@@ -204,6 +204,7 @@ public class KioskFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         ApplicationFrame APLIframe = new ApplicationFrame();
         
+        
         APLIframe.setVisible(true);
         
         this.dispose();
@@ -250,7 +251,7 @@ public class KioskFrame extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        System.out.println(",eh");
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new KioskFrame().setVisible(true));
     }
