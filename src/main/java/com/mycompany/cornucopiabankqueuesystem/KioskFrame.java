@@ -105,6 +105,7 @@ public class KioskFrame extends javax.swing.JFrame {
         btnForeignExchange.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnForeignExchange.setText("Foreign Exchange");
         btnForeignExchange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
+        btnForeignExchange.addActionListener(this::btnForeignExchangeActionPerformed);
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setText("Account Application");
@@ -221,6 +222,11 @@ public class KioskFrame extends javax.swing.JFrame {
 
     private void withdrawbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withdrawbtnActionPerformed
         // TODO add your handling code here:
+        WithdrawKiosk withdrawFrmae = new WithdrawKiosk();
+        
+        withdrawFrmae.setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_withdrawbtnActionPerformed
 
     private void depositbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositbtnActionPerformed
@@ -230,6 +236,15 @@ public class KioskFrame extends javax.swing.JFrame {
     private void fundTransferbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fundTransferbtnActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_fundTransferbtnActionPerformed
+
+    private void btnForeignExchangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForeignExchangeActionPerformed
+        // TODO add your handling code here:
+        fexchangeFrame fFrame = new fexchangeFrame();
+        
+        fFrame.setVisible(true);
+        
+        this.dispose();
+    }//GEN-LAST:event_btnForeignExchangeActionPerformed
 
     /**
      * @param args the command line arguments
