@@ -224,7 +224,11 @@ public class KioskFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_withdrawbtnActionPerformed
 
     private void depositbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositbtnActionPerformed
-        // TODO add your handling code here:
+DepositFrame DepositFrame = new DepositFrame();
+        
+        DepositFrame.setVisible(true);
+        
+        this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_depositbtnActionPerformed
 
     private void fundTransferbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fundTransferbtnActionPerformed
