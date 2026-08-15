@@ -48,6 +48,10 @@ public class fexchangeFrame extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         lblPhpTotal = new javax.swing.JLabel();
+        chkPriority = new javax.swing.JCheckBox();
+        btnGetTicket = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        clearbtn = new javax.swing.JButton();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -208,6 +212,22 @@ public class fexchangeFrame extends javax.swing.JFrame {
                 .addGap(14, 14, 14))
         );
 
+        chkPriority.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        chkPriority.setForeground(new java.awt.Color(139, 101, 8));
+        chkPriority.setText("Priority Line (Senior / PWD / Pregnant)");
+
+        btnGetTicket.setBackground(new java.awt.Color(12, 35, 74));
+        btnGetTicket.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnGetTicket.setForeground(new java.awt.Color(255, 255, 255));
+        btnGetTicket.setText("Get Queue Ticket");
+        btnGetTicket.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(253, 220, 92), 3));
+
+        jButton1.setText("Back");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        clearbtn.setText("Clear");
+        clearbtn.addActionListener(this::clearbtnActionPerformed);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -222,6 +242,8 @@ public class fexchangeFrame extends javax.swing.JFrame {
                             .addComponent(txtCustomerName)
                             .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtForeignAmount)
+                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(chkPriority, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(label)
@@ -229,7 +251,12 @@ public class fexchangeFrame extends javax.swing.JFrame {
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel6))
                                 .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(btnGetTicket, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(clearbtn)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton1))))
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -260,11 +287,46 @@ public class fexchangeFrame extends javax.swing.JFrame {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18)
+                        .addComponent(chkPriority)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGetTicket)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton1)
+                            .addComponent(clearbtn))
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         KioskFrame kkkiosk = new  KioskFrame();
+         
+         kkkiosk.setVisible(true);
+         
+         this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void clearbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearbtnActionPerformed
+        // TODO add your handling code here:
+       
+    txtCustomerName.setText("");
+    txtForeignAmount.setText("");
+
+    
+    if (jComboBox1.getItemCount() > 0) {
+        jComboBox1.setSelectedIndex(0);
+    }
+
+    
+    lblPhpTotal.setText("₱ 0.00 PHP");
+
+    
+    chkPriority.setSelected(false);
+    }//GEN-LAST:event_clearbtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -292,6 +354,10 @@ public class fexchangeFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnGetTicket;
+    private javax.swing.JCheckBox chkPriority;
+    private javax.swing.JButton clearbtn;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
