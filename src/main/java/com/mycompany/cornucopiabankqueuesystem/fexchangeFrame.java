@@ -31,6 +31,7 @@ package com.mycompany.cornucopiabankqueuesystem;
 
         public fexchangeFrame() {
             initComponents();
+            QueueDatabase.initialize();
             populateRateTable();
               txtForeignAmount.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
                 public void insertUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
@@ -448,7 +449,7 @@ package com.mycompany.cornucopiabankqueuesystem;
         double phpTotal = amount * rate;
         lblPhpTotal.setText("₱ " + String.format("%,.2f", phpTotal) + " PHP");
 
-        String ticket = ValidationUtils.generateTicketNumber("FX");
+        String ticket = QueueDatabase.addTicket("FX", "Foreign Exchange", customerName, chkPriority.isSelected());
         ValidationUtils.showSuccess(this,
                 "Queue ticket issued!\n"
                 + "Queue ticket: " + ticket + "\n"

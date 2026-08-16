@@ -17,6 +17,7 @@ public class DepositFrame extends javax.swing.JFrame {
      */
     public DepositFrame() {
         initComponents();
+        QueueDatabase.initialize();
     }
 
     /**
@@ -398,7 +399,7 @@ public class DepositFrame extends javax.swing.JFrame {
              return;
     }
 
-          String ticket = ValidationUtils.generateTicketNumber("DP");
+         String ticket = QueueDatabase.addTicket("DP", "Deposit", accountName, jCheckBox1.isSelected());
           ValidationUtils.showSuccess(this,
                  "Deposit accepted!\n"
                  + "Queue ticket: " + ticket + "\n"

@@ -17,6 +17,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
      */
     public WithdrawKiosk() {
         initComponents();
+        QueueDatabase.initialize();
     }
 
     /**
@@ -331,7 +332,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
             return;
         }
 
-        String ticket = ValidationUtils.generateTicketNumber("WD");
+        String ticket = QueueDatabase.addTicket("WD", "Withdrawal", accountName, jCheckBox1.isSelected());
         ValidationUtils.showSuccess(this,
                 "Withdrawal approved!\n"
                 + "Queue ticket: " + ticket + "\n"

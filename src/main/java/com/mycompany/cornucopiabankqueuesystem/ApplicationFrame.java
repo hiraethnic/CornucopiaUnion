@@ -17,6 +17,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
      */
     public ApplicationFrame() {
         initComponents();
+        QueueDatabase.initialize();
         setLocationRelativeTo(null);
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
     }
@@ -289,7 +290,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         return;
     }
 
-    String ticket = ValidationUtils.generateTicketNumber("AC");
+    String ticket = QueueDatabase.addTicket("AC", "Account Opening", fullName, chkPriority.isSelected());
     ValidationUtils.showSuccess(this,
             "Application accepted!\n"
             + "Queue ticket: " + ticket + "\n"

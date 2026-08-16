@@ -17,6 +17,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
      */
     public BillPaymentFrame() {
         initComponents();
+        QueueDatabase.initialize();
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
         
         
@@ -361,7 +362,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
 
-        String ticket = ValidationUtils.generateTicketNumber("BP");
+        String ticket = QueueDatabase.addTicket("BP", "Bill Payment", accountName, jCheckBox1.isSelected());
         ValidationUtils.showSuccess(this,
                 "Payment accepted!\n"
                 + "Queue ticket: " + ticket + "\n"
