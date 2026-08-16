@@ -17,6 +17,11 @@ public class BillPaymentFrame extends javax.swing.JFrame {
      */
     public BillPaymentFrame() {
         initComponents();
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
+        
+        
+        
+        
     }
 
     /**
@@ -175,6 +180,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("SUBMIT & PRINT TICKET");
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         btnBack.setBackground(new java.awt.Color(51, 65, 85));
         btnBack.setForeground(new java.awt.Color(255, 255, 255));
@@ -274,6 +280,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         KioskFrame kioskk = new KioskFrame();
@@ -297,6 +304,74 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         
         jCheckBox1.setSelected(false);
     }//GEN-LAST:event_clearbtnActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+        Object category = cmbCategory.getSelectedItem();
+        Object biller = cmbBiller.getSelectedItem();
+        String refNumber = txtRefNumber.getText().trim();
+        String accountName = txtAccountName.getText().trim();
+        String amountText = txtAmount.getText().trim();
+        Object paymentMode = jComboBox1.getSelectedItem();
+
+        if (!ValidationUtils.isValidComboSelection(category)) {
+            ValidationUtils.showError(this, "Please select a biller category.");
+            cmbCategory.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidComboSelection(biller)) {
+            ValidationUtils.showError(this, "Please select a biller.");
+            cmbBiller.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidReferenceNumber(refNumber)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account/reference number (4-30 letters, digits or hyphens).");
+            txtRefNumber.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidName(accountName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account holder name (letters only).");
+            txtAccountName.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidAmountFormat(amountText)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid amount due (numbers only, e.g. 1500 or 1500.00).");
+            txtAmount.requestFocusInWindow();
+            return;
+        }
+
+        Double amount = ValidationUtils.parseAmount(amountText);
+        if (amount == null || amount <= 0) {
+            ValidationUtils.showError(this, "Amount due must be greater than zero.");
+            txtAmount.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidComboSelection(paymentMode)) {
+            ValidationUtils.showError(this, "Please select a payment mode.");
+            jComboBox1.requestFocusInWindow();
+            return;
+        }
+
+        String ticket = ValidationUtils.generateTicketNumber("BP");
+        ValidationUtils.showSuccess(this,
+                "Payment accepted!\n"
+                + "Queue ticket: " + ticket + "\n"
+                + "Biller: " + biller + "\n"
+                + "Reference No.: " + refNumber + "\n"
+                + "Amount: PHP " + String.format("%,.2f", amount) + "\n"
+                + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
+
+        clearbtnActionPerformed(evt);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

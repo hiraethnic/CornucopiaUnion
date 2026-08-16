@@ -8,16 +8,86 @@ package com.mycompany.cornucopiabankqueuesystem;
  *
  * @author admin
  */
-public class fexchangeFrame extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(fexchangeFrame.class.getName());
+        public class fexchangeFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form fexchangeFrame
-     */
-    public fexchangeFrame() {
-        initComponents();
-    }
+            private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(fexchangeFrame.class.getName());
+
+            /**
+             * Creates new form fexchangeFrame
+             */
+            private static final java.util.Map<String, Double> EXCHANGE_RATES = new java.util.LinkedHashMap<>();
+        static {
+            EXCHANGE_RATES.put("SAR", 15.10);
+            EXCHANGE_RATES.put("AED", 15.40);
+            EXCHANGE_RATES.put("KWD", 184.50);
+            EXCHANGE_RATES.put("QAR", 15.50);
+            EXCHANGE_RATES.put("SGD", 42.50);
+            EXCHANGE_RATES.put("HKD", 7.30);
+            EXCHANGE_RATES.put("JPY", 0.39);
+            EXCHANGE_RATES.put("TWD", 1.80);
+            EXCHANGE_RATES.put("USD", 57.00);
+            EXCHANGE_RATES.put("CAD", 42.00);
+        }
+
+        public fexchangeFrame() {
+            initComponents();
+            populateRateTable();
+              txtForeignAmount.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+                public void insertUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
+                public void removeUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
+                public void changedUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
+            });
+
+            jComboBox1.addActionListener(evt -> updateEstimatedTotal());
+        }
+
+        /** Fills the reference exchange-rate table shown on the left panel. */
+        private void populateRateTable() {
+            javax.swing.table.DefaultTableModel model =
+                    (javax.swing.table.DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0);
+            for (int i = 0; i < jComboBox1.getItemCount(); i++) {
+                String entry = jComboBox1.getItemAt(i);
+                String code = extractCurrencyCode(entry);
+                if (code == null) {
+                    continue;
+                }
+                Double rate = EXCHANGE_RATES.get(code);
+                if (rate == null) {
+                    continue;
+                }
+                String country = entry.contains(" - ") ? entry.substring(entry.indexOf(" - ") + 3) : entry;
+                model.addRow(new Object[]{country, code, String.format("%,.2f", rate)});
+            }
+        }
+        
+            private void updateEstimatedTotal() {
+            Object currencySelection = jComboBox1.getSelectedItem();
+            String amountText = txtForeignAmount.getText().trim();
+
+            String code = currencySelection == null ? null : extractCurrencyCode(currencySelection.toString());
+            Double rate = code == null ? null : EXCHANGE_RATES.get(code);
+
+            if (rate == null || !amountText.matches("\\d{1,12}(\\.\\d{1,2})?")) {
+                lblPhpTotal.setText("₱ 0.00 PHP");
+                return;
+            }
+
+            double amount = Double.parseDouble(amountText);
+            double phpTotal = amount * rate;
+            lblPhpTotal.setText("₱ " + String.format("%,.2f", phpTotal) + " PHP");
+        }
+
+        /** Pulls the 3-letter currency code out of a combo box entry like "USD - United States (US Dollar)". */
+        private String extractCurrencyCode(String comboEntry) {
+            if (comboEntry == null || comboEntry.trim().isEmpty()) {
+                return null;
+            }
+            String trimmed = comboEntry.trim();
+            int dashIndex = trimmed.indexOf(" - ");
+            String code = dashIndex > 0 ? trimmed.substring(0, dashIndex) : trimmed;
+            return code.trim();
+        }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -29,6 +99,7 @@ public class fexchangeFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel2 = new javax.swing.JPanel();
+        jComboBox2 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -63,6 +134,8 @@ public class fexchangeFrame extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 100, Short.MAX_VALUE)
         );
+
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Cornucopia Union - Foreign Exchange Kiosk");
@@ -181,7 +254,8 @@ public class fexchangeFrame extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Select Foreign Currency:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SAR - Saudi Arabia (Saudi Riyal)", "AED - United Arab Emirates (UAE Dirham)", " ", "KWD - Kuwait (Kuwaiti Dinar)", " ", "QAR - Qatar (Qatari Riyal)", " ", "SGD - Singapore (Singapore Dollar)", " ", "HKD - Hong Kong (Hong Kong Dollar)", " ", "JPY - Japan (Japanese Yen)", " ", "TWD - Taiwan (New Taiwan Dollar)", " ", "USD - United States (US Dollar)", " ", "CAD - Canada (Canadian Dollar)" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SAR - Saudi Arabia (Saudi Riyal)", "AED - United Arab Emirates (UAE Dirham)", "KWD - Kuwait (Kuwaiti Dinar)", "QAR - Qatar (Qatari Riyal)", "SGD - Singapore (Singapore Dollar)", "HKD - Hong Kong (Hong Kong Dollar)", "JPY - Japan (Japanese Yen)", "TWD - Taiwan (New Taiwan Dollar)", "USD - United States (US Dollar)", "CAD - Canada (Canadian Dollar)" }));
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Amount in Foreign Currency:");
@@ -221,6 +295,7 @@ public class fexchangeFrame extends javax.swing.JFrame {
         btnGetTicket.setForeground(new java.awt.Color(255, 255, 255));
         btnGetTicket.setText("Get Queue Ticket");
         btnGetTicket.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(253, 220, 92), 3));
+        btnGetTicket.addActionListener(this::btnGetTicketActionPerformed);
 
         jButton1.setText("Back");
         jButton1.addActionListener(this::jButton1ActionPerformed);
@@ -328,6 +403,65 @@ public class fexchangeFrame extends javax.swing.JFrame {
     chkPriority.setSelected(false);
     }//GEN-LAST:event_clearbtnActionPerformed
 
+    private void btnGetTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetTicketActionPerformed
+        // TODO add your handling code here:
+        String customerName = txtCustomerName.getText().trim();
+        Object currencySelection = jComboBox1.getSelectedItem();
+        String amountText = txtForeignAmount.getText().trim();
+
+        if (!ValidationUtils.isValidName(customerName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid customer name (letters only).");
+            txtCustomerName.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidComboSelection(currencySelection)) {
+            ValidationUtils.showError(this, "Please select a foreign currency.");
+            jComboBox1.requestFocusInWindow();
+            return;
+        }
+
+        String code = extractCurrencyCode(currencySelection.toString());
+        Double rate = code == null ? null : EXCHANGE_RATES.get(code);
+        if (rate == null) {
+            ValidationUtils.showError(this,
+                    "Exchange rate unavailable for the selected currency. Please choose another.");
+            jComboBox1.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidAmountFormat(amountText)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid foreign currency amount (numbers only, e.g. 100 or 100.50).");
+            txtForeignAmount.requestFocusInWindow();
+            return;
+        }
+
+        Double amount = ValidationUtils.parseAmount(amountText);
+        if (amount == null || amount <= 0) {
+            ValidationUtils.showError(this, "Amount must be greater than zero.");
+            txtForeignAmount.requestFocusInWindow();
+            return;
+        }
+
+        double phpTotal = amount * rate;
+        lblPhpTotal.setText("₱ " + String.format("%,.2f", phpTotal) + " PHP");
+
+        String ticket = ValidationUtils.generateTicketNumber("FX");
+        ValidationUtils.showSuccess(this,
+                "Queue ticket issued!\n"
+                + "Queue ticket: " + ticket + "\n"
+                + "Customer: " + customerName + "\n"
+                + "Converting: " + String.format("%,.2f", amount) + " " + code + "\n"
+                + "Estimated PHP: " + lblPhpTotal.getText() + "\n"
+                + "Priority: " + (chkPriority.isSelected() ? "Yes" : "No"));
+    }//GEN-LAST:event_btnGetTicketActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -359,6 +493,7 @@ public class fexchangeFrame extends javax.swing.JFrame {
     private javax.swing.JButton clearbtn;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
