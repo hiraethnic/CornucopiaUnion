@@ -328,9 +328,9 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
 
-        if (!ValidationUtils.isValidReferenceNumber(refNumber)) {
+        if (!ValidationUtils.isValidNumericReferenceNumber(refNumber)) {
             ValidationUtils.showError(this,
-                    "Please enter a valid account/reference number (4-30 letters, digits or hyphens).");
+                    "Please enter a valid account/reference number (4-20 digits, numbers only).");
             txtRefNumber.requestFocusInWindow();
             return;
         }

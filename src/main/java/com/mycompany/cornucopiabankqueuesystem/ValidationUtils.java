@@ -31,6 +31,9 @@ public class ValidationUtils {
     /** Whole-peso amount only (no decimals) - used for cash-dispensing withdrawals. */
     private static final Pattern WHOLE_AMOUNT_PATTERN =
             Pattern.compile("^\\d{1,12}$");
+    
+    private static final Pattern NUMERIC_REFERENCE_PATTERN =
+        Pattern.compile("^\\d{4,10}$");
  
    
  
@@ -58,6 +61,10 @@ public class ValidationUtils {
  
     public static boolean isValidWholeAmountFormat(String text) {
         return !isBlank(text) && WHOLE_AMOUNT_PATTERN.matcher(text.trim()).matches();
+    }
+    
+    public static boolean isValidNumericReferenceNumber(String text) {
+        return !isBlank(text) && NUMERIC_REFERENCE_PATTERN.matcher(text.trim()).matches();
     }
  
     /**
