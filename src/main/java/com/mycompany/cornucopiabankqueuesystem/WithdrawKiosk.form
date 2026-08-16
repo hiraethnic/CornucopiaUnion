@@ -120,7 +120,6 @@
                       <Component id="jLabel13" min="-2" pref="187" max="-2" attributes="0"/>
                       <Component id="jTextField3" min="-2" pref="342" max="-2" attributes="0"/>
                       <Component id="jLabel12" min="-2" pref="187" max="-2" attributes="0"/>
-                      <Component id="jLabel10" min="-2" pref="187" max="-2" attributes="0"/>
                       <Component id="jTextField1" min="-2" pref="342" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
@@ -130,6 +129,7 @@
                           </Group>
                           <Component id="jTextField2" min="-2" pref="342" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="jLabel10" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="43" max="32767" attributes="0"/>
               </Group>
