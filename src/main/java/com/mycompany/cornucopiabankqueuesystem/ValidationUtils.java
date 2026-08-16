@@ -32,13 +32,9 @@ public class ValidationUtils {
     private static final Pattern WHOLE_AMOUNT_PATTERN =
             Pattern.compile("^\\d{1,12}$");
  
-    private ValidationUtils() {
-        // utility class - no instances
-    }
+   
  
-    // ---------------------------------------------------------------
-    // Generic field checks
-    // ---------------------------------------------------------------
+  
  
     public static boolean isBlank(String text) {
         return text == null || text.trim().isEmpty();
