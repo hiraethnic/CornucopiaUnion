@@ -17,6 +17,34 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
      */
     public LiveDisplayBoard() {
         initComponents();
+        refreshDisplay();
+        javax.swing.Timer refreshTimer = new javax.swing.Timer(3000, e -> refreshDisplay());
+        refreshTimer.start();
+    }
+        private void refreshDisplay() {
+        java.util.List<String[]> waiting = QueueDatabase.getWaitingTickets();
+        Object[][] waitingRows = new Object[waiting.size()][2];
+        for (int i = 0; i < waiting.size(); i++) {
+            waitingRows[i][0] = waiting.get(i)[0];
+            waitingRows[i][1] = waiting.get(i)[1];
+        }
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+                waitingRows, new String[]{"Ticket No.", "Category"}));
+
+        java.util.List<String[]> serving = QueueDatabase.getNowServing();
+        Object[][] servingRows = new Object[serving.size()][2];
+        for (int i = 0; i < serving.size(); i++) {
+            servingRows[i][0] = serving.get(i)[0];
+            servingRows[i][1] = serving.get(i)[1];
+        }
+        tblNowServing.setModel(new javax.swing.table.DefaultTableModel(
+                servingRows, new String[]{"Ticket No.", "Counter"}));
+
+        String[] last = QueueDatabase.getLastAnnounced();
+        if (last != null) {
+            lblLastTicket.setText("Ticket " + last[0]);
+            lblLastCounter.setText("Please proceed to Counter " + last[1]);
+        }
     }
 
     /**

@@ -17,6 +17,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
      */
     public WithdrawKiosk() {
         initComponents();
+        QueueDatabase.initialize();
     }
 
     /**
@@ -288,10 +289,67 @@ public class WithdrawKiosk extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+        String accountNumber = jTextField1.getText().trim();
+        String amountText = jTextField2.getText().trim();
+        String accountName = jTextField3.getText().trim();
+
+        if (!ValidationUtils.isValidAccountNumber(accountNumber)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account number (6-20 digits only).");
+            jTextField1.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidWholeAmountFormat(amountText)) {
+            ValidationUtils.showError(this,
+                    "Please enter the withdrawal amount in whole pesos only (no centavos).");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+
+        long amount = Long.parseLong(amountText);
+        if (amount < 100) {
+            ValidationUtils.showError(this, "Minimum withdrawal amount is PHP 100.");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+        if (amount % 100 != 0) {
+            ValidationUtils.showError(this,
+                    "Withdrawal amount must be in multiples of PHP 100 (dispenser bill denomination).");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+        if (amount > 100000) {
+            ValidationUtils.showError(this, "Maximum withdrawal per transaction is PHP 100,000.");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidName(accountName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account name (letters only), exactly as registered.");
+            jTextField3.requestFocusInWindow();
+            return;
+        }
+
+        String ticket = QueueDatabase.addTicket("WD", "Withdrawal", accountName, jCheckBox1.isSelected());
+        ValidationUtils.showSuccess(this,
+                "Withdrawal approved!\n"
+                + "Queue ticket: " + ticket + "\n"
+                + "Account: " + accountNumber + "\n"
+                + "Amount: PHP " + String.format("%,d", amount) + "\n"
+                + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
+
+        jButton2ActionPerformed(evt);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jCheckBox1.setSelected(false);
+        jTextField1.requestFocusInWindow();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void backbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backbtActionPerformed

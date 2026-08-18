@@ -17,7 +17,9 @@ public class ApplicationFrame extends javax.swing.JFrame {
      */
     public ApplicationFrame() {
         initComponents();
+        QueueDatabase.initialize();
         setLocationRelativeTo(null);
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
     }
 
     /**
@@ -166,6 +168,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("SUBMIT & PRINT TICKET");
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         Backbtn.setBackground(new java.awt.Color(51, 65, 85));
         Backbtn.setForeground(new java.awt.Color(255, 255, 255));
@@ -251,12 +254,57 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
     private void BackbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BackbtnActionPerformed
         // TODO add your handling code here:
+        
+        
+        
+        
         KioskFrame kioskframe = new KioskFrame();
         
         kioskframe.setVisible(true);
         
         this.dispose();
     }//GEN-LAST:event_BackbtnActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+         String fullName = txtFullName.getText().trim();
+    Object accountType = cmbAccountType.getSelectedItem();
+    Object idType = cmbIDType.getSelectedItem();
+
+    if (!ValidationUtils.isValidName(fullName)) {
+        ValidationUtils.showError(this,
+                "Please enter a valid full name (letters only).");
+        txtFullName.requestFocusInWindow();
+        return;
+    }
+
+    if (!ValidationUtils.isValidComboSelection(accountType)) {
+        ValidationUtils.showError(this, "Please select an account type.");
+        cmbAccountType.requestFocusInWindow();
+        return;
+    }
+
+    if (!ValidationUtils.isValidComboSelection(idType)) {
+        ValidationUtils.showError(this, "Please select the primary ID presented.");
+        cmbIDType.requestFocusInWindow();
+        return;
+    }
+
+    String ticket = QueueDatabase.addTicket("AC", "Account Opening", fullName, chkPriority.isSelected());
+    ValidationUtils.showSuccess(this,
+            "Application accepted!\n"
+            + "Queue ticket: " + ticket + "\n"
+            + "Applicant: " + fullName + "\n"
+            + "Account type: " + accountType + "\n"
+            + "ID presented: " + idType + "\n"
+            + "Priority: " + (chkPriority.isSelected() ? "Yes" : "No"));
+
+    txtFullName.setText("");
+    cmbAccountType.setSelectedIndex(0);
+    cmbIDType.setSelectedIndex(0);
+    chkPriority.setSelected(false);
+    txtFullName.requestFocusInWindow();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

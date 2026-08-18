@@ -17,6 +17,7 @@ public class DepositFrame extends javax.swing.JFrame {
      */
     public DepositFrame() {
         initComponents();
+        QueueDatabase.initialize();
     }
 
     /**
@@ -336,6 +337,15 @@ public class DepositFrame extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        if (jComboBox1.getItemCount() > 0) {
+            jComboBox1.setSelectedIndex(0);
+        }
+        jCheckBox1.setSelected(false);
+        jTextField1.requestFocusInWindow();
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -348,6 +358,57 @@ public class DepositFrame extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
+         String accountNumber = jTextField1.getText().trim();
+         String accountName = jTextField2.getText().trim();
+         String amountText = jTextField3.getText().trim();
+         Object depositType = jComboBox1.getSelectedItem();
+
+         if (!ValidationUtils.isValidAccountNumber(accountNumber)) {
+             ValidationUtils.showError(this,
+                     "Please enter a valid account number (6-20 digits only).");
+             jTextField1.requestFocusInWindow();
+             return;
+         } 
+
+         if (!ValidationUtils.isValidName(accountName)) {
+             ValidationUtils.showError(this,
+                     "Please enter a valid account holder name (letters only).");
+             jTextField2.requestFocusInWindow();
+             return;
+         }
+
+         if (!ValidationUtils.isValidAmountFormat(amountText)) {
+             ValidationUtils.showError(this,
+                    "Please enter a valid deposit amount (numbers only, e.g. 500 or 500.00).");
+             jTextField3.requestFocusInWindow();
+             return;
+        }
+
+         Double amount = ValidationUtils.parseAmount(amountText);
+         if (amount == null || amount < 100.0) {
+             ValidationUtils.showError(this,
+                    "Deposit amount must be at least PHP 100.00.");
+             jTextField3.requestFocusInWindow();
+             return;
+        }
+
+         if (!ValidationUtils.isValidComboSelection(depositType)) {
+             ValidationUtils.showError(this,
+                    "Please select a deposit type (Cash or Check).");
+             jComboBox1.requestFocusInWindow();
+             return;
+    }
+
+         String ticket = QueueDatabase.addTicket("DP", "Deposit", accountName, jCheckBox1.isSelected());
+          ValidationUtils.showSuccess(this,
+                 "Deposit accepted!\n"
+                 + "Queue ticket: " + ticket + "\n"
+                 + "Account: " + accountNumber + "\n"
+                 + "Amount: PHP " + String.format("%,.2f", amount) + "\n"
+                 + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
+
+         jButton2ActionPerformed(evt);
+        
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
