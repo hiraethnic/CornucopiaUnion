@@ -334,27 +334,33 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        if (!ValidationUtils.isValidAmountFormat(amountText)) {
+        if (!ValidationUtils.isValidWholeAmountFormat(amountText)) {
             ValidationUtils.showError(this,
-                    "Please enter a valid transfer amount (numbers only, e.g. 500 or 500.00).");
+                    "Please enter the transfer amount in whole pesos only (no centavos).");
             jTextField1.requestFocusInWindow();
             return;
         }
 
-        Double amount = ValidationUtils.parseAmount(amountText);
-        if (amount == null) {
-            ValidationUtils.showError(this,
-                    "Please enter a valid transfer amount (numbers only, e.g. 500 or 500.00).");
+        long amount = Long.parseLong(amountText);
+        if (amount <= 0) {
+            ValidationUtils.showError(this, "Transfer amount must be greater than zero.");
             jTextField1.requestFocusInWindow();
             return;
         }
 
-        if (amount > 50000.0) {
+        if (amount % 100 != 0) {                                       
             ValidationUtils.showError(this,
-                    "Transfer amount exceeds the maximum daily limit of PHP 50,000.00.");
+                    "Transfer amount must be in multiples of PHP 100 (e.g. 1000, not 1001).");
             jTextField1.requestFocusInWindow();
             return;
-    }
+        }
+
+        if (amount > 50000) {
+            ValidationUtils.showError(this, "Transfer amount exceeds the maximum daily limit of PHP 50,000.");
+            jTextField1.requestFocusInWindow();
+            return;
+        }
+    
 
     String ticket = QueueDatabase.addTicket("TR", "Fund Transfer", recipientName, jCheckBox1.isSelected());
     ValidationUtils.showSuccess(this,
