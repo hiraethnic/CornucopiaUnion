@@ -17,6 +17,7 @@ public class TransferFunds extends javax.swing.JFrame {
      */
     public TransferFunds() {
         initComponents();
+         QueueDatabase.initialize();
     }
 
     /**
@@ -300,14 +301,91 @@ public class TransferFunds extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
+         String sourceAccount = jTextField2.getText().trim();
+        String destinationAccount = jTextField3.getText().trim();
+        String recipientName = jTextField4.getText().trim();
+        String amountText = jTextField1.getText().trim();
+
+        if (!ValidationUtils.isValidAccountNumber(sourceAccount)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid source account number (6-20 digits only).");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidAccountNumber(destinationAccount)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid destination account number (6-20 digits only).");
+            jTextField3.requestFocusInWindow();
+            return;
+        }
+
+        if (sourceAccount.equals(destinationAccount)) {
+            ValidationUtils.showError(this,
+                    "Source and destination account numbers cannot be the same.");
+            jTextField3.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidName(recipientName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid recipient name (letters only).");
+            jTextField4.requestFocusInWindow();
+            return;
+        }
+
+        if (!ValidationUtils.isValidAmountFormat(amountText)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid transfer amount (numbers only, e.g. 500 or 500.00).");
+            jTextField1.requestFocusInWindow();
+            return;
+        }
+
+        Double amount = ValidationUtils.parseAmount(amountText);
+        if (amount == null) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid transfer amount (numbers only, e.g. 500 or 500.00).");
+            jTextField1.requestFocusInWindow();
+            return;
+        }
+
+        if (amount > 50000.0) {
+            ValidationUtils.showError(this,
+                    "Transfer amount exceeds the maximum daily limit of PHP 50,000.00.");
+            jTextField1.requestFocusInWindow();
+            return;
+    }
+
+    String ticket = QueueDatabase.addTicket("TR", "Fund Transfer", recipientName, jCheckBox1.isSelected());
+    ValidationUtils.showSuccess(this,
+            "Transfer accepted!\n"
+            + "Queue ticket: " + ticket + "\n"
+            + "Source account: " + sourceAccount + "\n"
+            + "Destination account: " + destinationAccount + "\n"
+            + "Recipient: " + recipientName + "\n"
+            + "Amount: PHP " + String.format("%,.2f", amount) + "\n"
+            + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
+
+    jButton5ActionPerformed(evt);
+        
+        
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+         jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jCheckBox1.setSelected(false);
+        jTextField2.requestFocusInWindow();
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
+        KioskFrame kioskF = new KioskFrame();
+        kioskF.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
