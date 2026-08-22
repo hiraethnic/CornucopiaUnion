@@ -9,37 +9,109 @@ package com.mycompany.cornucopiabankqueuesystem;
  * @author admin
  */
         public class fexchangeFrame extends javax.swing.JFrame {
-
+            
+            private static final java.util.Map<String, Double> EXCHANGE_RATES = new java.util.LinkedHashMap<>();
+            private static long lastFetchTime = 0;
+            private static final long REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000L; // ito ung para sa 24hr cache
             private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(fexchangeFrame.class.getName());
 
-            /**
-             * Creates new form fexchangeFrame
-             */
-            private static final java.util.Map<String, Double> EXCHANGE_RATES = new java.util.LinkedHashMap<>();
-        static {
-            EXCHANGE_RATES.put("SAR", 15.10);
-            EXCHANGE_RATES.put("AED", 15.40);
-            EXCHANGE_RATES.put("KWD", 184.50);
-            EXCHANGE_RATES.put("QAR", 15.50);
-            EXCHANGE_RATES.put("SGD", 42.50);
-            EXCHANGE_RATES.put("HKD", 7.30);
-            EXCHANGE_RATES.put("JPY", 0.39);
-            EXCHANGE_RATES.put("TWD", 1.80);
-            EXCHANGE_RATES.put("USD", 57.00);
-            EXCHANGE_RATES.put("CAD", 42.00);
+            // basically ito lng mangyayari if wlng internet
+            private static void loadFallbackRates()
+            { 
+              EXCHANGE_RATES.put("SAR", 15.10);
+              EXCHANGE_RATES.put("AED", 15.40);
+              EXCHANGE_RATES.put("KWD", 184.50);
+              EXCHANGE_RATES.put("QAR", 15.50);
+              EXCHANGE_RATES.put("SGD", 42.50);
+              EXCHANGE_RATES.put("HKD", 7.30);
+              EXCHANGE_RATES.put("JPY", 0.39);
+              EXCHANGE_RATES.put("TWD", 1.80);
+              EXCHANGE_RATES.put("USD", 57.00);
+              EXCHANGE_RATES.put("CAD", 42.00);
+            }
+            
+           private void updateRatesusingAPI() {
+    long currentTime = System.currentTimeMillis();
+    
+    if (!EXCHANGE_RATES.isEmpty() && (currentTime - lastFetchTime < REFRESH_INTERVAL_MS)) {
+        return;
+    }
+    
+    new Thread(() -> {
+        java.util.Map<String, Double> fetchedRates = new java.util.HashMap<>();
+        boolean success = false;
+
+        try {
+            java.net.URL url = new java.net.URL("https://api.frankfurter.app/latest?from=PHP");
+            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(4000);
+            conn.setReadTimeout(4000);
+            
+            if (conn.getResponseCode() == 200) {
+                try (java.io.BufferedReader reader = new java.io.BufferedReader(
+                        new java.io.InputStreamReader(conn.getInputStream()))) {
+                    
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                    
+                    String json = response.toString();
+                    String[] targetCurrencies = {"SAR", "AED", "KWD", "QAR", "SGD", "HKD", "JPY", "TWD", "USD", "CAD"};
+                    
+                    for (String code : targetCurrencies) {
+                        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("\"" + code + "\"\\s*:\\s*([0-9.]+)");
+                        java.util.regex.Matcher matcher = pattern.matcher(json);
+                        
+                        if (matcher.find()) {
+                            double rateFromPhp = Double.parseDouble(matcher.group(1));
+                            // Foreign Unit to PHP  1 USD = ~57 PHP
+                            if (rateFromPhp > 0) {
+                                fetchedRates.put(code, 1.0 / rateFromPhp);
+                            }
+                        }
+                    }
+                    success = !fetchedRates.isEmpty();
+                }
+            }
+        } catch (Exception e) {
+            logger.warning("API connection failed. Defaulting to offline rates: " + e.getMessage());
         }
 
+        final boolean apiSuccess = success;
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            if (apiSuccess) {
+                EXCHANGE_RATES.putAll(fetchedRates);
+                lastFetchTime = System.currentTimeMillis();
+            } else if (EXCHANGE_RATES.isEmpty()) {
+                loadFallbackRates();
+            }
+            populateRateTable();
+            updateEstimatedTotal();
+        });
+    }).start(); 
+}
         public fexchangeFrame() {
             initComponents();
             QueueDatabase.initialize();
+            // loads lng if offline
+            if (EXCHANGE_RATES.isEmpty()) {
+                loadFallbackRates();
+            }
             populateRateTable();
-              txtForeignAmount.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-                public void insertUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
-                public void removeUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
-                public void changedUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
+            
+            updateRatesusingAPI();
+            
+            txtForeignAmount.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updateEstimatedTotal(); }
             });
 
             jComboBox1.addActionListener(evt -> updateEstimatedTotal());
+            
         }
 
         /** Fills the reference exchange-rate table shown on the left panel. */
