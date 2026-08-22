@@ -244,7 +244,11 @@ DepositFrame DepositFrame = new DepositFrame();
     }//GEN-LAST:event_depositbtnActionPerformed
 
     private void fundTransferbtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fundTransferbtnActionPerformed
-        // TODO add your handling code here:
+TransferFunds TransferFunds = new TransferFunds();
+        
+        TransferFunds.setVisible(true);
+        
+        this.dispose();             // TODO add your handling code here:
     }//GEN-LAST:event_fundTransferbtnActionPerformed
 
     private void btnForeignExchangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnForeignExchangeActionPerformed
