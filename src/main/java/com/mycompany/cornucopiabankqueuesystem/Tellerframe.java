@@ -259,7 +259,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 349, Short.MAX_VALUE)))
+                        .addGap(0, 351, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -302,6 +302,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton9.setForeground(new java.awt.Color(51, 102, 0));
         jButton9.setText("CONFIRM");
+        jButton9.addActionListener(this::jButton9ActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -652,6 +653,10 @@ public class Tellerframe extends javax.swing.JFrame {
     private void btnUploadIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadIdActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnUploadIdActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments
