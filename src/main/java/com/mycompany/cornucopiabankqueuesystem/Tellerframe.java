@@ -10,7 +10,11 @@ package com.mycompany.cornucopiabankqueuesystem;
  * @author Lenovo
  */
 public class Tellerframe extends javax.swing.JFrame {
-    
+    private final String counterName = "Counter 1";
+    private QueueDatabase.Ticket activeTicket = null;
+    private boolean isEditMode = false;
+    private javax.swing.Timer refreshTimer;
+    private QueueDatabase.Ticket pastDoneTicket = null;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Tellerframe.class.getName());
     
 
@@ -20,8 +24,276 @@ public class Tellerframe extends javax.swing.JFrame {
      */
     public Tellerframe() {
         initComponents();
+        QueueDatabase.initialize();
+        setupCustomLogic();
+        refreshAllData();
+
+        refreshTimer = new javax.swing.Timer(3000, e -> refreshAllData());
+        refreshTimer.start();
+        
+        
+        
+        
+        
     }
     
+    
+    private void setupCustomLogic() {
+        jButton6.setText("CALL NEXT");
+        jButton9.setText("HOLD");
+        jButton7.setText("CANCEL");
+        setFieldsEditable(false);
+
+        jButton6.addActionListener(evt -> callNextCustomer());
+        jButton9.addActionListener(evt -> holdActiveTicket());
+        jButton7.addActionListener(evt -> cancelActiveTicket());
+        jButton11.addActionListener(evt -> recallHeldTicket());
+        jButton8.addActionListener(evt -> toggleEditMode());
+        jButton10.addActionListener(evt -> confirmAndPrintTransaction());
+
+        jTextField3.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
+        });
+    }
+    
+    private void toggleEditMode() {
+        if (activeTicket == null) {
+            ValidationUtils.showError(this, "No active transaction to edit.");
+            return;
+        }
+        isEditMode = !isEditMode;
+        setFieldsEditable(isEditMode);
+        jButton8.setText(isEditMode ? "SAVE EDIT" : "EDIT");
+    }
+    
+    private void setFieldsEditable(boolean editable) {
+        jTextField1.setEditable(editable);
+        jTextField2.setEditable(editable);
+        jTextField3.setEditable(editable);
+    }
+    
+   
+
+    
+
+    /** Queries SQLite DB to update Active Ticket, Next in Queue, and Held Ticket labels */
+    private void refreshAllData() {
+        activeTicket = QueueDatabase.getActiveTicket(counterName);
+        fetchHeldTicket();
+
+        if (activeTicket != null) {
+            jLabel10.setText(activeTicket.ticketNo);
+            jLabel11.setText(activeTicket.customerName != null && !activeTicket.customerName.isEmpty() ? activeTicket.customerName : "N/A");
+            jLabel12.setText(activeTicket.transactionType != null ? activeTicket.transactionType : activeTicket.category);
+            jPanel6.setVisible(true);
+            jLabel17.setText("FOREIGN EXCHANGE");
+        } else {
+            jLabel10.setText("---");
+            jLabel11.setText("No Active Ticket");
+            jLabel12.setText("---");
+        }
+
+        // Update Queue Waiting Display
+        java.util.List<String[]> waiting = QueueDatabase.getWaitingTickets(2);
+        jLabel14.setText(!waiting.isEmpty() ? "1. " + waiting.get(0)[0] + " - " + waiting.get(0)[1] : "1. None");
+        jLabel15.setText(waiting.size() > 1 ? "2. " + waiting.get(1)[0] + " - " + waiting.get(1)[1] : "2. None");
+
+        // Update Held Ticket Display
+        if (heldTicket != null) {
+            jLabel28.setText(heldTicket.ticketNo);
+            jLabel29.setText(heldTicket.customerName != null ? heldTicket.customerName : "N/A");
+            jLabel30.setText(heldTicket.category);
+            jLabel31.setText("HELD");
+        } else {
+            jLabel28.setText("---");
+            jLabel29.setText("No Held Tickets");
+            jLabel30.setText("---");
+            jLabel31.setText("---");
+        }
+
+        jButton11.setEnabled(activeTicket == null && heldTicket != null);
+    }
+    
+    private void updatePayoutCalculation() {
+        String amountText = jTextField3.getText().trim();
+        double rate = 57.00;
+        jLabel25.setText(String.format("1 Foreign = %.2f PHP", rate));
+
+        if (ValidationUtils.isValidAmountFormat(amountText)) {
+            double foreignAmt = Double.parseDouble(amountText);
+            double totalPhp = foreignAmt * rate;
+            jLabel26.setText("₱ " + String.format("%,.2f", totalPhp));
+        } else {
+            jLabel26.setText("₱ 0.00");
+        }
+    }
+    
+    private void autofillFields() {
+        QueueDatabase.Ticket target = (activeTicket != null) ? activeTicket : heldTicket;
+        if (target != null) {
+            jTextField1.setText(target.customerName != null ? target.customerName : "");
+            jTextField2.setText(target.referenceNo != null ? target.referenceNo : "USD");
+            jTextField3.setText(target.amount != null ? String.format("%.2f", target.amount) : "0.00");
+            updatePayoutCalculation();
+        }
+    }
+
+   private void fetchPastDoneTicket() {
+        String sql = "SELECT * FROM queue_tickets WHERE status = 'DONE' ORDER BY updated_at DESC LIMIT 1";
+        java.sql.Connection conn = QueueDatabase.getConnection();
+        pastDoneTicket = null;
+        if (conn == null) return;
+
+        try (java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+             java.sql.ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                pastDoneTicket = new QueueDatabase.Ticket(
+                    rs.getInt("id"), rs.getString("ticket_no"), rs.getString("category"),
+                    rs.getString("customer_name"), rs.getInt("priority") == 1,
+                    rs.getString("status"), rs.getString("counter"), rs.getString("created_at"),
+                    rs.getString("transaction_type"), rs.getInt("valid_id_submitted") == 1,
+                    rs.getObject("amount") == null ? null : rs.getDouble("amount"),
+                    rs.getString("reference_no")
+                );
+            }
+        } catch (java.sql.SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Error fetching past ticket", ex);
+        }
+    }
+
+    private void callNextCustomer() {
+        if (activeTicket != null) {
+            ValidationUtils.showError(this, "Finish, Hold, or Cancel current ticket first!");
+            return;
+        }
+        QueueDatabase.Ticket next = QueueDatabase.callNext(counterName);
+        if (next == null) {
+            ValidationUtils.showError(this, "No customers waiting in queue.");
+            return;
+        }
+
+        // Leave fields blank when calling next
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jLabel26.setText("₱ 0.00");
+
+
+
+        refreshAllData();
+    }   
+
+    private void holdActiveTicket() {
+        if (activeTicket == null) {
+            ValidationUtils.showError(this, "No active ticket to hold.");
+            return;
+        }
+
+        // Autofill text fields from kiosk input
+        autofillFields();
+
+        if (QueueDatabase.holdTicket(activeTicket.ticketNo)) {
+            ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " placed on HOLD and autofilled.");
+            refreshAllData();
+        }
+    }
+   private void cancelActiveTicket() {
+        if (activeTicket == null) {
+            ValidationUtils.showError(this, "No active ticket to cancel.");
+            return;
+        }
+
+        String sql = "UPDATE queue_tickets SET status = 'WAITING', counter = NULL, updated_at = datetime('now','localtime') "
+                   + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
+
+        try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
+            ps.setString(1, activeTicket.ticketNo);
+            if (ps.executeUpdate() > 0) {
+                ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " returned back to waiting queue!");
+
+                // Clear active text fields
+                activeTicket = null;
+                jTextField1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jLabel26.setText("₱ 0.00");
+
+                // Reset Valid ID submission
+                
+
+                refreshAllData();
+            }
+        } catch (java.sql.SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Cancel error", ex);
+        }
+    }
+
+   private void recallHeldTicket() {
+        if (activeTicket != null) {
+            ValidationUtils.showError(this, "Cannot recall held ticket while another ticket is active!");
+            return;
+        }
+        if (heldTicket == null) return;
+
+        String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, updated_at = datetime('now','localtime') "
+                   + "WHERE ticket_no = ? AND status = 'HELD'";
+        try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
+            ps.setString(1, counterName);
+            ps.setString(2, heldTicket.ticketNo);
+            if (ps.executeUpdate() > 0) {
+                ValidationUtils.showSuccess(this, "Ticket " + heldTicket.ticketNo + " recalled!");
+                activeTicket = QueueDatabase.getActiveTicket(counterName);
+                autofillFields();
+                refreshAllData();
+            }
+        } catch (java.sql.SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Recall error", ex);
+        }
+    }
+
+    private void confirmAndPrintTransaction() {
+        if (activeTicket == null) {
+            ValidationUtils.showError(this, "No active transaction to confirm.");
+            return;
+        }
+
+        Double amount = ValidationUtils.parseAmount(jTextField3.getText().trim());
+        if (amount == null || amount <= 0) {
+            ValidationUtils.showError(this, "Please enter a valid amount greater than zero.");
+            return;
+        }
+
+        String refNo = "FX-REF-" + System.currentTimeMillis();
+        String sql = "UPDATE queue_tickets SET status = 'DONE', transaction_type = 'Foreign Exchange', "
+                   + "valid_id_submitted = 1, amount = ?, reference_no = ?, updated_at = datetime('now','localtime') "
+                   + "WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
+
+        try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
+            ps.setDouble(1, amount);
+            ps.setString(2, refNo);
+            ps.setString(3, activeTicket.ticketNo);
+
+            if (ps.executeUpdate() > 0) {
+                ValidationUtils.showSuccess(this, "Transaction Confirmed & Saved!\nReference No: " + refNo);
+                activeTicket = null;
+                jTextField1.setText("");
+                jTextField2.setText("");
+                jTextField3.setText("");
+                jLabel26.setText("₱ 0.00");
+
+                refreshAllData();
+            }
+        } catch (java.sql.SQLException ex) {
+            logger.log(java.util.logging.Level.SEVERE, "Confirm transaction DB error", ex);
+        }
+    }
+
+    
+
+  
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,9 +341,6 @@ public class Tellerframe extends javax.swing.JFrame {
         jTextField2 = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel21 = new javax.swing.JLabel();
-        btnUploadId = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
@@ -460,39 +729,6 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel20.setForeground(new java.awt.Color(153, 153, 153));
         jLabel20.setText("Foreign Ammount");
 
-        jPanel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(102, 255, 51), 2, true));
-        jPanel7.setOpaque(false);
-
-        jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel21.setForeground(new java.awt.Color(51, 102, 0));
-        jLabel21.setText("Valid ID captured");
-
-        btnUploadId.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnUploadId.setForeground(new java.awt.Color(51, 102, 0));
-        btnUploadId.setText("Re-upload");
-        btnUploadId.addActionListener(this::btnUploadIdActionPerformed);
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel21)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnUploadId)
-                .addContainerGap())
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel21)
-                    .addComponent(btnUploadId))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jPanel8.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel8.setOpaque(false);
 
@@ -547,11 +783,13 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton10.setForeground(new java.awt.Color(255, 255, 255));
         jButton10.setText("Confirm and print");
+        jButton10.addActionListener(this::jButton10ActionPerformed);
 
         jButton8.setBackground(new java.awt.Color(51, 153, 0));
         jButton8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
         jButton8.setText("EDIT");
+        jButton8.addActionListener(this::jButton8ActionPerformed);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -575,7 +813,6 @@ public class Tellerframe extends javax.swing.JFrame {
                                 .addGap(0, 187, Short.MAX_VALUE))
                             .addComponent(jTextField2)))
                     .addComponent(jTextField3)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -608,9 +845,7 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addComponent(jLabel20)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(84, 84, 84)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -841,7 +1076,7 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, 294, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(jPanel11Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
@@ -1478,9 +1713,7 @@ public class Tellerframe extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1495,10 +1728,6 @@ public class Tellerframe extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void btnUploadIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUploadIdActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnUploadIdActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
         // TODO add your handling code here:
@@ -1619,6 +1848,14 @@ public class Tellerframe extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox4ActionPerformed
 
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton8ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1651,7 +1888,6 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JPanel TRANSFERFUNDS;
     private javax.swing.JPanel WITHDRAW;
     private javax.swing.JButton btnBack;
-    private javax.swing.JButton btnUploadId;
     private javax.swing.JCheckBox chkPriority;
     private javax.swing.JButton clearbtn;
     private javax.swing.JComboBox<String> cmbAccountType;
@@ -1689,7 +1925,6 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
@@ -1763,7 +1998,6 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JTextField jTextField1;

@@ -383,5 +383,19 @@ public final class QueueDatabase {
             logger.log(Level.SEVERE, "Could not call next ticket", ex);
             return null;
         }
+        
+    }
+    public static synchronized void saveKioskData(String ticketNo, String currencyCode, double amount) {
+        String sql = "UPDATE queue_tickets SET reference_no = ?, amount = ? WHERE ticket_no = ?";
+        Connection conn = getConnection();
+        if (conn == null) return;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, currencyCode);
+            ps.setDouble(2, amount);
+            ps.setString(3, ticketNo);
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not save kiosk details for " + ticketNo, ex);
+        }
     }
 }

@@ -522,6 +522,7 @@ package com.mycompany.cornucopiabankqueuesystem;
         lblPhpTotal.setText("₱ " + String.format("%,.2f", phpTotal) + " PHP");
 
         String ticket = QueueDatabase.addTicket("FX", "Foreign Exchange", customerName, chkPriority.isSelected());
+        QueueDatabase.saveKioskData(ticket, code, amount);
         ValidationUtils.showSuccess(this,
                 "Queue ticket issued!\n"
                 + "Queue ticket: " + ticket + "\n"
