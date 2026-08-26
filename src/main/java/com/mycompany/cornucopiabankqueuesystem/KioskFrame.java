@@ -60,7 +60,7 @@ public class KioskFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(253, 220, 92));
-        jLabel1.setText("Cornucopia Union");
+        jLabel1.setText("Centria Unified");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
@@ -83,8 +83,8 @@ public class KioskFrame extends javax.swing.JFrame {
                         .addGap(245, 245, 245)
                         .addComponent(jLabel2))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(280, 280, 280)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(301, 301, 301)
+                        .addComponent(jLabel1)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
