@@ -4,6 +4,7 @@
  */
 package com.mycompany.cornucopiabankqueuesystem;
 
+
 /**
  *
  * @author Lenovo
@@ -20,6 +21,7 @@ public class Tellerframe extends javax.swing.JFrame {
     public Tellerframe() {
         initComponents();
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
