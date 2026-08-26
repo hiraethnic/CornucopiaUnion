@@ -57,6 +57,11 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton7.setText("CANCEL");
         setFieldsEditable(false);
 
+        jButton1.addActionListener(evt -> showPanel(BILLS));
+        jButton2.addActionListener(evt -> showPanel(APP));
+        jButton3.addActionListener(evt -> showPanel(Xchange));
+        jButton4.addActionListener(evt -> showPanel(code));
+        jButton5.addActionListener(evt -> showPanel(FUNDS));
         jButton6.addActionListener(evt -> callNextCustomer());
         jButton9.addActionListener(evt -> holdActiveTicket());
         jButton7.addActionListener(evt -> cancelActiveTicket());
@@ -106,7 +111,7 @@ public class Tellerframe extends javax.swing.JFrame {
             jLabel10.setText(activeTicket.ticketNo);
             jLabel11.setText(activeTicket.customerName != null && !activeTicket.customerName.isEmpty() ? activeTicket.customerName : "N/A");
             jLabel12.setText(activeTicket.transactionType != null ? activeTicket.transactionType : activeTicket.category);
-            jPanel6.setVisible(true);
+            Xchange.setVisible(true);
             jLabel17.setText("FOREIGN EXCHANGE");
         } else {
             jLabel10.setText("---");
@@ -364,7 +369,12 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         jButton9 = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        code = new javax.swing.JPanel();
+        jTextField14 = new javax.swing.JTextField();
+        jLabel65 = new javax.swing.JLabel();
+        jLabel66 = new javax.swing.JLabel();
+        Xchange = new javax.swing.JPanel();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
@@ -381,6 +391,15 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel24 = new javax.swing.JLabel();
         jButton10 = new javax.swing.JButton();
         jButton8 = new javax.swing.JButton();
+        APP = new javax.swing.JPanel();
+        jLabel67 = new javax.swing.JLabel();
+        jLabel68 = new javax.swing.JLabel();
+        FUNDS = new javax.swing.JPanel();
+        jLabel69 = new javax.swing.JLabel();
+        jLabel70 = new javax.swing.JLabel();
+        BILLS = new javax.swing.JPanel();
+        jLabel71 = new javax.swing.JLabel();
+        jLabel72 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
@@ -501,6 +520,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Bills payment");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jButton2.setBackground(new java.awt.Color(12, 35, 74));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -511,6 +531,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Foreign exchange");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
 
         jButton4.setBackground(new java.awt.Color(12, 35, 74));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -729,7 +750,7 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addComponent(jLabel13)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel14)
@@ -738,8 +759,52 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addGap(22, 22, 22))
         );
 
-        jPanel6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
-        jPanel6.setOpaque(false);
+        jPanel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        jPanel7.setOpaque(false);
+        jPanel7.setLayout(new java.awt.CardLayout());
+
+        code.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        code.setOpaque(false);
+
+        jLabel65.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel65.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel65.setText("TRANSACTION");
+
+        jLabel66.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel66.setForeground(new java.awt.Color(180, 120, 15));
+        jLabel66.setText("DEPOSIT");
+
+        javax.swing.GroupLayout codeLayout = new javax.swing.GroupLayout(code);
+        code.setLayout(codeLayout);
+        codeLayout.setHorizontalGroup(
+            codeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, codeLayout.createSequentialGroup()
+                .addContainerGap(200, Short.MAX_VALUE)
+                .addComponent(jTextField14, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(162, 162, 162))
+            .addGroup(codeLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel65)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel66)
+                .addContainerGap())
+        );
+        codeLayout.setVerticalGroup(
+            codeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(codeLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(codeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel65)
+                    .addComponent(jLabel66))
+                .addGap(70, 70, 70)
+                .addComponent(jTextField14, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                .addGap(389, 389, 389))
+        );
+
+        jPanel7.add(code, "card2");
+
+        Xchange.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        Xchange.setOpaque(false);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(153, 153, 153));
@@ -825,31 +890,31 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton8.setText("EDIT");
         jButton8.addActionListener(this::jButton8ActionPerformed);
 
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        javax.swing.GroupLayout XchangeLayout = new javax.swing.GroupLayout(Xchange);
+        Xchange.setLayout(XchangeLayout);
+        XchangeLayout.setHorizontalGroup(
+            XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(XchangeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(XchangeLayout.createSequentialGroup()
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel17))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(XchangeLayout.createSequentialGroup()
+                        .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel18)
                             .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(70, 70, 70)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(XchangeLayout.createSequentialGroup()
                                 .addComponent(jLabel19)
-                                .addGap(0, 187, Short.MAX_VALUE))
+                                .addGap(0, 207, Short.MAX_VALUE))
                             .addComponent(jTextField2)))
                     .addComponent(jTextField3)
                     .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(XchangeLayout.createSequentialGroup()
+                        .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel20)
                             .addComponent(jLabel24))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -858,22 +923,22 @@ public class Tellerframe extends javax.swing.JFrame {
                         .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
+        XchangeLayout.setVerticalGroup(
+            XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(XchangeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel16)
                     .addComponent(jLabel17))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
                     .addComponent(jLabel19))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField2)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addGroup(XchangeLayout.createSequentialGroup()
+                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                         .addGap(2, 2, 2)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel20)
@@ -882,12 +947,116 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addGap(84, 84, 84)
                 .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel24)
                     .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(105, 105, 105))
         );
+
+        jPanel7.add(Xchange, "card2");
+
+        APP.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        APP.setOpaque(false);
+
+        jLabel67.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel67.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel67.setText("TRANSACTION");
+
+        jLabel68.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel68.setForeground(new java.awt.Color(180, 120, 15));
+        jLabel68.setText("APPLICATION");
+
+        javax.swing.GroupLayout APPLayout = new javax.swing.GroupLayout(APP);
+        APP.setLayout(APPLayout);
+        APPLayout.setHorizontalGroup(
+            APPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(APPLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel67)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 415, Short.MAX_VALUE)
+                .addComponent(jLabel68)
+                .addContainerGap())
+        );
+        APPLayout.setVerticalGroup(
+            APPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(APPLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(APPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel67)
+                    .addComponent(jLabel68))
+                .addContainerGap(510, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(APP, "card2");
+
+        FUNDS.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        FUNDS.setOpaque(false);
+
+        jLabel69.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel69.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel69.setText("TRANSACTION");
+
+        jLabel70.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel70.setForeground(new java.awt.Color(180, 120, 15));
+        jLabel70.setText("BILLS PAYMENT");
+
+        javax.swing.GroupLayout FUNDSLayout = new javax.swing.GroupLayout(FUNDS);
+        FUNDS.setLayout(FUNDSLayout);
+        FUNDSLayout.setHorizontalGroup(
+            FUNDSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FUNDSLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel69)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 401, Short.MAX_VALUE)
+                .addComponent(jLabel70)
+                .addContainerGap())
+        );
+        FUNDSLayout.setVerticalGroup(
+            FUNDSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(FUNDSLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(FUNDSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel69)
+                    .addComponent(jLabel70))
+                .addContainerGap(510, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(FUNDS, "card2");
+
+        BILLS.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
+        BILLS.setOpaque(false);
+
+        jLabel71.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel71.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel71.setText("TRANSACTION");
+
+        jLabel72.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel72.setForeground(new java.awt.Color(180, 120, 15));
+        jLabel72.setText("TRANSFER FUNDS");
+
+        javax.swing.GroupLayout BILLSLayout = new javax.swing.GroupLayout(BILLS);
+        BILLS.setLayout(BILLSLayout);
+        BILLSLayout.setHorizontalGroup(
+            BILLSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BILLSLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel71)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 388, Short.MAX_VALUE)
+                .addComponent(jLabel72)
+                .addContainerGap())
+        );
+        BILLSLayout.setVerticalGroup(
+            BILLSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(BILLSLayout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addGroup(BILLSLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel71)
+                    .addComponent(jLabel72))
+                .addContainerGap(510, Short.MAX_VALUE))
+        );
+
+        jPanel7.add(BILLS, "card2");
 
         jPanel9.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 2, true));
         jPanel9.setOpaque(false);
@@ -1676,7 +1845,8 @@ public class Tellerframe extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(619, 619, 619)))
                 .addContainerGap())
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1710,12 +1880,11 @@ public class Tellerframe extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -1894,6 +2063,15 @@ public class Tellerframe extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -1918,13 +2096,31 @@ public class Tellerframe extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Tellerframe().setVisible(true));
     }
+    
+    private void showPanel(javax.swing.JPanel panelToShow) {
+    // Hide all right-side panels
+    Xchange.setVisible(false);
+    BILLS.setVisible(false);
+    APP.setVisible(false);
+    DEPOSIT.setVisible(false);
+    FUNDS.setVisible(false);
+    WITHDRAW.setVisible(false);
+    code.setVisible(false);
+
+    // Show only the selected panel
+    panelToShow.setVisible(true);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel APP;
     private javax.swing.JPanel APPLICATION;
+    private javax.swing.JPanel BILLS;
     private javax.swing.JPanel BILSSPAYMENT;
     private javax.swing.JPanel DEPOSIT;
+    private javax.swing.JPanel FUNDS;
     private javax.swing.JPanel TRANSFERFUNDS;
     private javax.swing.JPanel WITHDRAW;
+    private javax.swing.JPanel Xchange;
     private javax.swing.JButton btnBack;
     private javax.swing.JCheckBox chkPriority;
     private javax.swing.JButton clearbtn;
@@ -1932,6 +2128,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbBiller;
     private javax.swing.JComboBox<String> cmbCategory;
     private javax.swing.JComboBox<String> cmbIDType;
+    private javax.swing.JPanel code;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton11;
@@ -2010,7 +2207,15 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel62;
     private javax.swing.JLabel jLabel63;
     private javax.swing.JLabel jLabel64;
+    private javax.swing.JLabel jLabel65;
+    private javax.swing.JLabel jLabel66;
+    private javax.swing.JLabel jLabel67;
+    private javax.swing.JLabel jLabel68;
+    private javax.swing.JLabel jLabel69;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel70;
+    private javax.swing.JLabel jLabel71;
+    private javax.swing.JLabel jLabel72;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
@@ -2035,7 +2240,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JTextField jTextField1;
@@ -2043,6 +2248,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField11;
     private javax.swing.JTextField jTextField12;
     private javax.swing.JTextField jTextField13;
+    private javax.swing.JTextField jTextField14;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
