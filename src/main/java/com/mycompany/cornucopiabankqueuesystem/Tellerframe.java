@@ -14,7 +14,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private QueueDatabase.Ticket activeTicket = null;
     private boolean isEditMode = false;
     private javax.swing.Timer refreshTimer;
-    private QueueDatabase.Ticket pastDoneTicket = null;
+    private java.util.List<QueueDatabase.Ticket> pastDoneTickets = new java.util.ArrayList<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Tellerframe.class.getName());
     
 
@@ -37,6 +37,19 @@ public class Tellerframe extends javax.swing.JFrame {
         
     }
     
+        private static final java.util.Map<String, Double> CURRENCY_RATES = new java.util.HashMap<>() {{
+        put("USD", 57.00);
+        put("SAR", 15.10);
+        put("AED", 15.40);
+        put("KWD", 184.50);
+        put("QAR", 15.50);
+        put("SGD", 42.50);
+        put("HKD", 7.30);
+        put("JPY", 0.39);
+        put("TWD", 1.80);
+        put("CAD", 42.00);
+    }};
+    
     
     private void setupCustomLogic() {
         jButton6.setText("CALL NEXT");
@@ -52,6 +65,12 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton10.addActionListener(evt -> confirmAndPrintTransaction());
 
         jTextField3.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
+        });
+        
+        jTextField2.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
@@ -81,7 +100,7 @@ public class Tellerframe extends javax.swing.JFrame {
     /** Queries SQLite DB to update Active Ticket, Next in Queue, and Held Ticket labels */
     private void refreshAllData() {
         activeTicket = QueueDatabase.getActiveTicket(counterName);
-        fetchHeldTicket();
+        fetchPastDoneTickets();
 
         if (activeTicket != null) {
             jLabel10.setText(activeTicket.ticketNo);
@@ -95,32 +114,41 @@ public class Tellerframe extends javax.swing.JFrame {
             jLabel12.setText("---");
         }
 
-        // Update Queue Waiting Display
         java.util.List<String[]> waiting = QueueDatabase.getWaitingTickets(2);
         jLabel14.setText(!waiting.isEmpty() ? "1. " + waiting.get(0)[0] + " - " + waiting.get(0)[1] : "1. None");
         jLabel15.setText(waiting.size() > 1 ? "2. " + waiting.get(1)[0] + " - " + waiting.get(1)[1] : "2. None");
 
-        // Update Held Ticket Display
-        if (heldTicket != null) {
-            jLabel28.setText(heldTicket.ticketNo);
-            jLabel29.setText(heldTicket.customerName != null ? heldTicket.customerName : "N/A");
-            jLabel30.setText(heldTicket.category);
-            jLabel31.setText("HELD");
+        if (!pastDoneTickets.isEmpty()) {
+            QueueDatabase.Ticket t1 = pastDoneTickets.get(0);
+            jLabel28.setText("1. " + t1.ticketNo + " - " + (t1.customerName != null ? t1.customerName : "N/A"));
+
+            if (pastDoneTickets.size() > 1) {
+                QueueDatabase.Ticket t2 = pastDoneTickets.get(1);
+                jLabel29.setText("2. " + t2.ticketNo + " - " + (t2.customerName != null ? t2.customerName : "N/A"));
+            } else {
+                jLabel29.setText("2. None");
+            }
+
+            jLabel30.setText(t1.category);
+            jLabel31.setText("DONE (" + pastDoneTickets.size() + ")");
         } else {
-            jLabel28.setText("---");
-            jLabel29.setText("No Held Tickets");
+            jLabel28.setText("1. None");
+            jLabel29.setText("2. None");
             jLabel30.setText("---");
             jLabel31.setText("---");
         }
 
-        jButton11.setEnabled(activeTicket == null && heldTicket != null);
+        jButton11.setEnabled(activeTicket == null && !pastDoneTickets.isEmpty());
     }
     
     private void updatePayoutCalculation() {
-        String amountText = jTextField3.getText().trim();
-        double rate = 57.00;
-        jLabel25.setText(String.format("1 Foreign = %.2f PHP", rate));
+        String currencyCode = jTextField2.getText().trim().toUpperCase();
 
+        double rate = CURRENCY_RATES.getOrDefault(currencyCode, 57.00);
+
+        jLabel25.setText(String.format("1 %s = %.2f PHP", currencyCode.isEmpty() ? "Foreign" : currencyCode, rate));
+
+        String amountText = jTextField3.getText().trim();
         if (ValidationUtils.isValidAmountFormat(amountText)) {
             double foreignAmt = Double.parseDouble(amountText);
             double totalPhp = foreignAmt * rate;
@@ -131,7 +159,7 @@ public class Tellerframe extends javax.swing.JFrame {
     }
     
     private void autofillFields() {
-        QueueDatabase.Ticket target = (activeTicket != null) ? activeTicket : heldTicket;
+        QueueDatabase.Ticket target = (activeTicket != null) ? activeTicket : (!pastDoneTickets.isEmpty() ? pastDoneTickets.get(0) : null);
         if (target != null) {
             jTextField1.setText(target.customerName != null ? target.customerName : "");
             jTextField2.setText(target.referenceNo != null ? target.referenceNo : "USD");
@@ -140,26 +168,26 @@ public class Tellerframe extends javax.swing.JFrame {
         }
     }
 
-   private void fetchPastDoneTicket() {
-        String sql = "SELECT * FROM queue_tickets WHERE status = 'DONE' ORDER BY updated_at DESC LIMIT 1";
+    private void fetchPastDoneTickets() {
+        String sql = "SELECT * FROM queue_tickets WHERE status = 'DONE' ORDER BY updated_at DESC LIMIT 2";
         java.sql.Connection conn = QueueDatabase.getConnection();
-        pastDoneTicket = null;
+        pastDoneTickets.clear();
         if (conn == null) return;
 
         try (java.sql.PreparedStatement ps = conn.prepareStatement(sql);
              java.sql.ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                pastDoneTicket = new QueueDatabase.Ticket(
+            while (rs.next()) {
+                pastDoneTickets.add(new QueueDatabase.Ticket(
                     rs.getInt("id"), rs.getString("ticket_no"), rs.getString("category"),
                     rs.getString("customer_name"), rs.getInt("priority") == 1,
                     rs.getString("status"), rs.getString("counter"), rs.getString("created_at"),
                     rs.getString("transaction_type"), rs.getInt("valid_id_submitted") == 1,
                     rs.getObject("amount") == null ? null : rs.getDouble("amount"),
                     rs.getString("reference_no")
-                );
+                ));
             }
         } catch (java.sql.SQLException ex) {
-            logger.log(java.util.logging.Level.SEVERE, "Error fetching past ticket", ex);
+            logger.log(java.util.logging.Level.SEVERE, "Error fetching past tickets", ex);
         }
     }
 
@@ -174,7 +202,6 @@ public class Tellerframe extends javax.swing.JFrame {
             return;
         }
 
-        // Leave fields blank when calling next
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
@@ -191,7 +218,6 @@ public class Tellerframe extends javax.swing.JFrame {
             return;
         }
 
-        // Autofill text fields from kiosk input
         autofillFields();
 
         if (QueueDatabase.holdTicket(activeTicket.ticketNo)) {
@@ -213,14 +239,11 @@ public class Tellerframe extends javax.swing.JFrame {
             if (ps.executeUpdate() > 0) {
                 ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " returned back to waiting queue!");
 
-                // Clear active text fields
                 activeTicket = null;
                 jTextField1.setText("");
                 jTextField2.setText("");
                 jTextField3.setText("");
                 jLabel26.setText("₱ 0.00");
-
-                // Reset Valid ID submission
                 
 
                 refreshAllData();
@@ -232,24 +255,33 @@ public class Tellerframe extends javax.swing.JFrame {
 
    private void recallHeldTicket() {
         if (activeTicket != null) {
-            ValidationUtils.showError(this, "Cannot recall held ticket while another ticket is active!");
+            ValidationUtils.showError(this, "Finish or clear current ticket before recalling history!");
             return;
         }
-        if (heldTicket == null) return;
+        if (pastDoneTickets.isEmpty()) return;
+
+        QueueDatabase.Ticket ticketToRecall = pastDoneTickets.get(0);
 
         String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, updated_at = datetime('now','localtime') "
-                   + "WHERE ticket_no = ? AND status = 'HELD'";
+                   + "WHERE ticket_no = ?";
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
             ps.setString(1, counterName);
-            ps.setString(2, heldTicket.ticketNo);
+            ps.setString(2, ticketToRecall.ticketNo);
             if (ps.executeUpdate() > 0) {
-                ValidationUtils.showSuccess(this, "Ticket " + heldTicket.ticketNo + " recalled!");
+                ValidationUtils.showSuccess(this, "Ticket " + ticketToRecall.ticketNo + " recalled as Active Ticket!");
+
                 activeTicket = QueueDatabase.getActiveTicket(counterName);
+
                 autofillFields();
+
+                isEditMode = true;
+                setFieldsEditable(true);
+                jButton8.setText("SAVE EDIT");
+
                 refreshAllData();
             }
         } catch (java.sql.SQLException ex) {
-            logger.log(java.util.logging.Level.SEVERE, "Recall error", ex);
+            logger.log(java.util.logging.Level.SEVERE, "Recall history error", ex);
         }
     }
 
@@ -724,6 +756,8 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(153, 153, 153));
         jLabel19.setText("CURRENCY");
+
+        jTextField2.addActionListener(this::jTextField2ActionPerformed);
 
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(153, 153, 153));
@@ -1855,6 +1889,10 @@ public class Tellerframe extends javax.swing.JFrame {
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments

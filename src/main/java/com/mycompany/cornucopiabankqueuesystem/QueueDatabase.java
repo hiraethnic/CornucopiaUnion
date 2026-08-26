@@ -28,7 +28,6 @@ public final class QueueDatabase {
     private static Connection connection;
 
     private QueueDatabase() {
-        // utility class - no instances
     }
 
     /** Returns a single shared connection, opening one if needed. */
@@ -367,7 +366,7 @@ public final class QueueDatabase {
      */
     public static synchronized Ticket callNext(String counter) {
         if (getActiveTicket(counter) != null) {
-            return null; // still has an ongoing/called ticket - finish that first
+            return null; 
         }
         String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
                 + "transaction_type = category, updated_at = datetime('now','localtime') "
