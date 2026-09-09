@@ -4,6 +4,8 @@
  */
 package com.mycompany.cornucopiabankqueuesystem;
 
+import static java.lang.classfile.Attributes.code;
+
 
 /**
  *
@@ -57,11 +59,11 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton7.setText("CANCEL");
         setFieldsEditable(false);
 
-        jButton1.addActionListener(evt -> showPanel(Deposit));
-        jButton2.addActionListener(evt -> showPanel(ACC));
-        jButton3.addActionListener(evt -> showPanel(Xchange));
-        jButton4.addActionListener(evt -> showPanel(code));
-        jButton5.addActionListener(evt -> showPanel(FUNDS));
+      jButton1.addActionListener(evt -> showPanel(BILLS));
+jButton2.addActionListener(evt -> showPanel(ACC));
+jButton3.addActionListener(evt -> showPanel(Xchange));
+jButton4.addActionListener(evt -> showPanel(Deposit));
+jButton5.addActionListener(evt -> showPanel(FUNDS));
         jButton6.addActionListener(evt -> callNextCustomer());
         jButton9.addActionListener(evt -> holdActiveTicket());
         jButton7.addActionListener(evt -> cancelActiveTicket());
@@ -1684,10 +1686,8 @@ public class Tellerframe extends javax.swing.JFrame {
     Xchange.setVisible(false);
     Deposit.setVisible(false);
     ACC.setVisible(false);
-    DEPOSIT.setVisible(false);
     FUNDS.setVisible(false);
-    WITHDRAW.setVisible(false);
-    code.setVisible(false);
+    BILLS.setVisible(false);
 
     // Show only the selected panel
     panelToShow.setVisible(true);
