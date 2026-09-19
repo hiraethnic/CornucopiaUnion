@@ -130,7 +130,7 @@ public class AdminRecord extends javax.swing.JFrame {
         TRANSACTIONPANEL.add(panel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 750, 50));
 
         jPanel1.add(TRANSACTIONPANEL);
-        TRANSACTIONPANEL.setBounds(0, 0, 670, 748);
+        TRANSACTIONPANEL.setBounds(0, 0, 670, 630);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -156,7 +156,7 @@ public class AdminRecord extends javax.swing.JFrame {
         );
 
         ACCOUNTPANEL.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, -1));
-        ACCOUNTPANEL.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(614, 240, 50, 10));
+        ACCOUNTPANEL.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 260, 50, 10));
 
         jButton2.setText("TRANSACTION LOGS");
         jButton2.addActionListener(this::jButton2ActionPerformed);
