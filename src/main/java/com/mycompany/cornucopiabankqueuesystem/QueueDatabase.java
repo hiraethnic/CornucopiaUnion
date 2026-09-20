@@ -384,17 +384,120 @@ public final class QueueDatabase {
         }
         
     }
-    public static synchronized void saveKioskData(String ticketNo, String currencyCode, double amount) {
+    public static synchronized void saveKioskData(String ticketNo, String referenceNo, double amount) {
         String sql = "UPDATE queue_tickets SET reference_no = ?, amount = ? WHERE ticket_no = ?";
         Connection conn = getConnection();
         if (conn == null) return;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, currencyCode);
+            ps.setString(1, referenceNo);
             ps.setDouble(2, amount);
             ps.setString(3, ticketNo);
             ps.executeUpdate();
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not save kiosk details for " + ticketNo, ex);
         }
+}    
+
+/** Creates the accounts table if it doesn't exist */
+    public static synchronized void initializeAccountsTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS bank_accounts ("
+                + "account_number TEXT PRIMARY KEY,"
+                + "account_name TEXT NOT NULL,"
+                + "account_type TEXT NOT NULL,"
+                + "balance REAL NOT NULL DEFAULT 0.0,"
+                + "id_document_path TEXT,"
+                + "created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))"
+                + ")";
+        Connection conn = getConnection();
+        if (conn == null) return;
+        try (Statement st = conn.createStatement()) {
+            st.execute(sql);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not create bank_accounts table", ex);
+        }
     }
+
+
+    public static boolean doesAccountExist(String accountName) {
+        initializeAccountsTable();
+        String sql = "SELECT COUNT(*) FROM bank_accounts WHERE LOWER(account_name) = LOWER(?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, accountName.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error checking account existence", ex);
+            return false;
+        }
+    }
+
+    /** Inserts a new bank account with an initial balance and uploaded ID file path */
+   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
+        String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
+        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status) "
+                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE')";
+
+        Connection conn = getConnection();
+        if (conn == null) return false;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, ticketNo);
+            ps.setString(2, accountType);
+            ps.setString(3, name);
+            ps.setDouble(4, balance);
+            ps.setString(5, accountNo);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error saving bank account record", ex);
+            return false;
+        }
+    }
+   
+    public static synchronized double getAccountBalance(String accountNo, String name) {
+     String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND LOWER(customer_name) = LOWER(?) AND status = 'DONE' LIMIT 1";
+     Connection conn = getConnection();
+     if (conn == null) return -1.0;
+
+     try (PreparedStatement ps = conn.prepareStatement(sql)) {
+         ps.setString(1, accountNo);
+         ps.setString(2, name);
+         try (ResultSet rs = ps.executeQuery()) {
+             if (rs.next()) {
+                 return rs.getDouble("amount");
+             }
+         }
+     } catch (SQLException ex) {
+         logger.log(Level.SEVERE, "Error fetching account balance for " + accountNo, ex);
+     }
+     return -1.0;
+ }
+
+ /**
+  * Updates the balance of an existing bank account.
+  * 
+  * @param accountNo Account number stored in reference_no
+  * @param newBalance Updated balance to save in amount column
+  * @return true if row updated successfully
+  */
+ public static synchronized boolean updateAccountBalance(String accountNo, double newBalance) {
+     String sql = "UPDATE queue_tickets SET amount = ?, updated_at = datetime('now','localtime') WHERE reference_no = ? AND status = 'DONE'";
+     Connection conn = getConnection();
+     if (conn == null) return false;
+
+     try (PreparedStatement ps = conn.prepareStatement(sql)) {
+         ps.setDouble(1, newBalance);
+         ps.setString(2, accountNo);
+         return ps.executeUpdate() > 0;
+     } catch (SQLException ex) {
+         logger.log(Level.SEVERE, "Error updating balance for account " + accountNo, ex);
+         return false;
+     }
+ }
+
+    
+
+
 }

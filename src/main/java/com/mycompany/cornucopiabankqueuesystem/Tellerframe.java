@@ -4,7 +4,7 @@
  */
 package com.mycompany.cornucopiabankqueuesystem;
 
-import static java.lang.classfile.Attributes.code;
+
 
 
 /**
@@ -18,6 +18,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.Timer refreshTimer;
     private java.util.List<QueueDatabase.Ticket> pastDoneTickets = new java.util.ArrayList<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Tellerframe.class.getName());
+    private String uploadedIdFilePath = null;
     
 
 
@@ -57,32 +58,58 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton6.setText("CALL NEXT");
         jButton9.setText("HOLD");
         jButton7.setText("CANCEL");
+
         setFieldsEditable(false);
 
-      jButton1.addActionListener(evt -> showPanel(With));
-jButton2.addActionListener(evt -> showPanel(ACC));
-jButton3.addActionListener(evt -> showPanel(Xchange));
-jButton4.addActionListener(evt -> showPanel(Deposit));
-jButton5.addActionListener(evt -> showPanel(FUNDS));
-jButton12.addActionListener(evt -> showPanel(BILLS));
+        jButton1.addActionListener(evt -> showPanel(With));
+        jButton2.addActionListener(evt -> showPanel(ACC));
+        jButton3.addActionListener(evt -> showPanel(Xchange));
+        jButton4.addActionListener(evt -> showPanel(Deposit));
+        jButton5.addActionListener(evt -> showPanel(FUNDS));
+        jButton12.addActionListener(evt -> showPanel(BILLS));
+
         jButton6.addActionListener(evt -> callNextCustomer());
         jButton9.addActionListener(evt -> holdActiveTicket());
         jButton7.addActionListener(evt -> cancelActiveTicket());
         jButton11.addActionListener(evt -> recallHeldTicket());
-        jButton8.addActionListener(evt -> toggleEditMode());
-        jButton10.addActionListener(evt -> confirmAndPrintTransaction());
+
+        jButton8.addActionListener(evt -> toggleEditMode());  
+        jButton17.addActionListener(evt -> toggleEditMode()); 
+        jButton19.addActionListener(evt -> toggleEditMode()); 
+        jButton21.addActionListener(evt -> toggleEditMode()); 
+        jButton16.addActionListener(evt -> toggleEditMode()); 
+        jButton23.addActionListener(evt -> toggleEditMode()); 
+
+        jButton10.addActionListener(evt -> confirmAndPrintTransaction()); 
+        jButton18.addActionListener(evt -> confirmAndPrintTransaction()); 
+        jButton20.addActionListener(evt -> confirmAndPrintTransaction());
+        jButton22.addActionListener(evt -> confirmAndPrintTransaction()); 
+        jButton15.addActionListener(evt -> confirmAndPrintTransaction()); 
+        jButton24.addActionListener(evt -> confirmAndPrintTransaction()); 
+        
+        jButton13.addActionListener(evt -> handleUploadID());
 
         customer.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
         });
-        
-        	currencyt1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+
+        currencyt1.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
             public void changedUpdate(javax.swing.event.DocumentEvent e) { updatePayoutCalculation(); }
         });
+        
+        javax.swing.event.DocumentListener depositListener = new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateDeposit(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateDeposit(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateDeposit(); }
+        };
+
+        jTextField6.getDocument().addDocumentListener(depositListener); 
+        jTextField5.getDocument().addDocumentListener(depositListener);  
+        jTextField26.getDocument().addDocumentListener(depositListener); 
     }
     
     private void toggleEditMode() {
@@ -90,22 +117,52 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             ValidationUtils.showError(this, "No active transaction to edit.");
             return;
         }
+
         isEditMode = !isEditMode;
+
         setFieldsEditable(isEditMode);
-        jButton8.setText(isEditMode ? "SAVE EDIT" : "EDIT");
+
+        String label = isEditMode ? "SAVE EDIT" : "EDIT";
+        jButton8.setText(label);  
+        jButton17.setText(label); 
+        jButton19.setText(label); 
+        jButton21.setText(label); 
+        jButton16.setText(label); 
+        jButton23.setText(label); 
+
+        if (isEditMode) {
+            ValidationUtils.showSuccess(this, "Fields unlocked! You can now edit the transaction details.");
+        } else {
+            ValidationUtils.showSuccess(this, "Edits saved! Fields are locked again.");
+        }
     }
-    
-    private void setFieldsEditable(boolean editable) {
-        customer.setEditable(editable);
-        currencyt1.setEditable(editable);
-        customer.setEditable(editable);
+     private void handleUploadID() {
+        javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
+        fileChooser.setDialogTitle("Select Customer Valid ID Image / Document");
+
+        javax.swing.filechooser.FileNameExtensionFilter filter = 
+                new javax.swing.filechooser.FileNameExtensionFilter(
+                    "ID Documents (*.jpg, *.png, *.pdf)", 
+                    "jpg", "jpeg", "png", "pdf"
+                );
+        fileChooser.setFileFilter(filter);
+
+        int result = fileChooser.showOpenDialog(this);
+
+        if (result == javax.swing.JFileChooser.APPROVE_OPTION) {
+            java.io.File selectedFile = fileChooser.getSelectedFile();
+
+            uploadedIdFilePath = selectedFile.getAbsolutePath();
+
+            Customer.setText("ID Uploaded: " + selectedFile.getName());
+
+            ValidationUtils.showSuccess(this, "ID Document attached successfully:\n" + selectedFile.getName());
+        }
     }
-    
    
 
     
 
-    /** Queries SQLite DB to update Active Ticket, Next in Queue, and Held Ticket labels */
     private void refreshAllData() {
         activeTicket = QueueDatabase.getActiveTicket(counterName);
         fetchPastDoneTickets();
@@ -114,8 +171,6 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             jLabel10.setText(activeTicket.ticketNo);
             jLabel11.setText(activeTicket.customerName != null && !activeTicket.customerName.isEmpty() ? activeTicket.customerName : "N/A");
             jLabel12.setText(activeTicket.transactionType != null ? activeTicket.transactionType : activeTicket.category);
-            Xchange.setVisible(true);
-            jLabel17.setText("FOREIGN EXCHANGE");
         } else {
             jLabel10.setText("---");
             jLabel11.setText("No Active Ticket");
@@ -148,6 +203,89 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
 
         jButton11.setEnabled(activeTicket == null && !pastDoneTickets.isEmpty());
     }
+    
+    private void autoSwitchAndFillPanel(QueueDatabase.Ticket ticket) {
+    if (ticket == null) return;
+
+    String cat = ticket.category != null ? ticket.category.trim().toLowerCase() : "";
+    String ticketNo = ticket.ticketNo != null ? ticket.ticketNo.toUpperCase() : "";
+    
+    if (cat.contains("deposit") || ticketNo.startsWith("DP")) {
+        showPanel(Deposit);
+
+        if (jTextField5 != null) {
+            jTextField5.setText(ticket.customerName != null ? ticket.customerName : "");
+        }
+
+        if (jTextField6 != null) {
+            jTextField6.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+        }
+
+        if (jTextField26 != null) {
+            jTextField26.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+        }
+
+        validateAndCalculateDeposit();
+    }
+    
+    if (cat.contains("account") || cat.contains("opening") || cat.contains("creation") || ticketNo.startsWith("AC")) {
+        showPanel(ACC);
+        if (customername != null) {
+            customername.setText(ticket.customerName != null ? ticket.customerName : "");
+        }
+        if (currencyacc != null) {
+            currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "100" + (10000000 + (int)(Math.random() * 90000000)));
+        }
+    }
+
+    if (cat.contains("account") || cat.contains("opening") || cat.contains("creation") || ticketNo.startsWith("AC")) {
+        showPanel(ACC);
+        customername.setText(ticket.customerName != null ? ticket.customerName : "");
+        currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "Savings Account");
+    } 
+    else if (cat.contains("exchange") || cat.contains("forex") || ticketNo.startsWith("FX")) {
+        showPanel(Xchange);
+        customer1.setText(ticket.customerName != null ? ticket.customerName : "");
+        currencyt1.setText(ticket.referenceNo != null ? ticket.referenceNo : "USD");
+        customer.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+        updatePayoutCalculation();
+    } 
+    else if (cat.contains("withdraw") || ticketNo.startsWith("WD")) {
+        showPanel(With);
+        accname.setText(ticket.customerName != null ? ticket.customerName : "");
+        accnum.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+        withdrawamount.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+    } 
+    else if (cat.contains("deposit") || ticketNo.startsWith("DP")) {
+        showPanel(Deposit);
+
+        if (jTextField5 != null) {
+            jTextField5.setText(ticket.customerName != null ? ticket.customerName : "");
+        }
+
+        if (jTextField6 != null) {
+            jTextField6.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+        }
+
+        if (jTextField26 != null) {
+            jTextField26.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+        }
+
+        validateAndCalculateDeposit();
+    }
+    else if (cat.contains("transfer") || ticketNo.startsWith("TR")) {
+        showPanel(FUNDS);
+        recieptname.setText(ticket.customerName != null ? ticket.customerName : "");
+        destinationaccbank.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+        transferamountphp.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+    } 
+    else if (cat.contains("bill") || ticketNo.startsWith("BP")) {
+        showPanel(BILLS);
+        accholder.setText(ticket.customerName != null ? ticket.customerName : "");
+        referenceno.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+        DepositamountT.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+    }
+}
     
     private void updatePayoutCalculation() {
         String currencyCode = currencyt1.getText().trim().toUpperCase();
@@ -210,15 +348,58 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             return;
         }
 
-        customer.setText("");
-        currencyt1.setText("");
-        customer.setText("");
-        jLabel36.setText("₱ 0.00");
+        activeTicket = next;
 
-
+        autoSwitchAndFillPanel(activeTicket);
 
         refreshAllData();
     }   
+    
+   private void autofillActivePanel(QueueDatabase.Ticket ticket) {
+        if (ticket == null) return;
+
+        String category = ticket.category != null ? ticket.category.toLowerCase() : "";
+
+        if (category.contains("account") || category.contains("opening") || category.contains("creation") || category.contains("ac")) {
+            showPanel(ACC);
+            customername.setText(ticket.customerName != null ? ticket.customerName : "");
+            currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "Savings Account");
+        }
+        else if (category.contains("exchange") || category.contains("forex") || category.contains("fx")) {
+            showPanel(Xchange);
+            customer1.setText(ticket.customerName != null ? ticket.customerName : "");
+            currencyt1.setText(ticket.referenceNo != null ? ticket.referenceNo : "USD");
+            customer.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+            updatePayoutCalculation();
+        } 
+        else if (category.contains("withdraw") || category.contains("wd")) {
+            showPanel(With);
+            accname.setText(ticket.customerName != null ? ticket.customerName : "");
+            accnum.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+            withdrawamount.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+            jTextField30.setText(ticket.amount != null ? "₱ " + String.format("%,.2f", ticket.amount) : "₱ 0.00");
+        } 
+        else if (category.contains("deposit") || category.contains("dp")) {
+            showPanel(Deposit);
+            jTextField5.setText(ticket.customerName != null ? ticket.customerName : "");
+            jTextField6.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+            jTextField26.setText(ticket.amount != null ? "₱ " + String.format("%,.2f", ticket.amount) : "₱ 0.00");
+        } 
+        else if (category.contains("transfer") || category.contains("tr")) {
+            showPanel(FUNDS);
+            recieptname.setText(ticket.customerName != null ? ticket.customerName : "");
+            destinationaccbank.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+            transferamountphp.setText(ticket.amount != null ? "₱ " + String.format("%,.2f", ticket.amount) : "₱ 0.00");
+            totalphpdeducted.setText(ticket.amount != null ? "₱ " + String.format("%,.2f", ticket.amount) : "₱ 0.00");
+        } 
+        else if (category.contains("bill") || category.contains("bp")) {
+            showPanel(BILLS);
+            accholder.setText(ticket.customerName != null ? ticket.customerName : "");
+            referenceno.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
+            DepositamountT.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+        }
+        
+    }
 
     private void holdActiveTicket() {
         if (activeTicket == null) {
@@ -226,11 +407,23 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             return;
         }
 
-        autofillFields();
+        String ticketNo = activeTicket.ticketNo;
 
-        if (QueueDatabase.holdTicket(activeTicket.ticketNo)) {
-            ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " placed on HOLD and autofilled.");
+        if (QueueDatabase.holdTicket(ticketNo)) {
+            QueueDatabase.Ticket freshTicket = QueueDatabase.getTicketByNumber(ticketNo);
+
+            if (freshTicket != null) {
+                autoSwitchAndFillPanel(freshTicket);
+            }
+
+            isEditMode = false;
+            setFieldsEditable(false);
+            resetEditButtonLabels();
+
+            ValidationUtils.showSuccess(this, "Ticket " + ticketNo + " placed on HOLD and data transferred (Locked).");
             refreshAllData();
+        } else {
+            ValidationUtils.showError(this, "Failed to place ticket on HOLD.");
         }
     }
    private void cancelActiveTicket() {
@@ -260,31 +453,58 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             logger.log(java.util.logging.Level.SEVERE, "Cancel error", ex);
         }
     }
+   
+   private void clearAllFields() {
+        customer.setText("");
+        currencyt1.setText("");
+        customer1.setText("");
+        accname.setText("");
+        accnum.setText("");
+        withdrawamount.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jTextField26.setText("");
+        jTextField24.setText("");
+        recieptname.setText("");
+        destinationaccbank.setText("");
+        transferamountphp.setText("");
+        totalphpdeducted.setText("");
+        accholder.setText("");
+        referenceno.setText("");
+        DepositamountT.setText("");
+        customername.setText("");
+        currencyacc.setText("");
+        jLabel36.setText("₱ 0.00");
+    }
 
    private void recallHeldTicket() {
         if (activeTicket != null) {
             ValidationUtils.showError(this, "Finish or clear current ticket before recalling history!");
             return;
         }
-        if (pastDoneTickets.isEmpty()) return;
+        if (pastDoneTickets.isEmpty()) {
+            ValidationUtils.showError(this, "No tickets available to recall.");
+            return;
+        }
 
         QueueDatabase.Ticket ticketToRecall = pastDoneTickets.get(0);
 
         String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, updated_at = datetime('now','localtime') "
                    + "WHERE ticket_no = ?";
+
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
             ps.setString(1, counterName);
             ps.setString(2, ticketToRecall.ticketNo);
+
             if (ps.executeUpdate() > 0) {
                 ValidationUtils.showSuccess(this, "Ticket " + ticketToRecall.ticketNo + " recalled as Active Ticket!");
 
                 activeTicket = QueueDatabase.getActiveTicket(counterName);
+                autoSwitchAndFillPanel(activeTicket);
 
-                autofillFields();
-
-                isEditMode = true;
-                setFieldsEditable(true);
-                jButton8.setText("SAVE EDIT");
+                isEditMode = false;
+                setFieldsEditable(false);
+                resetEditButtonLabels();
 
                 refreshAllData();
             }
@@ -292,36 +512,157 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             logger.log(java.util.logging.Level.SEVERE, "Recall history error", ex);
         }
     }
+   
+ 
+    private void setFieldsEditable(boolean editable) {
+        customer.setEditable(editable);
+        currencyt1.setEditable(editable);
+        customer1.setEditable(editable);
 
-    private void confirmAndPrintTransaction() {
+        accname.setEditable(editable);
+        accnum.setEditable(editable);
+        withdrawamount.setEditable(editable);
+
+        jTextField5.setEditable(editable);
+        jTextField6.setEditable(editable);
+
+        recieptname.setEditable(editable);
+        destinationaccbank.setEditable(editable);
+
+        accholder.setEditable(editable);
+        referenceno.setEditable(editable);
+        DepositamountT.setEditable(editable);
+
+        customername.setEditable(editable);
+        currencyacc.setEditable(editable);
+    }
+
+    /** Resets edit button text across all panels */
+    private void resetEditButtonLabels() {
+        String label = isEditMode ? "SAVE EDIT" : "EDIT";
+        jButton8.setText(label);
+        jButton17.setText(label);
+        jButton19.setText(label);
+        jButton21.setText(label);
+        jButton16.setText(label);
+        jButton23.setText(label);
+    }
+
+   private void confirmAndPrintTransaction() {
         if (activeTicket == null) {
             ValidationUtils.showError(this, "No active transaction to confirm.");
             return;
         }
 
-        Double amount = ValidationUtils.parseAmount(customer.getText().trim());
-        if (amount == null || amount <= 0) {
-            ValidationUtils.showError(this, "Please enter a valid amount greater than zero.");
-            return;
+        String category = activeTicket.category != null ? activeTicket.category.trim().toLowerCase() : "";
+
+        if (category.contains("account") || category.contains("opening") || category.contains("creation") || activeTicket.ticketNo.startsWith("AC")) {
+            String name = customername.getText().trim();
+            String accType = "Savings Account";
+
+            if (name.isEmpty()) {
+                ValidationUtils.showError(this, "Customer name cannot be empty.");
+                return;
+            }
+
+            if (QueueDatabase.doesAccountExist(name)) {
+                ValidationUtils.showError(this, "An account with the name '" + name + "' already exists in the system!");
+                return;
+            }
+
+            String newAccountNumber = "100" + (10000000 + (int)(Math.random() * 90000000));
+            double initialBalance = 1000.00; 
+
+            currencyacc.setText(newAccountNumber);
+
+            boolean created = QueueDatabase.createBankAccount(newAccountNumber, name, accType, initialBalance, uploadedIdFilePath);
+
+            if (!created) {
+                ValidationUtils.showError(this, "Failed to save bank account to database.");
+                return;
+            }
+
+            ValidationUtils.showSuccess(this, "Account Successfully Created!\n"
+                    + "Account No: " + newAccountNumber + "\n"
+                    + "Account Holder: " + name + "\n"
+                    + "Account Type: " + accType + "\n"
+                    + "Opening Balance: PHP " + String.format("%,.2f", initialBalance) + "\n"
+                    + "ID Document Attached: " + (uploadedIdFilePath != null ? "Yes" : "No"));
         }
 
-        String refNo = "FX-REF-" + System.currentTimeMillis();
-        String sql = "UPDATE queue_tickets SET status = 'DONE', transaction_type = 'Foreign Exchange', "
-                   + "valid_id_submitted = 1, amount = ?, reference_no = ?, updated_at = datetime('now','localtime') "
-                   + "WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
+        else if (category.contains("deposit") || activeTicket.ticketNo.startsWith("DP")) {
+            String accountNo = jTextField6.getText().trim();
+            String accountName = jTextField5.getText().trim();
+            String depositAmountStr = jTextField26.getText().trim().replaceAll("[^0-9.]", "");
+
+            if (accountNo.isEmpty() || accountName.isEmpty()) {
+                ValidationUtils.showError(this, "Account Number and Holder Name are required.");
+                return;
+            }
+
+            if (depositAmountStr.isEmpty()) {
+                ValidationUtils.showError(this, "Please enter a valid deposit amount.");
+                return;
+            }
+
+            double depositAmount;
+            try {
+                depositAmount = Double.parseDouble(depositAmountStr);
+            } catch (NumberFormatException e) {
+                ValidationUtils.showError(this, "Invalid deposit amount format.");
+                return;
+            }
+
+            if (depositAmount <= 0) {
+                ValidationUtils.showError(this, "Deposit amount must be greater than PHP 0.00.");
+                return;
+            }
+
+            double currentBalance = QueueDatabase.getAccountBalance(accountNo, accountName);
+            if (currentBalance < 0) {
+                ValidationUtils.showError(this, "Deposit Failed: Account Number and Holder Name do not match our system records.");
+                return;
+            }
+
+            double newBalance = currentBalance + depositAmount;
+            boolean success = QueueDatabase.updateAccountBalance(accountNo, newBalance);
+
+            if (!success) {
+                ValidationUtils.showError(this, "Failed to update account balance in database.");
+                return;
+            }
+
+            ValidationUtils.showSuccess(this, "Deposit Successfully Processed!\n"
+                    + "Account No: " + accountNo + "\n"
+                    + "Account Holder: " + accountName + "\n"
+                    + "Amount Deposited: PHP " + String.format("%,.2f", depositAmount) + "\n"
+                    + "New Balance: PHP " + String.format("%,.2f", newBalance));
+        }
+
+        String refNo = activeTicket.category.substring(0, Math.min(2, activeTicket.category.length())).toUpperCase() 
+                     + "-REF-" + System.currentTimeMillis();
+
+        String sql = "UPDATE queue_tickets SET status = 'DONE', valid_id_submitted = 1, reference_no = ?, "
+                   + "updated_at = datetime('now','localtime') WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
 
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
-            ps.setDouble(1, amount);
-            ps.setString(2, refNo);
-            ps.setString(3, activeTicket.ticketNo);
+            ps.setString(1, refNo);
+            ps.setString(2, activeTicket.ticketNo);
 
             if (ps.executeUpdate() > 0) {
                 ValidationUtils.showSuccess(this, "Transaction Confirmed & Saved!\nReference No: " + refNo);
+
                 activeTicket = null;
-                customer.setText("");
-                currencyt1.setText("");
-                customer.setText("");
-                jLabel36.setText("₱ 0.00");
+
+                isEditMode = false;
+                setFieldsEditable(false);
+                resetEditButtonLabels();
+
+                uploadedIdFilePath = null;
+                if (Customer != null) {
+                    Customer.setText("Valid ID Document");
+                }
+                clearAllFields();
 
                 refreshAllData();
             }
@@ -425,11 +766,6 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         jLabel35 = new javax.swing.JLabel();
         jLabel36 = new javax.swing.JLabel();
         ACC = new javax.swing.JPanel();
-        jPanel30 = new javax.swing.JPanel();
-        jLabel90 = new javax.swing.JLabel();
-        jLabel92 = new javax.swing.JLabel();
-        totalspayment = new javax.swing.JTextField();
-        totalspayment1 = new javax.swing.JTextField();
         jPanel36 = new javax.swing.JPanel();
         jLabel68 = new javax.swing.JLabel();
         jLabel67 = new javax.swing.JLabel();
@@ -904,9 +1240,9 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         jPanel33Layout.setVerticalGroup(
             jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel33Layout.createSequentialGroup()
-                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel105)
-                    .addComponent(jLabel104, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel104, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel105))
                 .addGap(12, 12, 12)
                 .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(Billcategory, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1280,49 +1616,6 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         ACC.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
         ACC.setOpaque(false);
 
-        jPanel30.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
-        jPanel30.setOpaque(false);
-
-        jLabel90.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel90.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel90.setText("Profile Status ");
-
-        jLabel92.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel92.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel92.setText("Total PHP payout");
-
-        javax.swing.GroupLayout jPanel30Layout = new javax.swing.GroupLayout(jPanel30);
-        jPanel30.setLayout(jPanel30Layout);
-        jPanel30Layout.setHorizontalGroup(
-            jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel30Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel30Layout.createSequentialGroup()
-                        .addComponent(jLabel90)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel92)
-                        .addGap(12, 12, 12))
-                    .addGroup(jPanel30Layout.createSequentialGroup()
-                        .addComponent(totalspayment, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(totalspayment1, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())))
-        );
-        jPanel30Layout.setVerticalGroup(
-            jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel30Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel90)
-                    .addComponent(jLabel92))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(totalspayment1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(totalspayment, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
         jPanel36.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
         jPanel36.setOpaque(false);
 
@@ -1399,9 +1692,9 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
                     .addComponent(jLabel71)
                     .addComponent(Customer1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(customername, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(currencyacc, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(currencyacc, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(customername, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel72)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1473,12 +1766,13 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             jPanel39Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel39Layout.createSequentialGroup()
                 .addGap(58, 58, 58)
-                .addGroup(jPanel39Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel39Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel39Layout.createSequentialGroup()
                         .addGap(13, 13, 13)
-                        .addComponent(jLabel93)))
+                        .addComponent(jLabel93))
+                    .addGroup(jPanel39Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton18, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton17, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(95, Short.MAX_VALUE))
         );
 
@@ -1490,7 +1784,6 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
             .addGroup(ACCLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ACCLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel30, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel37, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel38, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -1502,11 +1795,9 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
                 .addComponent(jPanel36, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                 .addComponent(jPanel38, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(117, 117, 117)
                 .addComponent(jPanel39, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
         );
@@ -1847,6 +2138,8 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         jLabel95.setForeground(new java.awt.Color(0, 51, 102));
         jLabel95.setText("Account Number");
 
+        jTextField6.addActionListener(this::jTextField6ActionPerformed);
+
         jLabel91.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel91.setForeground(new java.awt.Color(0, 51, 102));
         jLabel91.setText("Account Name Holder ");
@@ -2136,18 +2429,13 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         With.setLayout(WithLayout);
         WithLayout.setHorizontalGroup(
             WithLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(WithLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel31, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
             .addComponent(jPanel47, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(WithLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel48, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(WithLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(WithLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel31, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel48, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         WithLayout.setVerticalGroup(
@@ -2318,7 +2606,9 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton13ActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:\
+        
+        
     }//GEN-LAST:event_jButton13ActionPerformed
 
     private void customerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_customerActionPerformed
@@ -2345,6 +2635,10 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         // TODO add your handling code here:
     }//GEN-LAST:event_recieptnameActionPerformed
 
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -2364,24 +2658,57 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
 
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Tellerframe().setVisible(true));
     }
     
-    private void showPanel(javax.swing.JPanel panelToShow) {
-    // Hide all right-side panels
-    Xchange.setVisible(false);
-    Deposit.setVisible(false);
-    ACC.setVisible(false);
-    FUNDS.setVisible(false);
-    With.setVisible(false);
-    BILLS.setVisible(false);
+    
+   private void showPanel(javax.swing.JPanel panel) {
+    if (jPanel7.getLayout() instanceof java.awt.CardLayout) {
+        java.awt.CardLayout cl = (java.awt.CardLayout) jPanel7.getLayout();
 
-    // Show only the selected panel
-    panelToShow.setVisible(true);
+        for (java.awt.Component comp : jPanel7.getComponents()) {
+            comp.setVisible(comp == panel);
+        }
+        
+        jPanel7.revalidate();
+        jPanel7.repaint();
+    }
 }
+   private void validateAndCalculateDeposit() {
+        String accountNo = jTextField6.getText().trim();
+        String accountName = jTextField5.getText().trim();
+        String depositAmountStr = jTextField26.getText().trim().replaceAll("[^0-9.]", "");
+
+        if (accountNo.isEmpty() || accountName.isEmpty()) {
+            jTextField24.setText("PHP 0.00");
+            return;
+        }
+
+        double currentBalance = QueueDatabase.getAccountBalance(accountNo, accountName);
+
+        if (currentBalance < 0) {
+            ValidationUtils.showError(this, "Account Verification Failed!\nNo matching active account found for Number: " 
+                    + accountNo + " and Holder: " + accountName);
+            jTextField24.setText("Invalid Account");
+            return;
+        }
+
+        double depositAmount = 0.0;
+        if (!depositAmountStr.isEmpty()) {
+            try {
+                depositAmount = Double.parseDouble(depositAmountStr);
+            } catch (NumberFormatException e) {
+                depositAmount = 0.0;
+            }
+        }
+
+        double estimatedBalance = currentBalance + depositAmount;
+
+        jTextField24.setText("PHP " + String.format("%,.2f", estimatedBalance));
+    }
+    
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ACC;
@@ -2498,9 +2825,7 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
     private javax.swing.JLabel jLabel88;
     private javax.swing.JLabel jLabel89;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JLabel jLabel90;
     private javax.swing.JLabel jLabel91;
-    private javax.swing.JLabel jLabel92;
     private javax.swing.JLabel jLabel93;
     private javax.swing.JLabel jLabel94;
     private javax.swing.JLabel jLabel95;
@@ -2516,7 +2841,6 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
     private javax.swing.JPanel jPanel28;
     private javax.swing.JPanel jPanel29;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel30;
     private javax.swing.JPanel jPanel31;
     private javax.swing.JPanel jPanel32;
     private javax.swing.JPanel jPanel33;
@@ -2554,8 +2878,6 @@ jButton12.addActionListener(evt -> showPanel(BILLS));
     private javax.swing.JTextField referenceno;
     private javax.swing.JTextField sourceacc;
     private javax.swing.JTextField totalphpdeducted;
-    private javax.swing.JTextField totalspayment;
-    private javax.swing.JTextField totalspayment1;
     private javax.swing.JTextField transferamountphp;
     private javax.swing.JTextField withdrawamount;
     // End of variables declaration//GEN-END:variables
