@@ -62,8 +62,8 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(253, 220, 92));
         jLabel1.setText("Withdrawal Kiosk");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 0));
         jLabel2.setText("Centria Unified");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -76,7 +76,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
                         .addGap(330, 330, 330)
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(340, 340, 340)
+                        .addGap(364, 364, 364)
                         .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

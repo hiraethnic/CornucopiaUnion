@@ -57,10 +57,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(212, 175, 55));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
         jLabel1.setText("Centria Unified");
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("New Account Application Form");
 
@@ -74,7 +74,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         .addGap(388, 388, 388)
                         .addComponent(jLabel1))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(361, 361, 361)
+                        .addGap(353, 353, 353)
                         .addComponent(jLabel2)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );

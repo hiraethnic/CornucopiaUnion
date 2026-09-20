@@ -59,7 +59,7 @@ public class KioskFrame extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(12, 35, 64));
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(253, 220, 92));
+        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
         jLabel1.setText("Centria Unified");
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
@@ -175,7 +175,7 @@ public class KioskFrame extends javax.swing.JFrame {
                     .addComponent(depositbtn, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(144, 144, 144)
+                .addGap(149, 149, 149)
                 .addComponent(jLabel4)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
