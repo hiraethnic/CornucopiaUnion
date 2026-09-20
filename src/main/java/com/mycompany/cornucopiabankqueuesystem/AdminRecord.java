@@ -189,6 +189,7 @@ public class AdminRecord extends javax.swing.JFrame {
 
         ACCOUNTPANEL.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 940, 50));
 
+        AccountList.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         AccountList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
