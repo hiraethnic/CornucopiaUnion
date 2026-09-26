@@ -110,6 +110,16 @@ public class Tellerframe extends javax.swing.JFrame {
         jTextField6.getDocument().addDocumentListener(depositListener); 
         jTextField5.getDocument().addDocumentListener(depositListener);  
         jTextField26.getDocument().addDocumentListener(depositListener); 
+        
+        javax.swing.event.DocumentListener withdrawListener = new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateWithdrawal(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateWithdrawal(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateWithdrawal(); }
+        };
+
+        accnum.getDocument().addDocumentListener(withdrawListener);
+        accname.getDocument().addDocumentListener(withdrawListener);
+        withdrawamount.getDocument().addDocumentListener(withdrawListener);
     }
     
     private void toggleEditMode() {
@@ -237,6 +247,29 @@ public class Tellerframe extends javax.swing.JFrame {
             currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "100" + (10000000 + (int)(Math.random() * 90000000)));
         }
     }
+    
+        else if (cat.contains("transfer") || ticketNo.startsWith("TR")) {
+    showPanel(FUNDS);
+    
+    recieptname.setText(ticket.customerName != null ? ticket.customerName : "");
+    
+    
+    
+    String ref = ticket.referenceNo != null ? ticket.referenceNo : "";
+    if (ref.contains(",")) {
+        String[] parts = ref.split(",");
+        sourceacc.setText(parts[0].trim());          // Source account field
+        destinationaccbank.setText(parts[1].trim()); // Destination account field ONLY
+    } else {
+        destinationaccbank.setText(ref);
+        sourceacc.setText("");
+    }
+    
+    String amt = ticket.amount != null ? String.format("₱ %,.2f", ticket.amount) : "₱ 0.00";
+    transferamountphp.setText(amt);
+    totalphpdeducted.setText(amt);
+}
+
 
     if (cat.contains("account") || cat.contains("opening") || cat.contains("creation") || ticketNo.startsWith("AC")) {
         showPanel(ACC);
@@ -276,7 +309,6 @@ public class Tellerframe extends javax.swing.JFrame {
     else if (cat.contains("transfer") || ticketNo.startsWith("TR")) {
         showPanel(FUNDS);
         recieptname.setText(ticket.customerName != null ? ticket.customerName : "");
-        destinationaccbank.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
         transferamountphp.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
     } 
     else if (cat.contains("bill") || ticketNo.startsWith("BP")) {
@@ -377,7 +409,7 @@ public class Tellerframe extends javax.swing.JFrame {
             accname.setText(ticket.customerName != null ? ticket.customerName : "");
             accnum.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
             withdrawamount.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
-            jTextField30.setText(ticket.amount != null ? "₱ " + String.format("%,.2f", ticket.amount) : "₱ 0.00");
+          
         } 
         else if (category.contains("deposit") || category.contains("dp")) {
             showPanel(Deposit);
@@ -548,7 +580,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton23.setText(label);
     }
 
-   private void confirmAndPrintTransaction() {
+  private void confirmAndPrintTransaction() {
         if (activeTicket == null) {
             ValidationUtils.showError(this, "No active transaction to confirm.");
             return;
@@ -556,6 +588,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         String category = activeTicket.category != null ? activeTicket.category.trim().toLowerCase() : "";
 
+        // --- ACCOUNT CREATION ---
         if (category.contains("account") || category.contains("opening") || category.contains("creation") || activeTicket.ticketNo.startsWith("AC")) {
             String name = customername.getText().trim();
             String accType = "Savings Account";
@@ -590,6 +623,7 @@ public class Tellerframe extends javax.swing.JFrame {
                     + "ID Document Attached: " + (uploadedIdFilePath != null ? "Yes" : "No"));
         }
 
+        // --- DEPOSIT ---
         else if (category.contains("deposit") || activeTicket.ticketNo.startsWith("DP")) {
             String accountNo = jTextField6.getText().trim();
             String accountName = jTextField5.getText().trim();
@@ -639,6 +673,72 @@ public class Tellerframe extends javax.swing.JFrame {
                     + "New Balance: PHP " + String.format("%,.2f", newBalance));
         }
 
+        // --- WITHDRAWAL ---
+        else if (category.contains("withdraw") || activeTicket.ticketNo.startsWith("WD")) {
+            String accountNo = accnum.getText().trim();
+            String accountName = accname.getText().trim();
+            String withdrawAmountStr = withdrawamount.getText().trim().replaceAll("[^0-9.]", "");
+
+            if (accountNo.isEmpty() || accountName.isEmpty()) {
+                ValidationUtils.showError(this, "Account Number and Holder Name are required.");
+                return;
+            }
+
+            if (withdrawAmountStr.isEmpty()) {
+                ValidationUtils.showError(this, "Please enter a valid withdrawal amount.");
+                return;
+            }
+
+            double withdrawAmount;
+            try {
+                withdrawAmount = Double.parseDouble(withdrawAmountStr);
+            } catch (NumberFormatException e) {
+                ValidationUtils.showError(this, "Invalid withdrawal amount format.");
+                return;
+            }
+
+            if (withdrawAmount < 100) {
+                ValidationUtils.showError(this, "Minimum withdrawal amount is PHP 100.00.");
+                return;
+            }
+
+            if (withdrawAmount % 100 != 0) {
+                ValidationUtils.showError(this, "Withdrawal amount must be in multiples of PHP 100.");
+                return;
+            }
+
+            double currentBalance = QueueDatabase.getAccountBalance(accountNo, accountName);
+            if (currentBalance < 0) {
+                ValidationUtils.showError(this, "Withdrawal Failed: Account Number and Holder Name do not match our system records.");
+                return;
+            }
+
+            if (currentBalance < withdrawAmount) {
+                ValidationUtils.showError(this, "Insufficient Funds!\n"
+                        + "Available Balance: PHP " + String.format("%,.2f", currentBalance) + "\n"
+                        + "Requested Amount: PHP " + String.format("%,.2f", withdrawAmount));
+                return;
+            }
+
+            double newBalance = currentBalance - withdrawAmount;
+            boolean success = QueueDatabase.updateAccountBalance(accountNo, newBalance);
+
+            if (!success) {
+                ValidationUtils.showError(this, "Failed to update account balance in database.");
+                return;
+            }
+
+            // Update Remaining Balance Field on UI
+            jTextField29.setText("PHP " + String.format("%,.2f", newBalance));
+
+            ValidationUtils.showSuccess(this, "Withdrawal Successfully Processed!\n"
+                    + "Account No: " + accountNo + "\n"
+                    + "Account Holder: " + accountName + "\n"
+                    + "Amount Withdrawn: PHP " + String.format("%,.2f", withdrawAmount) + "\n"
+                    + "Remaining Balance: PHP " + String.format("%,.2f", newBalance));
+        }
+
+        // Mark ticket as DONE in DB
         String refNo = activeTicket.category.substring(0, Math.min(2, activeTicket.category.length())).toUpperCase() 
                      + "-REF-" + System.currentTimeMillis();
 
@@ -670,6 +770,43 @@ public class Tellerframe extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, "Confirm transaction DB error", ex);
         }
     }
+  
+  private void validateAndCalculateWithdrawal() {
+        String accountNo = accnum.getText().trim();
+        String accountName = accname.getText().trim();
+        String withdrawAmountStr = withdrawamount.getText().trim().replaceAll("[^0-9.]", "");
+
+        if (accountNo.isEmpty() || accountName.isEmpty()) {
+            jTextField29.setText("PHP 0.00");
+            return;
+        }
+
+        double currentBalance = QueueDatabase.getAccountBalance(accountNo, accountName);
+
+        if (currentBalance < 0) {
+            jTextField29.setText("Invalid Account");
+            return;
+        }
+
+        double withdrawAmount = 0.0;
+        if (!withdrawAmountStr.isEmpty()) {
+            try {
+                withdrawAmount = Double.parseDouble(withdrawAmountStr);
+            } catch (NumberFormatException e) {
+                withdrawAmount = 0.0;
+            }
+        }
+
+        double remainingBalance = currentBalance - withdrawAmount;
+
+        if (remainingBalance < 0) {
+            jTextField29.setText("Insufficient Funds");
+        } else {
+            jTextField29.setText("PHP " + String.format("%,.2f", remainingBalance));
+        }
+    }
+  
+  
 
     
 
@@ -829,10 +966,8 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton19 = new javax.swing.JButton();
         With = new javax.swing.JPanel();
         jPanel31 = new javax.swing.JPanel();
-        jLabel96 = new javax.swing.JLabel();
         jLabel97 = new javax.swing.JLabel();
         jTextField29 = new javax.swing.JTextField();
-        jTextField30 = new javax.swing.JTextField();
         jPanel47 = new javax.swing.JPanel();
         jLabel76 = new javax.swing.JLabel();
         jLabel77 = new javax.swing.JLabel();
@@ -1053,7 +1188,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 353, Short.MAX_VALUE)))
+                        .addGap(0, 355, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1076,6 +1211,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("CALL NEXT");
+        jButton6.addActionListener(this::jButton6ActionPerformed);
 
         jButton7.setBackground(new java.awt.Color(196, 67, 59));
         jButton7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -2279,28 +2415,18 @@ public class Tellerframe extends javax.swing.JFrame {
         jPanel31.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel31.setOpaque(false);
 
-        jLabel96.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel96.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel96.setText("Requested Amount");
-
         jLabel97.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel97.setForeground(new java.awt.Color(0, 0, 102));
         jLabel97.setText("Remaining Balance");
 
         jTextField29.setText("PHP:");
 
-        jTextField30.setText("PHP:");
-
         javax.swing.GroupLayout jPanel31Layout = new javax.swing.GroupLayout(jPanel31);
         jPanel31.setLayout(jPanel31Layout);
         jPanel31Layout.setHorizontalGroup(
             jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel31Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel96)
-                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 298, Short.MAX_VALUE)
+                .addContainerGap(456, Short.MAX_VALUE)
                 .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel97))
@@ -2310,13 +2436,9 @@ public class Tellerframe extends javax.swing.JFrame {
             jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel31Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel96)
-                    .addComponent(jLabel97))
+                .addComponent(jLabel97)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel31Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField30, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextField29, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(17, Short.MAX_VALUE))
         );
 
@@ -2567,7 +2689,7 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 493, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -2669,6 +2791,10 @@ public class Tellerframe extends javax.swing.JFrame {
     private void popupMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_popupMenu1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_popupMenu1ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -2860,7 +2986,6 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel93;
     private javax.swing.JLabel jLabel94;
     private javax.swing.JLabel jLabel95;
-    private javax.swing.JLabel jLabel96;
     private javax.swing.JLabel jLabel97;
     private javax.swing.JLabel jLabel99;
     private javax.swing.JPanel jPanel1;
@@ -2900,7 +3025,6 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField24;
     private javax.swing.JTextField jTextField26;
     private javax.swing.JTextField jTextField29;
-    private javax.swing.JTextField jTextField30;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private java.awt.List list1;

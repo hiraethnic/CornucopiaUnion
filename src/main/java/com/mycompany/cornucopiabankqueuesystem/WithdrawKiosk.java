@@ -291,7 +291,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+      
         String accountNumber = jTextField1.getText().trim();
         String amountText = jTextField2.getText().trim();
         String accountName = jTextField3.getText().trim();
@@ -336,6 +336,10 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         }
 
         String ticket = QueueDatabase.addTicket("WD", "Withdrawal", accountName, jCheckBox1.isSelected());
+        
+        // ADDED: Save the reference (account number) and amount to the database so the Teller frame can autofill it.
+        QueueDatabase.saveKioskData(ticket, accountNumber, amount);
+
         ValidationUtils.showSuccess(this,
                 "Withdrawal approved!\n"
                 + "Queue ticket: " + ticket + "\n"
@@ -344,6 +348,8 @@ public class WithdrawKiosk extends javax.swing.JFrame {
                 + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
 
         jButton2ActionPerformed(evt);
+    
+    
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

@@ -190,6 +190,10 @@ public class TransferFunds extends javax.swing.JFrame {
                 .addGap(33, 33, 33))
         );
 
+        jTextField2.addActionListener(this::jTextField2ActionPerformed);
+
+        jTextField3.addActionListener(this::jTextField3ActionPerformed);
+
         jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel15.setText("Source Account no");
 
@@ -303,78 +307,83 @@ public class TransferFunds extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-         String sourceAccount = jTextField2.getText().trim();
-        String destinationAccount = jTextField3.getText().trim();
-        String recipientName = jTextField4.getText().trim();
-        String amountText = jTextField1.getText().trim();
+         
+        // 1. Read all text fields
+        String accountNumber = jTextField2.getText().trim();       // Source Account
+        String destinationAccount = jTextField3.getText().trim();  // Destination Account
+        String accountName = jTextField4.getText().trim();         // Account Name
+        String amountText = jTextField1.getText().trim();          // Transfer Amo);  // Destination Account
 
-        if (!ValidationUtils.isValidAccountNumber(sourceAccount)) {
+        // 2. Validate Source Account
+        if (!ValidationUtils.isValidAccountNumber(accountNumber)) {
             ValidationUtils.showError(this,
                     "Please enter a valid source account number (6-20 digits only).");
-            jTextField2.requestFocusInWindow();
+            jTextField1.requestFocusInWindow();
             return;
         }
 
+        // 3. Validate Destination Account
         if (!ValidationUtils.isValidAccountNumber(destinationAccount)) {
             ValidationUtils.showError(this,
                     "Please enter a valid destination account number (6-20 digits only).");
-            jTextField3.requestFocusInWindow();
-            return;
-        }
-
-        if (sourceAccount.equals(destinationAccount)) {
-            ValidationUtils.showError(this,
-                    "Source and destination account numbers cannot be the same.");
-            jTextField3.requestFocusInWindow();
-            return;
-        }
-
-        if (!ValidationUtils.isValidName(recipientName)) {
-            ValidationUtils.showError(this,
-                    "Please enter a valid recipient name (letters only).");
             jTextField4.requestFocusInWindow();
             return;
         }
 
+        // 4. Ensure Source and Destination are not the same
+        if (accountNumber.equals(destinationAccount)) {
+            ValidationUtils.showError(this,
+                    "Source and destination accounts cannot be the same.");
+            jTextField4.requestFocusInWindow();
+            return;
+        }
+
+        // 5. Validate Amount
         if (!ValidationUtils.isValidWholeAmountFormat(amountText)) {
             ValidationUtils.showError(this,
                     "Please enter the transfer amount in whole pesos only (no centavos).");
-            jTextField1.requestFocusInWindow();
+            jTextField2.requestFocusInWindow();
             return;
         }
 
         long amount = Long.parseLong(amountText);
-        if (amount <= 0) {
-            ValidationUtils.showError(this, "Transfer amount must be greater than zero.");
-            jTextField1.requestFocusInWindow();
+        if (amount < 1) { 
+            ValidationUtils.showError(this, "Minimum transfer amount is PHP 1.");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+        if (amount > 500000) { 
+            ValidationUtils.showError(this, "Maximum digital transfer per transaction is PHP 500,000.");
+            jTextField2.requestFocusInWindow();
             return;
         }
 
-        if (amount % 100 != 0) {                                       
+        // 6. Validate Account Name
+        if (!ValidationUtils.isValidName(accountName)) {
             ValidationUtils.showError(this,
-                    "Transfer amount must be in multiples of PHP 100 (e.g. 1000, not 1001).");
-            jTextField1.requestFocusInWindow();
+                    "Please enter a valid account name (letters only).");
+            jTextField3.requestFocusInWindow();
             return;
         }
 
-        if (amount > 50000) {
-            ValidationUtils.showError(this, "Transfer amount exceeds the maximum daily limit of PHP 50,000.");
-            jTextField1.requestFocusInWindow();
-            return;
-        }
+        // 7. Generate the "TR" ticket for Transfer
+        String ticket = QueueDatabase.addTicket("TR", "Transfer Funds", accountName, jCheckBox1.isSelected());
+        
+        // 8. Save all data using the new 4-parameter method you added to QueueDatabase
+        QueueDatabase.saveKioskData(ticket, accountNumber, destinationAccount, amount);
+
+        // 9. Show Success Prompt
+        ValidationUtils.showSuccess(this,
+                "Transfer request submitted!\n"
+                + "Queue ticket: " + ticket + "\n"
+                + "Source: " + accountNumber + "\n"
+                + "Destination: " + destinationAccount + "\n"
+                + "Amount: PHP " + String.format("%,d", amount) + "\n"
+                + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
+
+        // 10. Call your reset or back button to clear the fields
+        jButton5ActionPerformed(evt); 
     
-
-    String ticket = QueueDatabase.addTicket("TR", "Fund Transfer", recipientName, jCheckBox1.isSelected());
-    ValidationUtils.showSuccess(this,
-            "Transfer accepted!\n"
-            + "Queue ticket: " + ticket + "\n"
-            + "Source account: " + sourceAccount + "\n"
-            + "Destination account: " + destinationAccount + "\n"
-            + "Recipient: " + recipientName + "\n"
-            + "Amount: PHP " + String.format("%,.2f", amount) + "\n"
-            + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
-
-    jButton5ActionPerformed(evt);
         
         
     }//GEN-LAST:event_jButton4ActionPerformed
@@ -395,6 +404,14 @@ public class TransferFunds extends javax.swing.JFrame {
         kioskF.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments

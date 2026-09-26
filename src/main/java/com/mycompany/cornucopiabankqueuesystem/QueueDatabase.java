@@ -496,6 +496,42 @@ public final class QueueDatabase {
          return false;
      }
  }
+ 
+ public static void saveKioskData(String ticket, String sourceAccount, String destinationAccount, long amount) {
+        String sql = "UPDATE queue_tickets SET reference_no = ?, amount = ? WHERE ticket_no = ?";
+
+        Connection conn = getConnection();
+        if (conn == null) return;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, sourceAccount + "," + destinationAccount);
+            pstmt.setDouble(2, amount);
+            pstmt.setString(3, ticket);
+            pstmt.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.out.println("Error saving transfer data: " + e.getMessage());
+        }
+    }
+
+    public static String getDestinationAccount(String ticket) {
+        String sql = "SELECT reference_no FROM queue_tickets WHERE ticket_no = ?";
+        Connection conn = getConnection();
+        if (conn == null) return "";
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, ticket);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String ref = rs.getString("reference_no");
+                    return ref != null ? ref : "";
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving destination account: " + e.getMessage());
+        }
+        return "";
+    }
 
     
 
