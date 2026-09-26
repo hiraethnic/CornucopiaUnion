@@ -302,6 +302,23 @@ public class WithdrawKiosk extends javax.swing.JFrame {
             jTextField1.requestFocusInWindow();
             return;
         }
+        
+        if (!ValidationUtils.isValidName(accountName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account name (letters only), exactly as registered.");
+            jTextField3.requestFocusInWindow();
+            return;
+        }
+        
+        double currentBalance = QueueDatabase.getAccountBalance(accountNumber, accountName);
+        if (currentBalance < 0) {
+            ValidationUtils.showError(this, "Withdrawal Failed: Account Number and Name do not match our system records.");
+            return;
+        }
+        if (currentBalance < Long.parseLong(amountText)) {
+            ValidationUtils.showError(this, "Withdrawal Failed: Insufficient funds in the account.");
+            return;
+        }
 
         if (!ValidationUtils.isValidWholeAmountFormat(amountText)) {
             ValidationUtils.showError(this,
@@ -309,6 +326,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
             jTextField2.requestFocusInWindow();
             return;
         }
+        
 
         long amount = Long.parseLong(amountText);
         if (amount < 100) {

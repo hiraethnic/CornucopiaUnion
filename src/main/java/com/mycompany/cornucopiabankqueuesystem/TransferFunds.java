@@ -345,6 +345,32 @@ public class TransferFunds extends javax.swing.JFrame {
             jTextField2.requestFocusInWindow();
             return;
         }
+        
+        // 6. Validate Account Name
+        if (!ValidationUtils.isValidName(accountName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account name (letters only).");
+            jTextField3.requestFocusInWindow();
+            return;
+        }
+        
+        double sourceBalance = QueueDatabase.getBalanceByNumber(accountNumber);
+        if (sourceBalance < 0) {
+            ValidationUtils.showError(this, "Transfer Failed: Source Account Number does not exist in our records.");
+            return;
+        }
+        
+        if (sourceBalance < Long.parseLong(amountText)) {
+            ValidationUtils.showError(this, "Transfer Failed: Insufficient funds in the Source Account.");
+            return;
+        }
+
+        // ADD THIS: Validate if the destination account actually exists in the database
+        if (QueueDatabase.getAccountBalance(destinationAccount, accountName) < 0) {
+            ValidationUtils.showError(this, 
+                    "Transfer Failed: Destination Account Number and Name do not match our system records.");
+            return;
+        }
 
         long amount = Long.parseLong(amountText);
         if (amount < 1) { 

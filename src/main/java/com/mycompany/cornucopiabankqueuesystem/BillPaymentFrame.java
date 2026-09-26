@@ -359,7 +359,8 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
 
-        String ticket = QueueDatabase.addTicket("BP", "Bill Payment", accountName, jCheckBox1.isSelected());
+        String ticket = QueueDatabase.addTicket("BP", biller.toString(), accountName, jCheckBox1.isSelected());
+        QueueDatabase.saveKioskData(ticket, refNumber, amount.longValue());
         ValidationUtils.showSuccess(this,
                 "Payment accepted!\n"
                 + "Queue ticket: " + ticket + "\n"

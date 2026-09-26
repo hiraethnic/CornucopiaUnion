@@ -532,6 +532,20 @@ public final class QueueDatabase {
         }
         return "";
     }
+    
+    public static synchronized double getBalanceByNumber(String accountNo) {
+        String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND status = 'DONE' LIMIT 1";
+        java.sql.Connection conn = getConnection();
+        if (conn == null) return -1.0;
+        
+        try (java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, accountNo);
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getDouble("amount");
+            }
+        } catch (java.sql.SQLException ex) {}
+        return -1.0; // Returns -1 if account doesn't exist
+    }
 
     
 
