@@ -22,36 +22,34 @@ public class AdminRecord extends javax.swing.JFrame {
         loadTransactionLogs();
     }
 
-   private void loadTransactionLogs() {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-        model.setRowCount(0); // Clears any empty rows
-
+  private void loadTransactionLogs() {
         try {
+            // 1. THIS is where we tell the code to put the data into jTable1
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0); 
+
+            // 2. Connect to the database and grab everything
             java.sql.Connection conn = QueueDatabase.getConnection();
             java.sql.Statement st = conn.createStatement();
-            // Select all records, newest at the top
-            java.sql.ResultSet rs = st.executeQuery("SELECT * FROM queue_tickets ORDER BY id DESC");
+            java.sql.ResultSet rs = st.executeQuery("SELECT * FROM queue_tickets");
 
+            // 3. Loop through the database and add a new row to jTable1 for every log
             while (rs.next()) {
-                String ticketNo = rs.getString("ticket_no");
-                String date = rs.getString("created_at");
-                String type = rs.getString("category"); 
-                String name = rs.getString("customer_name");
-                String refNo = rs.getString("reference_no");
-                String counter = rs.getString("counter");
-                String status = rs.getString("status");
-                
-                // Safely handle the amount
-                String amount = "";
-                if (rs.getString("amount") != null) {
-                    amount = "PHP " + rs.getString("amount");
-                }
-
-                // Add data directly to the 8 columns
-                model.addRow(new Object[]{ticketNo, date, type, name, amount, refNo, counter, status});
+                model.addRow(new Object[]{
+                    rs.getString("ticket_no"),
+                    rs.getString("created_at"),
+                    rs.getString("category"),
+                    rs.getString("customer_name"),
+                    rs.getString("amount"),
+                    rs.getString("reference_no"),
+                    rs.getString("counter"),
+                    rs.getString("status")
+                });
             }
+            
         } catch (Exception ex) {
-            System.out.println("Error loading table: " + ex.getMessage());
+            // 4. If it fails, this will pop up an error box on your screen telling you exactly why
+            javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
         }
     }
     
