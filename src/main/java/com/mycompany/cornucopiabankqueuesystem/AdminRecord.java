@@ -20,36 +20,34 @@ public class AdminRecord extends javax.swing.JFrame {
          QueueDatabase.initialize(); 
         loadTransactionLogs();
     }
-        private void loadTransactionLogs() {
-        try {
-            // 1. THIS is where we tell the code to put the data into jTable1
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
-            model.setRowCount(0); 
+   private void loadTransactionLogs() {
+    try {
+        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) AccountList.getModel();
+        model.setRowCount(0); 
 
-            // 2. Connect to the database and grab everything
-            java.sql.Connection conn = QueueDatabase.getConnection();
-            java.sql.Statement st = conn.createStatement();
-            java.sql.ResultSet rs = st.executeQuery("SELECT * FROM queue_tickets");
+        // Connect to the database and grab everything ordered by newest first
+        java.sql.Connection conn = QueueDatabase.getConnection();
+        java.sql.Statement st = conn.createStatement();
+        java.sql.ResultSet rs = st.executeQuery("SELECT * FROM queue_tickets ORDER BY id DESC");
 
-            // 3. Loop through the database and add a new row to jTable1 for every log
-            while (rs.next()) {
-                model.addRow(new Object[]{
-                    rs.getString("ticket_no"),
-                    rs.getString("created_at"),
-                    rs.getString("category"),
-                    rs.getString("customer_name"),
-                    rs.getString("amount"),
-                    rs.getString("reference_no"),
-                    rs.getString("counter"),
-                    rs.getString("status")
-                });
-            }
-            
-        } catch (Exception ex) {
-            // 4. If it fails, this will pop up an error box on your screen telling you exactly why
-            javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
+        // Loop through the database and add rows to AccountList
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getString("ticket_no"),
+                rs.getString("created_at"),
+                rs.getString("category"),
+                rs.getString("customer_name"),
+                rs.getString("amount"),
+                rs.getString("reference_no"),
+                rs.getString("counter"),
+                rs.getString("status")
+            });
         }
+        
+    } catch (Exception ex) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
     }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
