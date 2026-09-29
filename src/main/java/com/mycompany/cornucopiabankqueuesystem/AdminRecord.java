@@ -198,20 +198,18 @@ public class AdminRecord extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "EMPLOYEE ID", "FULLNAME", "BRANCH", "ROLE", "ACCESS  SCOPE", "USERNAME", "STATUS", "DATA CREATED"
+                "TICKET NO.", "DATE", "TRANSACTION TYPE", "NAME", "AMOUNT", "REFERENCE NO.", "COUNTER", "STATUS"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(AccountList);
-        if (AccountList.getColumnModel().getColumnCount() > 0) {
-            AccountList.getColumnModel().getColumn(0).setHeaderValue("EMPLOYEE ID");
-            AccountList.getColumnModel().getColumn(1).setHeaderValue("FULLNAME");
-            AccountList.getColumnModel().getColumn(2).setHeaderValue("BRANCH");
-            AccountList.getColumnModel().getColumn(3).setHeaderValue("ROLE");
-            AccountList.getColumnModel().getColumn(4).setHeaderValue("ACCESS  SCOPE");
-            AccountList.getColumnModel().getColumn(5).setHeaderValue("USERNAME");
-            AccountList.getColumnModel().getColumn(6).setHeaderValue("STATUS");
-            AccountList.getColumnModel().getColumn(7).setHeaderValue("DATA CREATED");
-        }
 
         ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 940, 440));
 

@@ -380,55 +380,55 @@
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="8" rowCount="4">
-                    <Column editable="true" title="EMPLOYEE ID" type="java.lang.Object"/>
-                    <Column editable="true" title="FULLNAME" type="java.lang.Object"/>
-                    <Column editable="true" title="BRANCH" type="java.lang.Object"/>
-                    <Column editable="true" title="ROLE" type="java.lang.Object"/>
-                    <Column editable="true" title="ACCESS  SCOPE" type="java.lang.Object"/>
-                    <Column editable="true" title="USERNAME" type="java.lang.Object"/>
+                    <Column editable="false" title="TICKET NO." type="java.lang.Object"/>
+                    <Column editable="false" title="DATE" type="java.lang.Object"/>
+                    <Column editable="false" title="TRANSACTION TYPE" type="java.lang.Object"/>
+                    <Column editable="false" title="NAME" type="java.lang.Object"/>
+                    <Column editable="false" title="AMOUNT" type="java.lang.Object"/>
+                    <Column editable="false" title="REFERENCE NO." type="java.lang.Object"/>
+                    <Column editable="true" title="COUNTER" type="java.lang.Object"/>
                     <Column editable="true" title="STATUS" type="java.lang.Object"/>
-                    <Column editable="true" title="DATA CREATED" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="EMPLOYEE ID"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="FULLNAME"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="BRANCH"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="ROLE"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="ACCESS  SCOPE"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="USERNAME"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="STATUS"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
-                      <Title value="DATA CREATED"/>
+                      <Title/>
                       <Editor/>
                       <Renderer/>
                     </Column>
