@@ -2829,7 +2829,7 @@ public class Tellerframe extends javax.swing.JFrame {
     
     
    private void showPanel(javax.swing.JPanel panel) {
-    jPanel7.removeAll();
+        jPanel7.removeAll();
         jPanel7.add(panel);
         jPanel7.repaint();
         jPanel7.revalidate();

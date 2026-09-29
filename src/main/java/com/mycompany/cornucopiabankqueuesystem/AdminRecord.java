@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package com.mycompany.cornucopiabankqueuesystem;
-
+import javax.swing.JOptionPane;
 /**
  *
  * @author Rara
@@ -17,8 +17,39 @@ public class AdminRecord extends javax.swing.JFrame {
      */
     public AdminRecord() {
         initComponents();
+         QueueDatabase.initialize(); 
+        loadTransactionLogs();
     }
+        private void loadTransactionLogs() {
+        try {
+            // 1. THIS is where we tell the code to put the data into jTable1
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+            model.setRowCount(0); 
 
+            // 2. Connect to the database and grab everything
+            java.sql.Connection conn = QueueDatabase.getConnection();
+            java.sql.Statement st = conn.createStatement();
+            java.sql.ResultSet rs = st.executeQuery("SELECT * FROM queue_tickets");
+
+            // 3. Loop through the database and add a new row to jTable1 for every log
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("ticket_no"),
+                    rs.getString("created_at"),
+                    rs.getString("category"),
+                    rs.getString("customer_name"),
+                    rs.getString("amount"),
+                    rs.getString("reference_no"),
+                    rs.getString("counter"),
+                    rs.getString("status")
+                });
+            }
+            
+        } catch (Exception ex) {
+            // 4. If it fails, this will pop up an error box on your screen telling you exactly why
+            javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -165,6 +196,7 @@ public class AdminRecord extends javax.swing.JFrame {
         jButton4.setBackground(new java.awt.Color(51, 51, 255));
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("REFRESH");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -192,10 +224,7 @@ public class AdminRecord extends javax.swing.JFrame {
         AccountList.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         AccountList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
+
             },
             new String [] {
                 "TICKET NO.", "DATE", "TRANSACTION TYPE", "NAME", "AMOUNT", "REFERENCE NO.", "COUNTER", "STATUS"
@@ -230,6 +259,10 @@ public class AdminRecord extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        loadTransactionLogs();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
