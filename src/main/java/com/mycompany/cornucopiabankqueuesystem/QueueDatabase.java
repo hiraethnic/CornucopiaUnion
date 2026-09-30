@@ -31,6 +31,100 @@ public final class QueueDatabase {
     }
 
     /** Returns a single shared connection, opening one if needed. */
+      /** Creates the users table if it doesn't exist. Permission flags: 1 = allowed, 0 = not allowed. */
+    public static synchronized void initializeUsersTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS users ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "username TEXT NOT NULL UNIQUE,"
+                + "password TEXT NOT NULL,"
+                + "full_name TEXT NOT NULL,"
+                + "can_account_creation INTEGER NOT NULL DEFAULT 0,"
+                + "can_cash_deposits INTEGER NOT NULL DEFAULT 0,"
+                + "can_account_termination INTEGER NOT NULL DEFAULT 0,"
+                + "can_fund_transfers INTEGER NOT NULL DEFAULT 0,"
+                + "can_cash_withdrawals INTEGER NOT NULL DEFAULT 0,"
+                + "created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))"
+                + ")";
+        Connection conn = getConnection();
+        if (conn == null) return;
+        try (Statement st = conn.createStatement()) {
+            st.execute(sql);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not create users table", ex);
+        }
+    }
+
+    public static boolean usernameExists(String username) {
+        initializeUsersTable();
+        String sql = "SELECT COUNT(*) FROM users WHERE LOWER(username) = LOWER(?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error checking username", ex);
+            return false;
+        }
+    }
+
+    /** Saves a new teller with their permissions. Returns true if saved. */
+    public static synchronized boolean createTeller(String username, String password,
+            String fullName, TellerPermissions p) {
+        initializeUsersTable();
+        String sql = "INSERT INTO users (username, password, full_name, can_account_creation, "
+                + "can_cash_deposits, can_account_termination, can_fund_transfers, can_cash_withdrawals) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username.trim());
+            ps.setString(2, password);
+            ps.setString(3, fullName.trim());
+            ps.setInt(4, p.canAccountCreation() ? 1 : 0);
+            ps.setInt(5, p.canCashDeposits() ? 1 : 0);
+            ps.setInt(6, p.canAccountTermination() ? 1 : 0);
+            ps.setInt(7, p.canFundTransfers() ? 1 : 0);
+            ps.setInt(8, p.canCashWithdrawals() ? 1 : 0);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not create teller " + username, ex);
+            return false;
+        }
+    }
+
+    /**
+     * Checks username + password. Returns the teller's permissions,
+     * or null if the login is wrong.
+     */
+    public static TellerPermissions authenticate(String username, String password) {
+        initializeUsersTable();
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username.trim());
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new TellerPermissions(
+                            rs.getInt("can_account_creation") == 1,
+                            rs.getInt("can_cash_deposits") == 1,
+                            rs.getInt("can_account_termination") == 1,
+                            rs.getInt("can_fund_transfers") == 1,
+                            rs.getInt("can_cash_withdrawals") == 1);
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Login query failed", ex);
+        }
+        return null;
+    }
+    
+    
+    
     public static synchronized Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {

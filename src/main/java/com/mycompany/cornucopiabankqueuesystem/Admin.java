@@ -17,8 +17,21 @@ public class Admin extends javax.swing.JFrame {
      */
     public Admin() {
         initComponents();
+         QueueDatabase.initializeUsersTable();
     }
-
+    private void clearForm() {
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        jCheckBox1.setSelected(false);
+        jCheckBox2.setSelected(false);
+        jCheckBox3.setSelected(false);
+        jCheckBox4.setSelected(false);
+        jCheckBox5.setSelected(false);
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -73,6 +86,7 @@ public class Admin extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 23, 42));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -282,11 +296,13 @@ public class Admin extends javax.swing.JFrame {
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(0, 0, 255));
         jButton4.setText("Clear form");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jButton5.setBackground(new java.awt.Color(0, 0, 255));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Create account");
+        jButton5.addActionListener(this::jButton5ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -354,6 +370,59 @@ public class Admin extends javax.swing.JFrame {
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+  
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    String fullName = jTextField1.getText();   // Employee full name
+        String username = jTextField5.getText();   // System username
+        String password = jTextField6.getText();   // Initial password
+
+        // --- validation ---
+        if (!ValidationUtils.isValidName(fullName)) {
+            ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
+            return;
+        }
+        if (!ValidationUtils.isValidUsername(username)) {
+            ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
+            return;
+        }
+        if (!ValidationUtils.isBlank(password)) {
+            ValidationUtils.showError(this, "Password must be at least 6 characters.");
+            return;
+        }
+        if (!(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
+                || jCheckBox4.isSelected() || jCheckBox5.isSelected())) {
+            ValidationUtils.showError(this, "Select at least one permission.");
+            return;
+        }
+        if (QueueDatabase.usernameExists(username)) {
+            ValidationUtils.showError(this, "That username is already taken.");
+            return;
+        }
+
+        // --- read checkboxes ---
+        TellerPermissions permissions = new TellerPermissions(
+                jCheckBox1.isSelected(),   // Account creation
+                jCheckBox2.isSelected(),   // Cash deposits
+                jCheckBox3.isSelected(),   // Account termination
+                jCheckBox4.isSelected(),   // Fund transfers
+                jCheckBox5.isSelected());  // Cash withdrawals
+
+        // --- save ---
+        if (QueueDatabase.createTeller(username, password, fullName, permissions)) {
+            ValidationUtils.showSuccess(this, "Teller account created for " + fullName.trim() + ".");
+            clearForm();
+        } else {
+            ValidationUtils.showError(this, "Could not save the account. Please try again.");
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

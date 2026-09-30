@@ -40,7 +40,6 @@ public class Loginadminteller extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setMaximumSize(new java.awt.Dimension(700, 681));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -75,6 +74,7 @@ public class Loginadminteller extends javax.swing.JFrame {
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Log in ");
+        jButton5.addActionListener(this::jButton5ActionPerformed);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel11.setText("LOG IN YOUR ACCOUNT ");
@@ -149,6 +149,26 @@ public class Loginadminteller extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+     String username = jTextField1.getText();
+    String password = new String(jPasswordField2.getPassword());   // if it's a JPasswordField
+
+    if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)) {
+        ValidationUtils.showError(this, "Enter your username and password.");
+        return;
+    }
+
+    TellerPermissions userPermissions = QueueDatabase.authenticate(username, password);
+
+    if (userPermissions == null) {
+        ValidationUtils.showError(this, "Wrong username or password.");
+        return;
+    }
+
+    new Tellerframe(userPermissions).setVisible(true);
+    this.dispose();   
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments

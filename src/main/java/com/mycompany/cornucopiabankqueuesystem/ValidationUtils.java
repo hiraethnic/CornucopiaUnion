@@ -34,6 +34,8 @@ public class ValidationUtils {
     
     private static final Pattern NUMERIC_REFERENCE_PATTERN =
         Pattern.compile("^\\d{4,10}$");
+    
+   
  
    
  
@@ -108,6 +110,10 @@ public class ValidationUtils {
     public static String generateTicketNumber(String prefix) {
         int number = 1000 + (int) (Math.random() * 9000);
         return prefix + "-" + number;
+    }
+
+    static boolean isValidUsername(String username) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     
 }

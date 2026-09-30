@@ -19,26 +19,39 @@ public class Tellerframe extends javax.swing.JFrame {
     private java.util.List<QueueDatabase.Ticket> pastDoneTickets = new java.util.ArrayList<>();
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Tellerframe.class.getName());
     private String uploadedIdFilePath = null;
-    
+    private final TellerPermissions permissions;
 
 
     /**
      * Creates new form Tellerframe
      */
-    public Tellerframe() {
+    public Tellerframe(TellerPermissions permissions) {
+        this.permissions = permissions;
         initComponents();
         QueueDatabase.initialize();
         setupCustomLogic();
+        applyPermissions();
         refreshAllData();
 
         refreshTimer = new javax.swing.Timer(3000, e -> refreshAllData());
         refreshTimer.start();
-        
-        
-        
-        
-        
     }
+
+     public Tellerframe() {
+        this(TellerPermissions.allGranted());
+    }
+
+    /** Shows only the top buttons this teller is allowed to use. */
+    private void applyPermissions() {
+        jButton1.setVisible(permissions.canCashWithdrawals());  // Withdraw
+        jButton2.setVisible(permissions.canAccountCreation());  // Account Creation
+        jButton4.setVisible(permissions.canCashDeposits());     // Deposit
+        jButton5.setVisible(permissions.canFundTransfers());    // Transfer funds
+        // jButton3 (Foreign exchange) and jButton12 (Bills payment) stay visible.
+        // canAccountTermination() has no top button yet, so nothing to hide here.
+    }
+    
+    
     
         private static final java.util.Map<String, Double> CURRENCY_RATES = new java.util.HashMap<>() {{
         put("USD", 57.00);
