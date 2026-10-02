@@ -756,7 +756,8 @@ public final class QueueDatabase {
 
     public static List<String[]> getAccountHistory(String accountNo) {
         List<String[]> history = new ArrayList<>();
-        String sql = "SELECT created_at, category, amount, ticket_no FROM queue_tickets "
+        // Added transaction_type to the SELECT statement
+        String sql = "SELECT created_at, ticket_no, category, transaction_type, amount FROM queue_tickets "
                    + "WHERE reference_no LIKE ? AND status IN ('DONE', 'LOCKED') ORDER BY id DESC";
         Connection conn = getConnection();
         if (conn == null) return history;
@@ -764,11 +765,22 @@ public final class QueueDatabase {
             ps.setString(1, "%" + accountNo + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    String ticket = rs.getString("ticket_no");
+                    
+                    // 1. Get the actual transaction type saved by the Teller. If empty, fall back to the Category.
+                    String actualType = rs.getString("transaction_type");
+                    if (actualType == null || actualType.trim().isEmpty()) {
+                        actualType = rs.getString("category");
+                    }
+                    
+                    // 2. If it's an AC- ticket, force it to say "Account Opened". Otherwise, use the actualType (Deposit, Transfer, etc.)
+                    String displayType = ticket.startsWith("AC-") ? "Account Opened" : actualType;
+                    
                     history.add(new String[] { 
-                        rs.getString("created_at"), 
-                        rs.getString("category"), 
-                        String.format("%.2f", rs.getDouble("amount")), 
-                        rs.getString("ticket_no") 
+                        rs.getString("created_at"),                     // Date
+                        displayType,                                    // Type (Account Opened, Deposit, Transfer)
+                        String.format("%.2f", rs.getDouble("amount")),  // Amount
+                        ticket                                          // Ref No.
                     });
                 }
             }

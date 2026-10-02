@@ -19,6 +19,15 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
      */
     public Adminacciuntmanagement() {
         initComponents();
+        
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 11) {
+                    evt.consume(); // Ignores the keystroke
+                }
+            }
+        });
+        
         AccNo.setEditable(false);
         AccType.setEditable(false);
         BALance.setEditable(false);
@@ -295,7 +304,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Date", "Ticket NO.", "Type", "Amount", "Ref NO."
+                "Date", "Type", "Amount", "Ref No."
             }
         ));
         jScrollPane1.setViewportView(jTable1);
