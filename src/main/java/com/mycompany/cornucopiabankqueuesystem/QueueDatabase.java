@@ -176,6 +176,7 @@ public final class QueueDatabase {
         initializeAdminsTable();
         String sql = "INSERT INTO admins (admin_id, full_name, email, contact_number, username, password) "
                 + "VALUES (?, ?, ?, ?, ?, ?)";
+        
         Connection conn = getConnection();
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -192,7 +193,24 @@ public final class QueueDatabase {
             return false;
         }
     }
-
+    
+    public static boolean authenticateAdmin(String username, String password) {
+        initializeAdminsTable();
+        String sql = "SELECT * FROM admins WHERE username = ? AND password = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username.trim());
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Admin login query failed", ex);
+            return false;
+        }
+    }
+   
     public static synchronized Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {

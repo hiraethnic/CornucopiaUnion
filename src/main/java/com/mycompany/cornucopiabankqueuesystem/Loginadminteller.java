@@ -18,6 +18,7 @@ public class Loginadminteller extends javax.swing.JFrame {
     public Loginadminteller() {
         initComponents();
         setLocationRelativeTo(null);
+        jPasswordField2.setText("");
     }
 
     /**
@@ -157,24 +158,31 @@ public class Loginadminteller extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    String username = jTextField1.getText();
-    String password = new String(jPasswordField2.getPassword());   // if it's a JPasswordField
- 
-    if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)) {
-        ValidationUtils.showError(this, "Enter your username and password.");
-        return;
-    }
- 
-    TellerPermissions userPermissions = QueueDatabase.authenticate(username, password);
-    
- 
-    if (userPermissions == null) {
+   String username = jTextField1.getText();
+        String password = new String(jPasswordField2.getPassword());
+
+        // Input validation: ensure inputs are not empty
+        if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)) {
+            ValidationUtils.showError(this, "Enter your username and password.");
+            return;
+        }
+
+        // Authenticate Teller account
+        TellerPermissions userPermissions = QueueDatabase.authenticate(username, password);
+        if (userPermissions != null) {
+            new Tellerframe(userPermissions).setVisible(true);
+            this.dispose();
+            return;
+        }
+
+        // Authenticate Admin account
+        if (QueueDatabase.authenticateAdmin(username, password)) {
+            new Admin().setVisible(true);
+            this.dispose();
+            return;
+        }
+
         ValidationUtils.showError(this, "Wrong username or password.");
-        return;
-    }
- 
-    new Tellerframe(userPermissions).setVisible(true);
-    this.dispose();   
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
