@@ -91,6 +91,7 @@ public class AdminRecord extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 23, 42));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
 
         jPanel1.setLayout(null);
 
@@ -263,6 +264,11 @@ public class AdminRecord extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         loadTransactionLogs();
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+     new Loginadminteller().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

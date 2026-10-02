@@ -18,6 +18,8 @@ public class creationAdmin extends javax.swing.JFrame {
     public creationAdmin() {
         initComponents();
          setLocationRelativeTo(null);
+         QueueDatabase.initializeAdminsTable();
+         
     }
 
     /**
@@ -32,6 +34,7 @@ public class creationAdmin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        logout = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
@@ -60,6 +63,11 @@ public class creationAdmin extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("CREATION ADMIN");
 
+        logout.setBackground(new java.awt.Color(0, 23, 42));
+        logout.setForeground(new java.awt.Color(255, 255, 255));
+        logout.setText("Logout");
+        logout.addActionListener(this::logoutActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -67,14 +75,18 @@ public class creationAdmin extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(logout)
+                .addGap(21, 21, 21))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel1)
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(logout))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -248,12 +260,67 @@ public class creationAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+      jTextField1.setText("");
+      jTextField2.setText("");
+      jTextField3.setText("");
+      jTextField4.setText("");
+      jTextField5.setText("");
+      jTextField6.setText("");
+      jTextField3.requestFocus();
       
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    String fullName = jTextField1.getText();
+    String email    = jTextField2.getText();
+    String adminId  = jTextField3.getText();
+    String contact  = jTextField4.getText();
+    String username = jTextField5.getText();
+    // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField.
+    String password = jTextField6.getText();
+
+    if (!ValidationUtils.isValidName(fullName)) {
+        ValidationUtils.showError(this, "Enter a valid full name (letters only).");
+        return;
+    }
+    if (!ValidationUtils.isValidReferenceNumber(adminId)) {
+        ValidationUtils.showError(this, "Admin ID must be 4-30 letters, numbers or hyphens.");
+        return;
+    }
+    if (!ValidationUtils.isValidEmail(email)) {
+        ValidationUtils.showError(this, "Enter a valid email address.");
+        return;
+    }
+    if (!ValidationUtils.isValidContactNumber(contact)) {
+        ValidationUtils.showError(this, "Contact number must look like 09123456789 or +639123456789.");
+        return;
+    }
+    if (!ValidationUtils.isValidUsername(username)) {
+        ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
+        return;
+    }
+    if (!ValidationUtils.isValidPassword(password)) {
+        ValidationUtils.showError(this, "Password must be at least 6 characters.");
+        return;
+    }
+    if (QueueDatabase.adminExists(adminId, username)) {
+        ValidationUtils.showError(this, "That Admin ID or username is already taken.");
+        return;
+    }
+
+    if (QueueDatabase.createAdmin(adminId, fullName, email, contact, username, password)) {
+        ValidationUtils.showSuccess(this, "Admin account created.");
+        jButton4ActionPerformed(null);   // clear the form
+    } else {
+        ValidationUtils.showError(this, "Could not save the admin. Please try again.");
+    }
      
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+    new Loginadminteller().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_logoutActionPerformed
 
     /**
      * @param args the command line arguments
@@ -275,6 +342,16 @@ public class creationAdmin extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold> 
+          try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
         java.awt.EventQueue.invokeLater(() -> new creationAdmin().setVisible(true));
     }
@@ -300,5 +377,6 @@ public class creationAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
+    private javax.swing.JButton logout;
     // End of variables declaration//GEN-END:variables
 }

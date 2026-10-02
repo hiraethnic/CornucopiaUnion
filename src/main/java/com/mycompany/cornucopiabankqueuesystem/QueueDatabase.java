@@ -127,6 +127,72 @@ public final class QueueDatabase {
     
     
     
+    // ---------------------------------------------------------------
+    // ADMINS (used by the creationAdmin form)
+    // ---------------------------------------------------------------
+
+    /** Creates the admins table if it doesn't exist. */
+    public static synchronized void initializeAdminsTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS admins ("
+                + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "admin_id TEXT NOT NULL UNIQUE,"
+                + "full_name TEXT NOT NULL,"
+                + "email TEXT NOT NULL,"
+                + "contact_number TEXT NOT NULL,"
+                + "username TEXT NOT NULL UNIQUE,"
+                + "password TEXT NOT NULL,"
+                + "created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))"
+                + ")";
+        Connection conn = getConnection();
+        if (conn == null) return;
+        try (Statement st = conn.createStatement()) {
+            st.execute(sql);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not create admins table", ex);
+        }
+    }
+
+    /** True if an admin already has this Admin ID or username. */
+    public static boolean adminExists(String adminId, String username) {
+        initializeAdminsTable();
+        String sql = "SELECT COUNT(*) FROM admins WHERE LOWER(admin_id) = LOWER(?) OR LOWER(username) = LOWER(?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, adminId.trim());
+            ps.setString(2, username.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error checking admin", ex);
+            return false;
+        }
+    }
+
+    /** Saves a new admin. Returns true if saved. */
+    public static synchronized boolean createAdmin(String adminId, String fullName, String email,
+            String contactNumber, String username, String password) {
+        initializeAdminsTable();
+        String sql = "INSERT INTO admins (admin_id, full_name, email, contact_number, username, password) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, adminId.trim());
+            ps.setString(2, fullName.trim());
+            ps.setString(3, email.trim());
+            ps.setString(4, contactNumber.trim());
+            ps.setString(5, username.trim());
+            // NOTE: password is saved as plain text. Should be replaced with a hashed password.
+            ps.setString(6, password);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not create admin " + username, ex);
+            return false;
+        }
+    }
+
     public static synchronized Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {

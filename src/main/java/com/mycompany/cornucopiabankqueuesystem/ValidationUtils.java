@@ -112,6 +112,22 @@ public class ValidationUtils {
         return prefix + "-" + number;
     }
 
+    /** Simple email check: something@something.something */
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
+
+    /** PH mobile number: 09XXXXXXXXX or +639XXXXXXXXX. */
+    private static final Pattern CONTACT_PATTERN =
+            Pattern.compile("^(09|\\+639)\\d{9}$");
+
+    public static boolean isValidEmail(String text) {
+        return !isBlank(text) && EMAIL_PATTERN.matcher(text.trim()).matches();
+    }
+
+    public static boolean isValidContactNumber(String text) {
+        return !isBlank(text) && CONTACT_PATTERN.matcher(text.trim()).matches();
+    }
+
     /** Username: 4-20 characters - letters, numbers, dot, underscore, hyphen. */
     private static final Pattern USERNAME_PATTERN =
             Pattern.compile("^[A-Za-z0-9._-]{4,20}$");

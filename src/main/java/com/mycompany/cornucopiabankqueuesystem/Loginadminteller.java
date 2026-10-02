@@ -166,6 +166,7 @@ public class Loginadminteller extends javax.swing.JFrame {
     }
  
     TellerPermissions userPermissions = QueueDatabase.authenticate(username, password);
+    
  
     if (userPermissions == null) {
         ValidationUtils.showError(this, "Wrong username or password.");
