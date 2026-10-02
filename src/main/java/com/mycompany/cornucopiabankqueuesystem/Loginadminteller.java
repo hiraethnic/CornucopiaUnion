@@ -41,7 +41,7 @@ public class Loginadminteller extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(new java.awt.Color(244, 246, 249));
 
         jPanel2.setBackground(new java.awt.Color(15, 23, 42));
 
@@ -66,14 +66,15 @@ public class Loginadminteller extends javax.swing.JFrame {
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
+        jButton4.setBackground(new java.awt.Color(153, 0, 0));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(0, 0, 255));
-        jButton4.setText("Clear");
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("CLEAR");
 
-        jButton5.setBackground(new java.awt.Color(0, 0, 255));
+        jButton5.setBackground(new java.awt.Color(0, 0, 153));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Log in ");
+        jButton5.setText("LOG IN");
         jButton5.addActionListener(this::jButton5ActionPerformed);
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N

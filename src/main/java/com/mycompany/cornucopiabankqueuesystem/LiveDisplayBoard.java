@@ -116,7 +116,7 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(253, 220, 92));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(12, 35, 74), 2));
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("LAST ANNOUNCEMENT");
 
         lblLastTicket.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N

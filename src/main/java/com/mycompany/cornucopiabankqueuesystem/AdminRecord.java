@@ -187,6 +187,8 @@ public class AdminRecord extends javax.swing.JFrame {
         ACCOUNTPANEL.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, -1));
         ACCOUNTPANEL.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 260, 50, 10));
 
+        jPanel3.setBackground(new java.awt.Color(244, 246, 249));
+
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setText("TRANSACTION LOGS");
         jButton2.addActionListener(this::jButton2ActionPerformed);
