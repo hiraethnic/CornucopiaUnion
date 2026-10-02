@@ -81,6 +81,8 @@ public final class QueueDatabase {
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
+            // NOTE: password is saved as plain text. Should be replaced with a hashed password
+            // (e.g. SHA-256 with a salt) in both createTeller() and authenticate().
             ps.setString(2, password);
             ps.setString(3, fullName.trim());
             ps.setInt(4, p.canAccountCreation() ? 1 : 0);
@@ -530,6 +532,8 @@ public final class QueueDatabase {
 
     /** Inserts a new bank account with an initial balance and uploaded ID file path */
    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
+        // NOTE: random number can collide with an existing AC ticket (ticket_no is UNIQUE) and fail.
+        // Should be replaced with sequential numbering like addTicket(). Left as is to keep it simple.
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
         String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status) "
                    + "VALUES (?, ?, ?, ?, ?, 1, 'DONE')";

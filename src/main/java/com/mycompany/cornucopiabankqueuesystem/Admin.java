@@ -18,6 +18,7 @@ public class Admin extends javax.swing.JFrame {
     public Admin() {
         initComponents();
          QueueDatabase.initializeUsersTable();
+           setLocationRelativeTo(null);
     }
     private void clearForm() {
         jTextField1.setText("");
@@ -372,14 +373,17 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-  
+    clearForm();
+    jTextField1.requestFocus();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    String fullName = jTextField1.getText();   // Employee full name
+     String fullName = jTextField1.getText();   // Employee full name
         String username = jTextField5.getText();   // System username
         String password = jTextField6.getText();   // Initial password
-
+        // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
+        // (then use new String(field.getPassword())).
+ 
         // --- validation ---
         if (!ValidationUtils.isValidName(fullName)) {
             ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
@@ -389,7 +393,8 @@ public class Admin extends javax.swing.JFrame {
             ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
             return;
         }
-        if (!ValidationUtils.isBlank(password)) {
+        // REPLACED: was "!isBlank(password)", which rejected every real password.
+        if (!ValidationUtils.isValidPassword(password)) {
             ValidationUtils.showError(this, "Password must be at least 6 characters.");
             return;
         }
@@ -402,7 +407,7 @@ public class Admin extends javax.swing.JFrame {
             ValidationUtils.showError(this, "That username is already taken.");
             return;
         }
-
+ 
         // --- read checkboxes ---
         TellerPermissions permissions = new TellerPermissions(
                 jCheckBox1.isSelected(),   // Account creation
@@ -410,7 +415,7 @@ public class Admin extends javax.swing.JFrame {
                 jCheckBox3.isSelected(),   // Account termination
                 jCheckBox4.isSelected(),   // Fund transfers
                 jCheckBox5.isSelected());  // Cash withdrawals
-
+ 
         // --- save ---
         if (QueueDatabase.createTeller(username, password, fullName, permissions)) {
             ValidationUtils.showSuccess(this, "Teller account created for " + fullName.trim() + ".");
@@ -444,6 +449,16 @@ public class Admin extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+          try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Admin().setVisible(true));

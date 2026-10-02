@@ -17,6 +17,7 @@ public class Loginadminteller extends javax.swing.JFrame {
      */
     public Loginadminteller() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -34,7 +35,7 @@ public class Loginadminteller extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
-        username = new javax.swing.JLabel();
+        a = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField2 = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
@@ -70,6 +71,7 @@ public class Loginadminteller extends javax.swing.JFrame {
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("CLEAR");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jButton5.setBackground(new java.awt.Color(0, 0, 153));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -80,8 +82,8 @@ public class Loginadminteller extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel11.setText("LOG IN YOUR ACCOUNT ");
 
-        username.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        username.setText("USERNAME:");
+        a.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        a.setText("USERNAME:");
 
         jPasswordField2.setText("jPasswordField2");
 
@@ -103,7 +105,7 @@ public class Loginadminteller extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(303, 303, 303)
-                        .addComponent(username))
+                        .addComponent(a))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(252, 252, 252)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -123,7 +125,7 @@ public class Loginadminteller extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(username, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(a, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(12, 12, 12)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
@@ -155,24 +157,30 @@ public class Loginadminteller extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-     String username = jTextField1.getText();
+    String username = jTextField1.getText();
     String password = new String(jPasswordField2.getPassword());   // if it's a JPasswordField
-
+ 
     if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)) {
         ValidationUtils.showError(this, "Enter your username and password.");
         return;
     }
-
+ 
     TellerPermissions userPermissions = QueueDatabase.authenticate(username, password);
-
+ 
     if (userPermissions == null) {
         ValidationUtils.showError(this, "Wrong username or password.");
         return;
     }
-
+ 
     new Tellerframe(userPermissions).setVisible(true);
     this.dispose();   
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    jTextField1.setText("");
+    jPasswordField2.setText("");
+    jTextField1.requestFocus();
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -196,10 +204,21 @@ public class Loginadminteller extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
+           try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
         java.awt.EventQueue.invokeLater(() -> new Loginadminteller().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel a;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
@@ -209,6 +228,5 @@ public class Loginadminteller extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel username;
     // End of variables declaration//GEN-END:variables
 }

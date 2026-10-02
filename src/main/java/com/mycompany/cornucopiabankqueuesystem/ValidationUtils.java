@@ -112,8 +112,19 @@ public class ValidationUtils {
         return prefix + "-" + number;
     }
 
-    static boolean isValidUsername(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    /** Username: 4-20 characters - letters, numbers, dot, underscore, hyphen. */
+    private static final Pattern USERNAME_PATTERN =
+            Pattern.compile("^[A-Za-z0-9._-]{4,20}$");
+
+    // REPLACED: this used to throw UnsupportedOperationException (NetBeans stub),
+    // which crashed the Admin "create teller" button.
+    public static boolean isValidUsername(String username) {
+        return !isBlank(username) && USERNAME_PATTERN.matcher(username.trim()).matches();
+    }
+
+    /** Password: at least 6 characters (no spaces-only passwords). */
+    public static boolean isValidPassword(String password) {
+        return !isBlank(password) && password.length() >= 6;
     }
     
 }
