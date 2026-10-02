@@ -18,6 +18,7 @@ public class TransferFunds extends javax.swing.JFrame {
     public TransferFunds() {
         initComponents();
          QueueDatabase.initialize();
+         applyRealTimeValidation();
     }
 
     /**
@@ -413,7 +414,30 @@ public class TransferFunds extends javax.swing.JFrame {
         
         
     }//GEN-LAST:event_jButton4ActionPerformed
+     
+    private void applyRealTimeValidation() {
+        // Source Account: Max 11 digits, numbers only
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField2.getText().length() >= 11) evt.consume();
+            }
+        });
 
+        // Destination Account: Max 11 digits, numbers only
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField3.getText().length() >= 11) evt.consume();
+            }
+        });
+
+        // Transfer Amount: Max 6 digits, whole numbers only (no decimals)
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 6) evt.consume();
+            }
+        });
+    }
+    
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
          jTextField1.setText("");

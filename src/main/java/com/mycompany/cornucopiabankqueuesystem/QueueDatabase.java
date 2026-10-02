@@ -640,6 +640,84 @@ public final class QueueDatabase {
         } catch (java.sql.SQLException ex) {}
         return -1.0; // Returns -1 if account doesn't exist
     }
+    
+    public static String[] getAccountDetails(String searchTerm) {
+        String sql = "SELECT reference_no, customer_name, category, amount, status FROM queue_tickets "
+                   + "WHERE (reference_no = ? OR LOWER(customer_name) = LOWER(?)) AND ticket_no LIKE 'AC-%' LIMIT 1";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, searchTerm.trim());
+            ps.setString(2, searchTerm.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new String[] {
+                        rs.getString("reference_no"),
+                        rs.getString("customer_name"),
+                        rs.getString("category"),
+                        String.valueOf(rs.getDouble("amount")),
+                        rs.getString("status")
+                    };
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching account details", ex);
+        }
+        return null;
+    }
+
+    public static List<String[]> getAccountHistory(String accountNo) {
+        List<String[]> history = new ArrayList<>();
+        String sql = "SELECT created_at, category, amount, ticket_no FROM queue_tickets "
+                   + "WHERE reference_no LIKE ? AND status IN ('DONE', 'LOCKED') ORDER BY id DESC";
+        Connection conn = getConnection();
+        if (conn == null) return history;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, "%" + accountNo + "%");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    history.add(new String[] { 
+                        rs.getString("created_at"), 
+                        rs.getString("category"), 
+                        String.format("%.2f", rs.getDouble("amount")), 
+                        rs.getString("ticket_no") 
+                    });
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching account history", ex);
+        }
+        return history;
+    }
+
+    public static boolean updateAccountName(String accountNo, String newName) {
+        String sql = "UPDATE queue_tickets SET customer_name = ? WHERE reference_no = ? AND ticket_no LIKE 'AC-%'";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newName);
+            ps.setString(2, accountNo);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error updating account name", ex);
+            return false;
+        }
+    }
+
+    public static boolean toggleAccountLock(String accountNo, boolean lock) {
+        String newStatus = lock ? "LOCKED" : "DONE";
+        String sql = "UPDATE queue_tickets SET status = ? WHERE reference_no = ? AND ticket_no LIKE 'AC-%'";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newStatus);
+            ps.setString(2, accountNo);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error toggling account lock", ex);
+            return false;
+        }
+    }
 
     
 

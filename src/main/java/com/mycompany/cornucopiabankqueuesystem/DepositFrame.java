@@ -18,6 +18,7 @@ public class DepositFrame extends javax.swing.JFrame {
     public DepositFrame() {
         initComponents();
         QueueDatabase.initialize();
+        applyRealTimeValidation();
     }
 
     /**
@@ -408,7 +409,22 @@ public class DepositFrame extends javax.swing.JFrame {
         jButton2ActionPerformed(evt);
         
     }//GEN-LAST:event_jButton1ActionPerformed
+    private void applyRealTimeValidation() {
+        // Account Number: Max 11 digits, numbers only
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 11) evt.consume();
+            }
+        });
 
+        // Deposit Amount: Max 6 digits, whole numbers only (no decimals)
+        jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField3.getText().length() >= 6) evt.consume();
+            }
+        });
+    }
+    
     /**
      * @param args the command line arguments
      */

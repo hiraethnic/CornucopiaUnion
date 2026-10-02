@@ -4,6 +4,8 @@
  */
 package com.mycompany.cornucopiabankqueuesystem;
 
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Lenovo
@@ -17,6 +19,82 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
      */
     public Adminacciuntmanagement() {
         initComponents();
+        AccNo.setEditable(false);
+        AccType.setEditable(false);
+        BALance.setEditable(false);
+        AccName.setEditable(false);
+        
+        jButton2.addActionListener(this::searchAccount);
+        LOCK.addActionListener(this::editName);
+    }
+    
+    private void searchAccount(java.awt.event.ActionEvent evt) {
+        String searchTerm = jTextField1.getText().trim();
+        if (searchTerm.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter an account number or name to search.");
+            return;
+        }
+
+        String[] details = QueueDatabase.getAccountDetails(searchTerm);
+        
+        if (details == null) {
+            JOptionPane.showMessageDialog(this, "Account not found in the database.");
+            return;
+        }
+
+        AccNo.setText(details[0]);
+        AccName.setText(details[1]);
+        AccType.setText(details[2]);
+        BALance.setText("PHP " + details[3]);
+        
+        if ("LOCKED".equals(details[4])) {
+            jButton3.setText("UNLOCK");
+        } else {
+            jButton3.setText("LOCK");
+        }
+
+        AccName.setEditable(false);
+        LOCK.setText("EDIT");
+
+        loadHistory(details[0]);
+    }
+
+    private void loadHistory(String accNo) {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+        
+        java.util.List<String[]> history = QueueDatabase.getAccountHistory(accNo);
+        for (String[] row : history) {
+            model.addRow(row);
+        }
+    }
+
+    private void editName(java.awt.event.ActionEvent evt) {
+        String accNo = AccNo.getText().trim();
+        if (accNo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Search for an account first.");
+            return;
+        }
+
+        if (LOCK.getText().equals("EDIT")) {
+            AccName.setEditable(true);
+            AccName.requestFocus();
+            LOCK.setText("SAVE");
+        } else {
+            String newName = AccName.getText().trim();
+            if (newName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Account name cannot be empty.");
+                return;
+            }
+            
+            if (QueueDatabase.updateAccountName(accNo, newName)) {
+                JOptionPane.showMessageDialog(this, "Account name updated successfully.");
+                AccName.setEditable(false);
+                LOCK.setText("EDIT");
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update account name.");
+            }
+        }
     }
 
     /**
@@ -39,14 +117,15 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        AccName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        AccNo = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        AccType = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        BALance = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
+        LOCK = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel8 = new javax.swing.JLabel();
@@ -91,7 +170,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Find account number:");
+        jLabel2.setText("Find account number / name:");
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -106,10 +185,10 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(50, 50, 50))
         );
@@ -133,27 +212,33 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel4.setText("Account name:");
 
-        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        AccName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Account NO:");
 
-        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        AccNo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Account type:");
 
-        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        AccType.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Total balance:");
 
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        BALance.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jButton3.setBackground(new java.awt.Color(0, 0, 153));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("EDIT");
+        jButton3.setText("LOCK");
+        jButton3.addActionListener(this::jButton3ActionPerformed);
+
+        LOCK.setBackground(new java.awt.Color(0, 0, 153));
+        LOCK.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        LOCK.setForeground(new java.awt.Color(255, 255, 255));
+        LOCK.setText("EDIT");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -169,12 +254,14 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2)
-                    .addComponent(jTextField3)
-                    .addComponent(jTextField4)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AccName)
+                    .addComponent(AccNo)
+                    .addComponent(AccType)
+                    .addComponent(BALance, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 203, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LOCK, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(61, 61, 61))
         );
         jPanel4Layout.setVerticalGroup(
@@ -183,19 +270,20 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(AccName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(AccNo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(AccType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(LOCK, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BALance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28))
         );
@@ -205,7 +293,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Date", "Ticket NO.", "Type", "Amount", "Ref NO."
+                "Date", "Transaction", "Amount", "Reference Id"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
@@ -247,7 +335,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -265,6 +353,31 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        String accNo = AccNo.getText().trim();
+        if (accNo.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Search for an account first.");
+            return;
+        }
+
+        boolean isCurrentlyLocked = jButton3.getText().equals("UNLOCK");
+        boolean success = QueueDatabase.toggleAccountLock(accNo, !isCurrentlyLocked);
+        
+        if (success) {
+            if (isCurrentlyLocked) {
+                jButton3.setText("LOCK");
+                JOptionPane.showMessageDialog(this, "Account Unlocked. Transactions are now allowed.");
+            } else {
+                jButton3.setText("UNLOCK");
+                JOptionPane.showMessageDialog(this, "Account Locked. All future Teller transactions will be blocked.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Failed to change account lock status.");
+        }
+        
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -292,6 +405,11 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField AccName;
+    private javax.swing.JTextField AccNo;
+    private javax.swing.JTextField AccType;
+    private javax.swing.JTextField BALance;
+    private javax.swing.JButton LOCK;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -310,9 +428,5 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables
 }

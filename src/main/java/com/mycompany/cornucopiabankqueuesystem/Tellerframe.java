@@ -609,7 +609,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton23.setText(label);
     }
 
-  private void confirmAndPrintTransaction() {
+ private void confirmAndPrintTransaction() {
         if (activeTicket == null) {
             ValidationUtils.showError(this, "No active transaction to confirm.");
             return;
@@ -633,7 +633,34 @@ public class Tellerframe extends javax.swing.JFrame {
             }
 
             String newAccountNumber = "100" + (10000000 + (int)(Math.random() * 90000000));
-            double initialBalance = 1000.00; 
+            
+            // --- NEW POPUP: Ask for Initial Deposit ---
+            String depositInput = javax.swing.JOptionPane.showInputDialog(this, 
+                "How much is the initial deposit? (Minimum PHP 1,000)", 
+                "Initial Deposit Required", 
+                javax.swing.JOptionPane.QUESTION_MESSAGE);
+                
+            // Cancel transaction if they hit cancel or close the prompt
+            if (depositInput == null || depositInput.trim().isEmpty()) {
+                return; 
+            }
+            
+            depositInput = depositInput.trim();
+
+            // VALIDATION: Check for numbers only, no letters, and maximum 6 digits
+            if (!depositInput.matches("\\d{1,6}")) {
+                ValidationUtils.showError(this, "Invalid amount! Please enter numbers only, up to 6 digits (no letters or decimals).");
+                return;
+            }
+            
+            double initialBalance = Double.parseDouble(depositInput);
+            
+            // VALIDATION: Check for minimum 1000
+            if (initialBalance < 1000) {
+                ValidationUtils.showError(this, "Initial deposit must be at least PHP 1,000! Transaction cancelled.");
+                return;
+            }
+            // --- END OF POPUP LOGIC ---
 
             currencyacc.setText(newAccountNumber);
 

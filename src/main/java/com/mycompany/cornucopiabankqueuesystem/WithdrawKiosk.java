@@ -18,6 +18,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     public WithdrawKiosk() {
         initComponents();
         QueueDatabase.initialize();
+        applyRealTimeValidation();
     }
 
     /**
@@ -370,6 +371,22 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void applyRealTimeValidation() {
+        // Account Number: Max 11 digits, numbers only
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 11) evt.consume();
+            }
+        });
+
+        // Withdrawal Amount: Max 6 digits, whole numbers only (no decimals)
+        jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || jTextField2.getText().length() >= 6) evt.consume();
+            }
+        });
+    }
+    
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         jTextField1.setText("");

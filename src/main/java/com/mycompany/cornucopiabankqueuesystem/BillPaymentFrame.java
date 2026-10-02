@@ -18,6 +18,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
     public BillPaymentFrame() {
         initComponents();
         QueueDatabase.initialize();
+        applyRealTimeValidation();
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
         
         
@@ -166,6 +167,8 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel9.setText("Amount Due (PHP ₱)");
+
+        txtAmount.addActionListener(this::txtAmountActionPerformed);
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel10.setText("Payment Mode:");
@@ -372,6 +375,26 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         clearbtnActionPerformed(evt);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void txtAmountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAmountActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAmountActionPerformed
+
+    private void applyRealTimeValidation() {
+        // Reference Number: Max 11 digits, numbers only
+        txtRefNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || txtRefNumber.getText().length() >= 11) evt.consume();
+            }
+        });
+
+        // Amount: Max 6 digits, whole numbers only (no decimals)
+        txtAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                if (!Character.isDigit(evt.getKeyChar()) || txtAmount.getText().length() >= 6) evt.consume();
+            }
+        });
+    }
+    
     /**
      * @param args the command line arguments
      */
