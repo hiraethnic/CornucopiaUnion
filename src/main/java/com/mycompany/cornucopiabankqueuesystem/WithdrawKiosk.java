@@ -122,7 +122,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         jButton4.setBackground(new java.awt.Color(12, 35, 74));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("CLEAR");
+        jButton4.setText("Done");
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
         backbt.setBackground(new java.awt.Color(0, 0, 204));
