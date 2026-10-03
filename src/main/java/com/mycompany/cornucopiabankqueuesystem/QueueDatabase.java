@@ -665,19 +665,23 @@ public final class QueueDatabase {
   * @return true if row updated successfully
   */
  public static synchronized boolean updateAccountBalance(String accountNo, double newBalance) {
-     String sql = "UPDATE queue_tickets SET amount = ?, updated_at = datetime('now','localtime') WHERE reference_no = ? AND status = 'DONE'";
-     Connection conn = getConnection();
-     if (conn == null) return false;
+        // FIX: Added "AND ticket_no LIKE 'AC-%'" so it only updates the main account balance, 
+        // leaving your older transaction history amounts completely untouched.
+        String sql = "UPDATE queue_tickets SET amount = ?, updated_at = datetime('now','localtime') "
+                   + "WHERE reference_no = ? AND ticket_no LIKE 'AC-%'";
+                   
+        Connection conn = getConnection();
+        if (conn == null) return false;
 
-     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-         ps.setDouble(1, newBalance);
-         ps.setString(2, accountNo);
-         return ps.executeUpdate() > 0;
-     } catch (SQLException ex) {
-         logger.log(Level.SEVERE, "Error updating balance for account " + accountNo, ex);
-         return false;
-     }
- }
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setDouble(1, newBalance);
+            ps.setString(2, accountNo);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error updating balance for account " + accountNo, ex);
+            return false;
+        }
+    }
  
  public static void saveKioskData(String ticket, String sourceAccount, String destinationAccount, long amount) {
         String sql = "UPDATE queue_tickets SET reference_no = ?, amount = ? WHERE ticket_no = ?";
@@ -756,31 +760,75 @@ public final class QueueDatabase {
 
     public static List<String[]> getAccountHistory(String accountNo) {
         List<String[]> history = new ArrayList<>();
-        // Added transaction_type to the SELECT statement
-        String sql = "SELECT created_at, ticket_no, category, transaction_type, amount FROM queue_tickets "
+        
+        // 1. Grab the EXACT balance used by the Account Details panel so they never mismatch
+        double runningBalance = 0.0;
+        String[] details = getAccountDetails(accountNo);
+        if (details != null && details[3] != null) {
+            try {
+                runningBalance = Double.parseDouble(details[3]);
+            } catch (NumberFormatException e) { }
+        }
+
+        // 2. Read newest to oldest (ORDER BY id DESC) to calculate backward from the current balance
+        String sql = "SELECT created_at, ticket_no, amount, reference_no FROM queue_tickets "
                    + "WHERE reference_no LIKE ? AND status IN ('DONE', 'LOCKED') ORDER BY id DESC";
+        
         Connection conn = getConnection();
         if (conn == null) return history;
+
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, "%" + accountNo + "%");
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String ticket = rs.getString("ticket_no");
+                    String refNo = rs.getString("reference_no");
+                    double amt = rs.getDouble("amount");
                     
-                    // 1. Get the actual transaction type saved by the Teller. If empty, fall back to the Category.
-                    String actualType = rs.getString("transaction_type");
-                    if (actualType == null || actualType.trim().isEmpty()) {
-                        actualType = rs.getString("category");
+                    String displayType = "Transaction";
+                    String cashFlow = "0.00";
+                    double rowBalance = runningBalance; // The exact balance after this transaction
+
+                    if (ticket != null) {
+                        if (ticket.startsWith("AC-")) {
+                            displayType = "Account Creation";
+                            cashFlow = "+" + String.format("%.2f", runningBalance);
+                            runningBalance = 0.0;
+                        }
+                        else if (ticket.startsWith("DP-")) {
+                            displayType = "Deposit";
+                            cashFlow = "+" + String.format("%.2f", amt);
+                            runningBalance -= amt; // Undo deposit to find previous balance
+                        }
+                        else if (ticket.startsWith("WD-")) {
+                            displayType = "Withdrawal";
+                            cashFlow = "-" + String.format("%.2f", amt);
+                            runningBalance += amt; // Undo withdrawal to find previous balance
+                        }
+                        else if (ticket.startsWith("TR-")) {
+                            displayType = "Transfer Funds";
+                            if (refNo != null && refNo.startsWith(accountNo + ",")) {
+                                cashFlow = "-" + String.format("%.2f", amt);
+                                runningBalance += amt; 
+                            } else { 
+                                cashFlow = "+" + String.format("%.2f", amt);
+                                runningBalance -= amt; 
+                            }
+                        }
+                        else if (ticket.startsWith("BP-")) {
+                            displayType = "Bills Payment";
+                            cashFlow = "-" + String.format("%.2f", amt);
+                            runningBalance += amt; 
+                        }
                     }
                     
-                    // 2. If it's an AC- ticket, force it to say "Account Opened". Otherwise, use the actualType (Deposit, Transfer, etc.)
-                    String displayType = ticket.startsWith("AC-") ? "Account Opened" : actualType;
-                    
+                    // Since we queried DESC, adding normally puts the newest transaction at the top
                     history.add(new String[] { 
-                        rs.getString("created_at"),                     // Date
-                        displayType,                                    // Type (Account Opened, Deposit, Transfer)
-                        String.format("%.2f", rs.getDouble("amount")),  // Amount
-                        ticket                                          // Ref No.
+                        rs.getString("created_at"),
+                        displayType,
+                        cashFlow,
+                        String.format("%.2f", rowBalance),
+                        ticket
                     });
                 }
             }

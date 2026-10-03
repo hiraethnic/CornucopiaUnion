@@ -234,7 +234,15 @@ public class Admintellermanagement extends javax.swing.JFrame {
             new String [] {
                 "Time", "Ticket NO.", "Transaction Type", "Status ", "Handled"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jButton6.setBackground(new java.awt.Color(0, 0, 204));

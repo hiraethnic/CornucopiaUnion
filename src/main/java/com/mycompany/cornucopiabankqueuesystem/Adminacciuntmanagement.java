@@ -35,6 +35,21 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         
         jButton2.addActionListener(this::searchAccount);
         LOCK.addActionListener(this::editName);
+        
+        // --- ADD THIS TO AUTO-REFRESH THE TABLE & BALANCE EVERY 3 SECONDS ---
+        new javax.swing.Timer(3000, e -> {
+            String currentAcc = AccNo.getText().trim();
+            if (!currentAcc.isEmpty()) {
+                loadHistory(currentAcc); // Pulls new transaction rows automatically
+                
+                // Updates the live balance text automatically
+                double currentBal = QueueDatabase.getBalanceByNumber(currentAcc);
+                if (currentBal >= 0) {
+                    BALance.setText("PHP " + String.format("%.2f", currentBal));
+                }
+            }
+        }).start();
+        
     }
     
     private void searchAccount(java.awt.event.ActionEvent evt) {
@@ -304,9 +319,17 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Date", "Type", "Amount", "Ref No."
+                "Date", "Transaction Type", "Cash Flow", "Balance", "Ref No."
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N

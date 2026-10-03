@@ -816,14 +816,15 @@ public class Tellerframe extends javax.swing.JFrame {
         }
 
         // Mark ticket as DONE in DB
-        String refNo = activeTicket.category.substring(0, Math.min(2, activeTicket.category.length())).toUpperCase() 
+       String refNo = activeTicket.category.substring(0, Math.min(2, activeTicket.category.length())).toUpperCase() 
                      + "-REF-" + System.currentTimeMillis();
 
-        String sql = "UPDATE queue_tickets SET status = 'DONE', valid_id_submitted = 1, reference_no = ?, "
+        // FIX: Update transaction_type instead of overwriting reference_no
+        String sql = "UPDATE queue_tickets SET status = 'DONE', valid_id_submitted = 1, transaction_type = ?, "
                    + "updated_at = datetime('now','localtime') WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
 
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
-            ps.setString(1, refNo);
+            ps.setString(1, activeTicket.category); 
             ps.setString(2, activeTicket.ticketNo);
 
             if (ps.executeUpdate() > 0) {
