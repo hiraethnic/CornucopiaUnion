@@ -325,7 +325,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jButton2" min="-2" pref="171" max="-2" attributes="0"/>
-                      <EmptySpace pref="659" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                      <Component id="jTextField1" min="-2" pref="307" max="-2" attributes="0"/>
+                      <EmptySpace pref="310" max="32767" attributes="0"/>
                       <Component id="jButton4" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                   </Group>
@@ -338,6 +340,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jButton2" alignment="3" pref="28" max="32767" attributes="0"/>
                           <Component id="jButton4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextField1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -370,6 +373,11 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton4ActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JTextField" name="jTextField1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="jTextField1"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -390,19 +398,25 @@
                   <Font name="Segoe UI" size="12" style="1"/>
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                  <Table columnCount="8" rowCount="0">
+                  <Table columnCount="9" rowCount="0">
                     <Column editable="false" title="TICKET NO." type="java.lang.Object"/>
                     <Column editable="false" title="DATE" type="java.lang.Object"/>
+                    <Column editable="false" title="Time" type="java.lang.Object"/>
                     <Column editable="false" title="TRANSACTION TYPE" type="java.lang.Object"/>
                     <Column editable="false" title="NAME" type="java.lang.Object"/>
+                    <Column editable="false" title="Account No." type="java.lang.Object"/>
                     <Column editable="false" title="AMOUNT" type="java.lang.Object"/>
                     <Column editable="false" title="REFERENCE NO." type="java.lang.Object"/>
-                    <Column editable="true" title="COUNTER" type="java.lang.Object"/>
-                    <Column editable="true" title="STATUS" type="java.lang.Object"/>
+                    <Column editable="false" title="COUNTER" type="java.lang.Object"/>
                   </Table>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
+                    <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
+                      <Title/>
+                      <Editor/>
+                      <Renderer/>
+                    </Column>
                     <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
                       <Title/>
                       <Editor/>

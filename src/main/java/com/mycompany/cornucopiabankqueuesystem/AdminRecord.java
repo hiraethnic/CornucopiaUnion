@@ -74,6 +74,7 @@ public class AdminRecord extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jTextField1 = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         AccountList = new javax.swing.JTable();
 
@@ -199,6 +200,8 @@ public class AdminRecord extends javax.swing.JFrame {
         jButton4.setText("REFRESH");
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
+        jTextField1.setText("jTextField1");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -206,7 +209,9 @@ public class AdminRecord extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 659, Short.MAX_VALUE)
+                .addGap(42, 42, 42)
+                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 310, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(27, 27, 27))
         );
@@ -216,7 +221,8 @@ public class AdminRecord extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(jButton4))
+                    .addComponent(jButton4)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -228,11 +234,11 @@ public class AdminRecord extends javax.swing.JFrame {
 
             },
             new String [] {
-                "TICKET NO.", "DATE", "TRANSACTION TYPE", "NAME", "AMOUNT", "REFERENCE NO.", "COUNTER", "STATUS"
+                "TICKET NO.", "DATE", "Time", "TRANSACTION TYPE", "NAME", "Account No.", "AMOUNT", "REFERENCE NO.", "COUNTER"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, true
+                false, false, false, false, false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -314,6 +320,7 @@ public class AdminRecord extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
     private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
 }

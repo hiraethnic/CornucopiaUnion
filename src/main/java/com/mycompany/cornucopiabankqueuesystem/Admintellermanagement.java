@@ -34,7 +34,6 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         SelectEmployee = new javax.swing.JComboBox<>();
-        AddNewTeller = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -42,7 +41,6 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         EmployeeID = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        AssignedDesk = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         UserName = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -52,6 +50,11 @@ public class Admintellermanagement extends javax.swing.JFrame {
         ShowPassword = new javax.swing.JButton();
         ResetPassword = new javax.swing.JButton();
         SaveModifications = new javax.swing.JButton();
+        jCheckBox3 = new javax.swing.JCheckBox();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jCheckBox2 = new javax.swing.JCheckBox();
+        jCheckBox4 = new javax.swing.JCheckBox();
+        jCheckBox5 = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -100,11 +103,6 @@ public class Admintellermanagement extends javax.swing.JFrame {
 
         SelectEmployee.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        AddNewTeller.setBackground(new java.awt.Color(0, 0, 153));
-        AddNewTeller.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        AddNewTeller.setForeground(new java.awt.Color(255, 255, 255));
-        AddNewTeller.setText("ADD NEW TELLER");
-
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setText("TELLER CREDENTIALS AND PROFILE");
 
@@ -123,8 +121,6 @@ public class Admintellermanagement extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Assigned Desk:");
-
-        AssignedDesk.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Username:");
@@ -150,12 +146,29 @@ public class Admintellermanagement extends javax.swing.JFrame {
         ResetPassword.setBackground(new java.awt.Color(153, 0, 0));
         ResetPassword.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         ResetPassword.setForeground(new java.awt.Color(255, 255, 255));
-        ResetPassword.setText("RESET PASSWORD");
+        ResetPassword.setText("EDIT PASSWORD");
+        ResetPassword.addActionListener(this::ResetPasswordActionPerformed);
 
         SaveModifications.setBackground(new java.awt.Color(51, 153, 0));
         SaveModifications.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         SaveModifications.setForeground(new java.awt.Color(255, 255, 255));
         SaveModifications.setText("SAVE MODIFICATIONS");
+        SaveModifications.addActionListener(this::SaveModificationsActionPerformed);
+
+        jCheckBox3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox3.setText("Account termination");
+
+        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox1.setText("Account creation");
+
+        jCheckBox2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox2.setText("Cash deposits");
+
+        jCheckBox4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox4.setText("Fund transfers");
+
+        jCheckBox5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox5.setText("Cash withdrawals");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -164,32 +177,48 @@ public class Admintellermanagement extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(EmployeeName)
-                    .addComponent(EmployeeID)
-                    .addComponent(AssignedDesk, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(UserName)
-                    .addComponent(PassWord)
-                    .addComponent(AccountStatus, 0, 208, Short.MAX_VALUE))
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(EmployeeName)
+                            .addComponent(EmployeeID)
+                            .addComponent(PassWord)
+                            .addComponent(AccountStatus, 0, 208, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(UserName)))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SaveModifications)
+                        .addGap(19, 19, 19))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(ShowPassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                        .addComponent(ResetPassword)
-                        .addGap(42, 42, 42))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(107, 107, 107)
-                        .addComponent(SaveModifications)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jCheckBox3)
+                            .addComponent(ResetPassword))
+                        .addGap(23, 23, 23))))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(164, 164, 164)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jCheckBox1)
+                        .addComponent(jCheckBox2))
+                    .addGap(183, 183, 183)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jCheckBox5)
+                        .addComponent(jCheckBox4))
+                    .addContainerGap(164, Short.MAX_VALUE)))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,23 +234,39 @@ public class Admintellermanagement extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(AssignedDesk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(UserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(PassWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ShowPassword)
-                    .addComponent(ResetPassword))
-                .addGap(18, 18, 18)
+                    .addComponent(jCheckBox3))
+                .addGap(30, 30, 30)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ShowPassword)
+                            .addComponent(ResetPassword))
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel7)
+                            .addComponent(UserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel8)
+                            .addComponent(PassWord, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)))
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
                     .addComponent(AccountStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(SaveModifications))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addGap(70, 70, 70)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jCheckBox1)
+                        .addComponent(jCheckBox4))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jCheckBox2)
+                        .addComponent(jCheckBox5))
+                    .addContainerGap(112, Short.MAX_VALUE)))
         );
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -262,9 +307,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
                         .addComponent(jLabel2)
                         .addGap(18, 18, 18)
                         .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(AddNewTeller)
-                        .addGap(14, 14, 14))
+                        .addGap(14, 396, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
@@ -287,17 +330,16 @@ public class Admintellermanagement extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AddNewTeller))
-                .addGap(42, 42, 42)
+                    .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jButton6))
         );
 
@@ -321,6 +363,14 @@ public class Admintellermanagement extends javax.swing.JFrame {
        new Loginadminteller().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void SaveModificationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveModificationsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SaveModificationsActionPerformed
+
+    private void ResetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetPasswordActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ResetPasswordActionPerformed
 
     /**
      * @param args the command line arguments
@@ -349,8 +399,6 @@ public class Admintellermanagement extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> AccountStatus;
-    private javax.swing.JButton AddNewTeller;
-    private javax.swing.JComboBox<String> AssignedDesk;
     private javax.swing.JTextField EmployeeID;
     private javax.swing.JTextField EmployeeName;
     private javax.swing.JTextField PassWord;
@@ -361,6 +409,11 @@ public class Admintellermanagement extends javax.swing.JFrame {
     private javax.swing.JTextField UserName;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton6;
+    private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
+    private javax.swing.JCheckBox jCheckBox3;
+    private javax.swing.JCheckBox jCheckBox4;
+    private javax.swing.JCheckBox jCheckBox5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
