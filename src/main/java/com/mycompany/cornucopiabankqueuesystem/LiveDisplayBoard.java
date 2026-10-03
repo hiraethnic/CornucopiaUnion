@@ -82,7 +82,7 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(253, 220, 92));
+        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
         jLabel1.setText("SERVING MONITOR");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);

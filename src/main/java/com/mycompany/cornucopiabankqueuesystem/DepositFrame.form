@@ -130,7 +130,7 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="ff" red="ff" type="rgb"/>
+                  <Color blue="17" green="a0" red="d4" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Centria Unified"/>
               </Properties>
@@ -141,7 +141,7 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="37" green="af" red="d4" type="rgb"/>
+                  <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Deposit kiosk"/>
               </Properties>

@@ -43,12 +43,12 @@ public class Loginadminteller extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(244, 246, 249));
+        jPanel1.setBackground(new java.awt.Color(212, 160, 23));
 
         jPanel2.setBackground(new java.awt.Color(15, 23, 42));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
         jLabel1.setText("Centria Unified");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
