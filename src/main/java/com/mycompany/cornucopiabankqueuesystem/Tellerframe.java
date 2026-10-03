@@ -12,7 +12,7 @@ package com.mycompany.cornucopiabankqueuesystem;
  * @author Lenovo
  */
 public class Tellerframe extends javax.swing.JFrame {
-    private final String counterName = "Counter 1";
+     private final String counterName = "Counter 1";
     private QueueDatabase.Ticket activeTicket = null;
     private boolean isEditMode = false;
     private javax.swing.Timer refreshTimer;
@@ -46,17 +46,38 @@ public class Tellerframe extends javax.swing.JFrame {
 
     /** Shows only the top buttons this teller is allowed to use. */
     private void applyPermissions() {
-        jButton1.setVisible(permissions.canCashWithdrawals());  // Withdraw
+         jButton1.setVisible(permissions.canCashWithdrawals());  // Withdraw
         jButton2.setVisible(permissions.canAccountCreation());  // Account Creation
+        jButton3.setVisible(permissions.canForeignExchange());  // Foreign exchange
         jButton4.setVisible(permissions.canCashDeposits());     // Deposit
         jButton5.setVisible(permissions.canFundTransfers());    // Transfer funds
-        // jButton3 (Foreign exchange) and jButton12 (Bills payment) stay visible.
-        // canAccountTermination() has no top button yet, so nothing to hide here.
+        jButton12.setVisible(permissions.canBillPayments());    // Bills payment
+ 
+        // Don't leave a forbidden panel sitting on screen: show the first allowed one.
+        jPanel7.removeAll();
+        javax.swing.JPanel[] order = {Deposit, With, ACC, FUNDS, BILLS, Xchange};
+        for (javax.swing.JPanel panel : order) {
+            if (isPanelAllowed(panel)) {
+                showPanel(panel);
+                break;
+            }
+        }
+        jPanel7.revalidate();
+        jPanel7.repaint();
     }
     
     
+    private boolean isPanelAllowed(javax.swing.JPanel panel) {
+        if (panel == With)     return permissions.canCashWithdrawals();
+        if (panel == ACC)      return permissions.canAccountCreation();
+        if (panel == Xchange)  return permissions.canForeignExchange();
+        if (panel == Deposit)  return permissions.canCashDeposits();
+        if (panel == FUNDS)    return permissions.canFundTransfers();
+        if (panel == BILLS)    return permissions.canBillPayments();
+        return true;
+        }
     
-        private static final java.util.Map<String, Double> CURRENCY_RATES = new java.util.HashMap<>() {{
+       private static final java.util.Map<String, Double> CURRENCY_RATES = new java.util.HashMap<>() {{
         put("USD", 57.00);
         put("SAR", 15.10);
         put("AED", 15.40);

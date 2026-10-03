@@ -21,7 +21,7 @@ public class Admin extends javax.swing.JFrame {
            setLocationRelativeTo(null);
     }
     private void clearForm() {
-        jTextField1.setText("");
+          jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
@@ -32,6 +32,7 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox3.setSelected(false);
         jCheckBox4.setSelected(false);
         jCheckBox5.setSelected(false);
+        foreignexchan.setSelected(false);
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -64,6 +65,7 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox3 = new javax.swing.JCheckBox();
         jCheckBox4 = new javax.swing.JCheckBox();
         jCheckBox5 = new javax.swing.JCheckBox();
+        foreignexchan = new javax.swing.JCheckBox();
         jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -201,13 +203,16 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox2.setText("Cash deposits");
 
         jCheckBox3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox3.setText("Account termination");
+        jCheckBox3.setText("Billy Payment");
 
         jCheckBox4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jCheckBox4.setText("Fund transfers");
 
         jCheckBox5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jCheckBox5.setText("Cash withdrawals");
+
+        foreignexchan.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        foreignexchan.setText("Foreign Exchange");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -217,16 +222,17 @@ public class Admin extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel7)
-                    .addComponent(jCheckBox3)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBox1)
-                            .addComponent(jCheckBox2))
+                            .addComponent(jCheckBox2)
+                            .addComponent(jCheckBox3))
                         .addGap(183, 183, 183)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(foreignexchan)
                             .addComponent(jCheckBox5)
                             .addComponent(jCheckBox4))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(311, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +248,9 @@ public class Admin extends javax.swing.JFrame {
                     .addComponent(jCheckBox2)
                     .addComponent(jCheckBox5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox3)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jCheckBox3)
+                    .addComponent(foreignexchan, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
@@ -392,7 +400,7 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-     String fullName = jTextField1.getText();   // Employee full name
+      String fullName = jTextField1.getText();   // Employee full name
         String username = jTextField5.getText();   // System username
         String password = jTextField6.getText();   // Initial password
         // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
@@ -413,7 +421,7 @@ public class Admin extends javax.swing.JFrame {
             return;
         }
         if (!(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
-                || jCheckBox4.isSelected() || jCheckBox5.isSelected())) {
+                || jCheckBox4.isSelected() || jCheckBox5.isSelected() || foreignexchan.isSelected())) {
             ValidationUtils.showError(this, "Select at least one permission.");
             return;
         }
@@ -426,9 +434,10 @@ public class Admin extends javax.swing.JFrame {
         TellerPermissions permissions = new TellerPermissions(
                 jCheckBox1.isSelected(),   // Account creation
                 jCheckBox2.isSelected(),   // Cash deposits
-                jCheckBox3.isSelected(),   // Account termination
+                jCheckBox3.isSelected(),   // Bill payments
                 jCheckBox4.isSelected(),   // Fund transfers
-                jCheckBox5.isSelected());  // Cash withdrawals
+                jCheckBox5.isSelected(),   // Cash withdrawals
+                foreignexchan.isSelected());  // Foreign exchange
  
         // --- save ---
         if (QueueDatabase.createTeller(username, password, fullName, permissions)) {
@@ -440,7 +449,7 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     new Loginadminteller().setVisible(true);
+         new Loginadminteller().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -464,6 +473,17 @@ public class Admin extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+               try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
           try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -474,7 +494,7 @@ public class Admin extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-
+ 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Admin().setVisible(true));
     }
@@ -482,6 +502,7 @@ public class Admin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ContactNum;
     private javax.swing.JLabel Emailadd;
+    private javax.swing.JCheckBox foreignexchan;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

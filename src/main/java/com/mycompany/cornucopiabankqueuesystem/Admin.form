@@ -325,20 +325,21 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="jCheckBox3" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jCheckBox1" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBox2" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBox3" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="183" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="foreignexchan" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBox5" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBox4" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="311" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -358,7 +359,10 @@
                           <Component id="jCheckBox5" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                          <Component id="foreignexchan" min="-2" pref="22" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -397,7 +401,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Account termination"/>
+                <Property name="text" type="java.lang.String" value="Billy Payment"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="jCheckBox4">
@@ -414,6 +418,14 @@
                   <Font name="Segoe UI" size="13" style="1"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Cash withdrawals"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="foreignexchan">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="13" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Foreign Exchange"/>
               </Properties>
             </Component>
           </SubComponents>

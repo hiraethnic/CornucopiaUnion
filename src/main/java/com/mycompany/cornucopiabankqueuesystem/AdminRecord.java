@@ -172,7 +172,7 @@ public class AdminRecord extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 618, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 776, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(32, 32, 32))
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -185,10 +185,10 @@ public class AdminRecord extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1)
                     .addComponent(jLabel1))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
-        ACCOUNTPANEL.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 940, -1));
+        ACCOUNTPANEL.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 60));
         ACCOUNTPANEL.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 260, 50, 10));
 
         jPanel3.setBackground(new java.awt.Color(244, 246, 249));
@@ -203,6 +203,7 @@ public class AdminRecord extends javax.swing.JFrame {
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField1.addActionListener(this::jTextField1ActionPerformed);
 
         jButton6.setBackground(new java.awt.Color(0, 0, 153));
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -220,7 +221,7 @@ public class AdminRecord extends javax.swing.JFrame {
                 .addComponent(jButton6)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(27, 27, 27))
         );
@@ -236,7 +237,7 @@ public class AdminRecord extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        ACCOUNTPANEL.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 940, 50));
+        ACCOUNTPANEL.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 1090, 50));
 
         AccountList.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         AccountList.setModel(new javax.swing.table.DefaultTableModel(
@@ -244,7 +245,7 @@ public class AdminRecord extends javax.swing.JFrame {
 
             },
             new String [] {
-                "TICKET NO.", "DATE", "Time", "TRANSACTION TYPE", "NAME", "Account No.", "AMOUNT", "REFERENCE NO.", "COUNTER"
+                "TICKET NO.", "DATE", "TIME", "TRANSACTION TYPE", "NAME", "ACCOUNT NO.", "AMOUNT", "REFERENCE NO.", "COUNTER"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -257,30 +258,23 @@ public class AdminRecord extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(AccountList);
 
-        ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 940, 390));
+        ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1090, 390));
 
         jButton5.setBackground(new java.awt.Color(0, 0, 153));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("BACK");
+        ACCOUNTPANEL.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 510, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ACCOUNTPANEL, javax.swing.GroupLayout.PREFERRED_SIZE, 937, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton5)
-                .addGap(36, 36, 36))
+            .addComponent(ACCOUNTPANEL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(ACCOUNTPANEL, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton5)
-                .addContainerGap())
+            .addComponent(ACCOUNTPANEL, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
         );
 
         pack();
@@ -298,6 +292,10 @@ public class AdminRecord extends javax.swing.JFrame {
      new Loginadminteller().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
