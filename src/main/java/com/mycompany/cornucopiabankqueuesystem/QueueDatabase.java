@@ -856,7 +856,10 @@ public final class QueueDatabase {
         }
     }
 
-  
+    /** Inserts a new bank account with an initial balance and uploaded ID file path */
+      public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
+        return createBankAccount(accountNo, name, accountType, balance, idPath, null);
+   }
 
    /** Same as above, but also records which teller account confirmed it. */
    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
