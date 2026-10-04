@@ -250,6 +250,7 @@ private void loadActivity(String username) {
         jLabel4.setText("Employee Name:");
 
         EmployeeName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        EmployeeName.addActionListener(this::EmployeeNameActionPerformed);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Employee ID:");
@@ -614,6 +615,10 @@ private void loadActivity(String username) {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void EmployeeNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmployeeNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EmployeeNameActionPerformed
 
     /**
      * @param args the command line arguments
