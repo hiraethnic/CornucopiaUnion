@@ -19,28 +19,68 @@ public class AdminRecord extends javax.swing.JFrame {
         initComponents();
          QueueDatabase.initialize(); 
         loadTransactionLogs();
+        setLocationRelativeTo(null);
     }
-   private void loadTransactionLogs() {
+    
+    
+    
+    
+    
+    
+    
+    private void loadTransactionLogs() {
+    loadTransactionLogs(""); // tawagin ang may filter kung wala pang search
+    }
+
+    private void loadTransactionLogs(String searchKeyword) {
     try {
         javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) AccountList.getModel();
         model.setRowCount(0); 
 
-        // Connect to the database and grab everything ordered by newest first
         java.sql.Connection conn = QueueDatabase.getConnection();
-        java.sql.Statement st = conn.createStatement();
-        java.sql.ResultSet rs = st.executeQuery("SELECT * FROM queue_tickets ORDER BY id DESC");
+        String query = "SELECT * FROM queue_tickets";
+        
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            query += " WHERE ticket_no LIKE ? OR customer_name LIKE ? OR reference_no LIKE ? OR transaction_type LIKE ? OR counter LIKE ?";
+        }
+        query += " ORDER BY id DESC";
 
-        // Loop through the database and add rows to AccountList
+        java.sql.PreparedStatement pst = conn.prepareStatement(query);
+        
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            String keyword = "%" + searchKeyword.trim() + "%";
+            pst.setString(1, keyword);
+            pst.setString(2, keyword);
+            pst.setString(3, keyword);
+            pst.setString(4, keyword);
+            pst.setString(5, keyword);
+        }
+
+        java.sql.ResultSet rs = pst.executeQuery();
+
         while (rs.next()) {
+            String createdAt = rs.getString("created_at"); // Halimbawa: "2026-06-06 14:30:00"
+            String datePart = "";
+            String timePart = "";
+            
+            if (createdAt != null && createdAt.contains(" ")) {
+                String[] parts = createdAt.split(" ");
+                datePart = parts[0]; // Petsa (YYYY-MM-DD)
+                timePart = parts[1]; // Oras (HH:MM:SS)
+            } else {
+                datePart = createdAt;
+            }
+
             model.addRow(new Object[]{
-                rs.getString("ticket_no"),
-                rs.getString("created_at"),
-                rs.getString("category"),
-                rs.getString("customer_name"),
-                rs.getString("amount"),
-                rs.getString("reference_no"),
-                rs.getString("counter"),
-                rs.getString("status")
+                rs.getString("ticket_no"),        // Ticket No
+                datePart,                         // Date
+                timePart,                         // Time
+                rs.getString("transaction_type"), // Transaction Type (deposit, withdraw, etc.)
+                rs.getString("customer_name"),    // Name
+                rs.getString("reference_no"),     // Account No / Reference
+                rs.getString("amount"),           // Amount
+                rs.getString("reference_no"),     // Reference ID
+                rs.getString("counter")           // Teller / Counter employee
             });
         }
         
@@ -204,11 +244,17 @@ public class AdminRecord extends javax.swing.JFrame {
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextField1KeyReleased(evt);
+            }
+        });
 
         jButton6.setBackground(new java.awt.Color(0, 0, 153));
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("SEARCH");
+        jButton6.addActionListener(this::jButton6ActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -245,7 +291,7 @@ public class AdminRecord extends javax.swing.JFrame {
 
             },
             new String [] {
-                "TICKET NO.", "DATE", "TIME", "TRANSACTION TYPE", "NAME", "ACCOUNT NO.", "AMOUNT", "REFERENCE NO.", "COUNTER"
+                "TICKET NO.", "DATE", "TIME", "TRANSACTION TYPE", "NAME", "ACCOUNT NO.", "AMOUNT", "REFERENCE NO.", "TELLER"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -294,8 +340,17 @@ public class AdminRecord extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
+      
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+       loadTransactionLogs(jTextField1.getText());
+      
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
