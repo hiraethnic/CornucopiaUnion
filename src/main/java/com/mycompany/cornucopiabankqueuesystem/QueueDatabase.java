@@ -4,18 +4,18 @@
  */
 package com.mycompany.cornucopiabankqueuesystem;
 
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.sql.Types;
+
 /**
  *
  * @author Kijetsu
@@ -30,8 +30,7 @@ public final class QueueDatabase {
     private QueueDatabase() {
     }
 
-    /** Returns a single shared connection, opening one if needed. */
-      /** Creates the users table if it doesn't exist. Permission flags: 1 = allowed, 0 = not allowed. */
+    /** Creates the users table if it doesn't exist. Permission flags: 1 = allowed, 0 = not allowed. */
     public static synchronized void initializeUsersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS users ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -53,9 +52,10 @@ public final class QueueDatabase {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create users table", ex);
         }
-        // Older databases: add the new permission columns.
+        // Older databases: add the new permission columns and email column.
         addColumnIfMissing(conn, "can_bill_payments", "ALTER TABLE users ADD COLUMN can_bill_payments INTEGER NOT NULL DEFAULT 0");
         addColumnIfMissing(conn, "can_foreign_exchange", "ALTER TABLE users ADD COLUMN can_foreign_exchange INTEGER NOT NULL DEFAULT 0");
+        addColumnIfMissing(conn, "email", "ALTER TABLE users ADD COLUMN email TEXT");
     }
 
     public static boolean usernameExists(String username) {
@@ -85,8 +85,6 @@ public final class QueueDatabase {
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
-            // NOTE: password is saved as plain text. Should be replaced with a hashed password
-            // (e.g. SHA-256 with a salt) in both createTeller() and authenticate().
             ps.setString(2, password);
             ps.setString(3, fullName.trim());
             ps.setInt(4, p.canAccountCreation() ? 1 : 0);
@@ -130,9 +128,71 @@ public final class QueueDatabase {
         }
         return null;
     }
-    
-    
-    
+
+    // ---------------------------------------------------------------
+    // STEP 2 ADDITIONS: TELLER PROFILE & PASSWORD MANAGEMENT
+    // ---------------------------------------------------------------
+
+    /** Fetches teller full name, username, and email for account info frame */
+    public static String[] getTellerProfile(String username) {
+        initializeUsersTable();
+        String sql = "SELECT full_name, username, email FROM users WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new String[] {
+                        rs.getString("full_name"),
+                        rs.getString("username"),
+                        rs.getString("email") != null ? rs.getString("email") : "N/A"
+                    };
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching profile for " + username, ex);
+        }
+        return null;
+    }
+
+    /** Verifies if the entered current password matches what is stored in DB */
+    public static boolean verifyCurrentPassword(String username, String currentPassword) {
+        initializeUsersTable();
+        String sql = "SELECT id FROM users WHERE username = ? AND password = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username.trim());
+            ps.setString(2, currentPassword);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error verifying password for " + username, ex);
+            return false;
+        }
+    }
+
+    /** Updates the user's password in SQLite */
+    public static boolean updatePassword(String username, String newPassword) {
+        initializeUsersTable();
+        String sql = "UPDATE users SET password = ? WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setString(2, username.trim());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error updating password for " + username, ex);
+            return false;
+        }
+    }
+
     // ---------------------------------------------------------------
     // ADMINS (used by the creationAdmin form)
     // ---------------------------------------------------------------
@@ -191,7 +251,6 @@ public final class QueueDatabase {
             ps.setString(3, email.trim());
             ps.setString(4, contactNumber.trim());
             ps.setString(5, username.trim());
-            // NOTE: password is saved as plain text. Should be replaced with a hashed password.
             ps.setString(6, password);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -261,10 +320,8 @@ public final class QueueDatabase {
         }
     }
 
-    /** Transaction categories that do NOT require a valid ID before confirming. */
     private static final String[] NO_ID_REQUIRED = {"deposit", "transfer", "bills payment", "billspayment"};
 
-    /** True if the given category/transaction type requires a valid ID before it can be confirmed. */
     public static boolean requiresValidId(String categoryOrType) {
         if (categoryOrType == null) {
             return true;
@@ -278,11 +335,6 @@ public final class QueueDatabase {
         return true;
     }
 
-    /**
-     * Creates the queue_tickets table if it doesn't exist yet. Safe to call
-     * from every frame's constructor - CREATE TABLE IF NOT EXISTS is a no-op
-     * once the table is there.
-     */
     public static synchronized void initialize() {
         String sql = "CREATE TABLE IF NOT EXISTS queue_tickets ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -303,7 +355,7 @@ public final class QueueDatabase {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create queue_tickets table", ex);
         }
-         migrateSchema(conn);
+        migrateSchema(conn);
     }
     
     private static void migrateSchema(Connection conn) {
@@ -342,16 +394,6 @@ public final class QueueDatabase {
         );
     }
 
-    /**
-     * Issues a new ticket, saves it as WAITING and returns the generated
-     * ticket number (e.g. "DP-004"). Numbering is sequential per prefix and
-     * persisted, so it survives app restarts.
-     *
-     * @param prefix short code used in the ticket number, e.g. "DP", "WD", "BP", "FX", "AC"
-     * @param category human-readable label shown on the live board, e.g. "Deposit"
-     * @param customerName name tied to the transaction (may be null)
-     * @param priority true if this customer gets priority lane treatment
-     */
     public static synchronized String addTicket(String prefix, String category,
             String customerName, boolean priority) {
         initialize();
@@ -373,7 +415,6 @@ public final class QueueDatabase {
         }
         return ticketNo;
     }
-    
 
     private static String nextTicketNumber(String prefix) {
         String sql = "SELECT COUNT(*) FROM queue_tickets WHERE ticket_no LIKE ?";
@@ -393,12 +434,10 @@ public final class QueueDatabase {
         }
     }
 
-    /** All tickets still waiting, priority customers first, then FIFO. Each row: {ticketNo, category}. */
     public static List<String[]> getWaitingTickets() {
         return getWaitingTickets(Integer.MAX_VALUE);
     }
 
-    /** Same as getWaitingTickets() but capped to the given number of rows (e.g. the next 5 in line). */
     public static List<String[]> getWaitingTickets(int limit) {
         List<String[]> list = new ArrayList<>();
         String sql = "SELECT ticket_no, category FROM queue_tickets WHERE status = 'WAITING' "
@@ -420,45 +459,43 @@ public final class QueueDatabase {
         return list;
     }
 
-    /** Tickets currently being served. Each row: {ticketNo, counter}. */
-    /** Tickets currently called or ongoing (SERVING or HELD). Each row: {ticketNo, counter}. */
-        public static List<String[]> getNowServing() {
-            List<String[]> list = new ArrayList<>();
-            String sql = "SELECT ticket_no, counter FROM queue_tickets WHERE status IN ('SERVING','HELD') "
-                    + "ORDER BY id DESC";
-            Connection conn = getConnection();
-            if (conn == null) {
-                return list;
-            }
-            try (Statement st = conn.createStatement();
-                    ResultSet rs = st.executeQuery(sql)) {
-                while (rs.next()) {
-                    list.add(new String[]{rs.getString("ticket_no"), rs.getString("counter")});
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Could not fetch now-serving tickets", ex);
-            }
+    public static List<String[]> getNowServing() {
+        List<String[]> list = new ArrayList<>();
+        String sql = "SELECT ticket_no, counter FROM queue_tickets WHERE status IN ('SERVING','HELD') "
+                + "ORDER BY id DESC";
+        Connection conn = getConnection();
+        if (conn == null) {
             return list;
         }
+        try (Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new String[]{rs.getString("ticket_no"), rs.getString("counter")});
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not fetch now-serving tickets", ex);
+        }
+        return list;
+    }
 
-        /** Most recently-called ticket, for the "last announcement" panel. {ticketNo, counter} or null. */
-        public static String[] getLastAnnounced() {
-            String sql = "SELECT ticket_no, counter FROM queue_tickets WHERE status IN ('SERVING','HELD') "
-                    + "ORDER BY id DESC LIMIT 1";
-            Connection conn = getConnection();
-            if (conn == null) {
-                return null;
-            }
-            try (Statement st = conn.createStatement();
-                    ResultSet rs = st.executeQuery(sql)) {
-                if (rs.next()) {
-                    return new String[]{rs.getString("ticket_no"), rs.getString("counter")};
-                }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Could not fetch last announced ticket", ex);
-            }
+    public static String[] getLastAnnounced() {
+        String sql = "SELECT ticket_no, counter FROM queue_tickets WHERE status IN ('SERVING','HELD') "
+                + "ORDER BY id DESC LIMIT 1";
+        Connection conn = getConnection();
+        if (conn == null) {
             return null;
         }
+        try (Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery(sql)) {
+            if (rs.next()) {
+                return new String[]{rs.getString("ticket_no"), rs.getString("counter")};
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not fetch last announced ticket", ex);
+        }
+        return null;
+    }
+
     public static Ticket getActiveTicket(String counter) {
         String sql = "SELECT * FROM queue_tickets WHERE status IN ('SERVING','HELD') AND counter = ? "
                 + "ORDER BY id DESC LIMIT 1";
@@ -543,23 +580,10 @@ public final class QueueDatabase {
         }
     }
 
-    /**
-     * Pulls the next WAITING ticket (priority first, then FIFO) into SERVING
-     * status at the given counter. Not wired to any UI yet - handy once a
-     * teller-side "Call Next" screen is built.
-     *
-     * @return true if a ticket was called, false if the queue was empty
-     */
-    /** Calls the next waiting ticket of ANY type (no permission limit). */
     public static synchronized Ticket callNext(String counter) {
         return callNext(counter, TellerPermissions.allGranted());
     }
 
-    /**
-     * Calls the next waiting ticket that this teller is allowed to serve.
-     * Tickets for functions the teller doesn't have are skipped and stay waiting
-     * for another teller.
-     */
     public static synchronized Ticket callNext(String counter, TellerPermissions perms) {
         if (getActiveTicket(counter) != null) {
             return null;
@@ -607,9 +631,8 @@ public final class QueueDatabase {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not save kiosk details for " + ticketNo, ex);
         }
-}    
+    }    
 
-/** Creates the accounts table if it doesn't exist */
     public static synchronized void initializeAccountsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS bank_accounts ("
                 + "account_number TEXT PRIMARY KEY,"
@@ -628,7 +651,6 @@ public final class QueueDatabase {
         }
     }
 
-
     public static boolean doesAccountExist(String accountName) {
         initializeAccountsTable();
         String sql = "SELECT COUNT(*) FROM bank_accounts WHERE LOWER(account_name) = LOWER(?)";
@@ -645,10 +667,7 @@ public final class QueueDatabase {
         }
     }
 
-    /** Inserts a new bank account with an initial balance and uploaded ID file path */
-   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
-        // NOTE: random number can collide with an existing AC ticket (ticket_no is UNIQUE) and fail.
-        // Should be replaced with sequential numbering like addTicket(). Left as is to keep it simple.
+    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
         String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status) "
                    + "VALUES (?, ?, ?, ?, ?, 1, 'DONE')";
@@ -670,34 +689,25 @@ public final class QueueDatabase {
     }
    
     public static synchronized double getAccountBalance(String accountNo, String name) {
-     String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND LOWER(customer_name) = LOWER(?) AND status = 'DONE' LIMIT 1";
-     Connection conn = getConnection();
-     if (conn == null) return -1.0;
+        String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND LOWER(customer_name) = LOWER(?) AND status = 'DONE' LIMIT 1";
+        Connection conn = getConnection();
+        if (conn == null) return -1.0;
 
-     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-         ps.setString(1, accountNo);
-         ps.setString(2, name);
-         try (ResultSet rs = ps.executeQuery()) {
-             if (rs.next()) {
-                 return rs.getDouble("amount");
-             }
-         }
-     } catch (SQLException ex) {
-         logger.log(Level.SEVERE, "Error fetching account balance for " + accountNo, ex);
-     }
-     return -1.0;
- }
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, accountNo);
+            ps.setString(2, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("amount");
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching account balance for " + accountNo, ex);
+        }
+        return -1.0;
+    }
 
- /**
-  * Updates the balance of an existing bank account.
-  * 
-  * @param accountNo Account number stored in reference_no
-  * @param newBalance Updated balance to save in amount column
-  * @return true if row updated successfully
-  */
- public static synchronized boolean updateAccountBalance(String accountNo, double newBalance) {
-        // FIX: Added "AND ticket_no LIKE 'AC-%'" so it only updates the main account balance, 
-        // leaving your older transaction history amounts completely untouched.
+    public static synchronized boolean updateAccountBalance(String accountNo, double newBalance) {
         String sql = "UPDATE queue_tickets SET amount = ?, updated_at = datetime('now','localtime') "
                    + "WHERE reference_no = ? AND ticket_no LIKE 'AC-%'";
                    
@@ -714,7 +724,7 @@ public final class QueueDatabase {
         }
     }
  
- public static void saveKioskData(String ticket, String sourceAccount, String destinationAccount, long amount) {
+    public static void saveKioskData(String ticket, String sourceAccount, String destinationAccount, long amount) {
         String sql = "UPDATE queue_tickets SET reference_no = ?, amount = ? WHERE ticket_no = ?";
 
         Connection conn = getConnection();
@@ -752,16 +762,16 @@ public final class QueueDatabase {
     
     public static synchronized double getBalanceByNumber(String accountNo) {
         String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND status = 'DONE' LIMIT 1";
-        java.sql.Connection conn = getConnection();
+        Connection conn = getConnection();
         if (conn == null) return -1.0;
         
-        try (java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, accountNo);
-            try (java.sql.ResultSet rs = ps.executeQuery()) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) return rs.getDouble("amount");
             }
-        } catch (java.sql.SQLException ex) {}
-        return -1.0; // Returns -1 if account doesn't exist
+        } catch (SQLException ex) {}
+        return -1.0;
     }
     
     public static String[] getAccountDetails(String searchTerm) {
@@ -792,7 +802,6 @@ public final class QueueDatabase {
     public static List<String[]> getAccountHistory(String accountNo) {
         List<String[]> history = new ArrayList<>();
         
-        // 1. Grab the EXACT balance used by the Account Details panel so they never mismatch
         double runningBalance = 0.0;
         String[] details = getAccountDetails(accountNo);
         if (details != null && details[3] != null) {
@@ -801,7 +810,6 @@ public final class QueueDatabase {
             } catch (NumberFormatException e) { }
         }
 
-        // 2. Read newest to oldest (ORDER BY id DESC) to calculate backward from the current balance
         String sql = "SELECT created_at, ticket_no, amount, reference_no FROM queue_tickets "
                    + "WHERE reference_no LIKE ? AND status IN ('DONE', 'LOCKED') ORDER BY id DESC";
         
@@ -818,7 +826,7 @@ public final class QueueDatabase {
                     
                     String displayType = "Transaction";
                     String cashFlow = "0.00";
-                    double rowBalance = runningBalance; // The exact balance after this transaction
+                    double rowBalance = runningBalance;
 
                     if (ticket != null) {
                         if (ticket.startsWith("AC-")) {
@@ -829,12 +837,12 @@ public final class QueueDatabase {
                         else if (ticket.startsWith("DP-")) {
                             displayType = "Deposit";
                             cashFlow = "+" + String.format("%.2f", amt);
-                            runningBalance -= amt; // Undo deposit to find previous balance
+                            runningBalance -= amt;
                         }
                         else if (ticket.startsWith("WD-")) {
                             displayType = "Withdrawal";
                             cashFlow = "-" + String.format("%.2f", amt);
-                            runningBalance += amt; // Undo withdrawal to find previous balance
+                            runningBalance += amt;
                         }
                         else if (ticket.startsWith("TR-")) {
                             displayType = "Transfer Funds";
@@ -853,7 +861,6 @@ public final class QueueDatabase {
                         }
                     }
                     
-                    // Since we queried DESC, adding normally puts the newest transaction at the top
                     history.add(new String[] { 
                         rs.getString("created_at"),
                         displayType,
@@ -897,8 +904,4 @@ public final class QueueDatabase {
             return false;
         }
     }
-
-    
-
-
 }
