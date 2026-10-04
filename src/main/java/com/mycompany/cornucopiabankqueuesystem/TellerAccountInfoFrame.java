@@ -15,8 +15,54 @@ public class TellerAccountInfoFrame extends javax.swing.JFrame {
     /**
      * Creates new form TellerAccountInfoFrame
      */
-    public TellerAccountInfoFrame() {
+    private String currentUsername = "teller_juan";
+    private TellerPermissions permissions = TellerPermissions.allGranted();
+
+    private String generatedOTP = null;
+    private long otpExpiryTime = 0;
+    private int resendCooldown = 60;
+    private javax.swing.Timer cooldownTimer;
+    
+    public TellerAccountInfoFrame(String username, TellerPermissions permissions) {
+        this.currentUsername = username;
+        this.permissions = permissions;
         initComponents();
+        
+        jPasswordFieldCurrent.setText("");
+        jPasswordFieldNew.setText("");
+        jPasswordFieldConfirm.setText("");
+        
+        loadTellerProfile();
+        displayPermissions();
+    }
+    
+    public TellerAccountInfoFrame() {
+        this("teller_juan", TellerPermissions.allGranted());
+    }
+    
+    private void loadTellerProfile() {
+        String[] profile = QueueDatabase.getTellerProfile(currentUsername);
+        if (profile != null) {
+            jTextFieldFullName.setText(profile[0]);
+            jTextFieldUsername.setText(profile[1]);
+            jTextFieldEmail.setText(profile[2]);
+        } else {
+            jTextFieldUsername.setText(currentUsername);
+            jTextFieldEmail.setText("N/A");
+        }
+    }
+
+    private void displayPermissions() {
+        if (jTextArea1 == null || permissions == null) return;
+        StringBuilder sb = new StringBuilder();
+        if (permissions.canAccountCreation())  sb.append("• Account Creation\n");
+        if (permissions.canCashDeposits())     sb.append("• Cash Deposits\n");
+        if (permissions.canBillPayments())     sb.append("• Bill Payments\n");
+        if (permissions.canFundTransfers())    sb.append("• Fund Transfers\n");
+        if (permissions.canCashWithdrawals())  sb.append("• Cash Withdrawals\n");
+        if (permissions.canForeignExchange())  sb.append("• Foreign Exchange\n");
+
+        jTextArea1.setText(sb.toString());
     }
 
     /**
@@ -77,6 +123,7 @@ public class TellerAccountInfoFrame extends javax.swing.JFrame {
         jLabel1.setText("TELLER ACCOUNT INFORMATION");
 
         jButton2.setText("Back");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -192,6 +239,7 @@ public class TellerAccountInfoFrame extends javax.swing.JFrame {
         jPasswordFieldConfirm.setText("jPasswordField1");
 
         jButtonUpdatePassword.setText("Update Password");
+        jButtonUpdatePassword.addActionListener(this::jButtonUpdatePasswordActionPerformed);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -268,9 +316,124 @@ public class TellerAccountInfoFrame extends javax.swing.JFrame {
 
     private void jButtonSendOTPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSendOTPActionPerformed
         // TODO add your handling code here:
+        String currentPassword = new String(jPasswordFieldCurrent.getPassword()).trim();
+        String userEmail = jTextFieldEmail.getText().trim();
+
+        if (currentPassword.isEmpty()) {
+            ValidationUtils.showError(this, "Please enter your current password first.");
+            return;
+        }
+
+        if (!QueueDatabase.verifyCurrentPassword(currentUsername, currentPassword)) {
+            ValidationUtils.showError(this, "Incorrect current password!");
+            return;
+        }
+
+        if (userEmail.isEmpty() || userEmail.equals("N/A") || !userEmail.contains("@")) {
+            ValidationUtils.showError(this, "No valid email linked to this account. Contact your administrator.");
+            return;
+        }
+
+        generatedOTP = emailstuff.generateOTP();
+        otpExpiryTime = System.currentTimeMillis() + (5 * 60 * 1000);
+
+        boolean sent = emailstuff.sendOTPEmail(userEmail, generatedOTP);
+
+        if (sent) {
+            ValidationUtils.showSuccess(this, "OTP code sent to " + maskEmail(userEmail));
+            startResendCooldown();
+        } else {
+            ValidationUtils.showError(this, "Failed to send OTP email. Please check internet connection.");
+        }
     }//GEN-LAST:event_jButtonSendOTPActionPerformed
 
+    private void jButtonUpdatePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdatePasswordActionPerformed
+        // TODO add your handling code here:
+        String enteredOTP = jTextFieldOTP.getText().trim();
+        String newPassword = new String(jPasswordFieldNew.getPassword()).trim();
+        String confirmPassword = new String(jPasswordFieldConfirm.getPassword()).trim();
+
+        if (enteredOTP.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            ValidationUtils.showError(this, "Please fill in all password fields.");
+            return;
+        }
+
+        if (generatedOTP == null) {
+            ValidationUtils.showError(this, "Please click 'Send 6-Digit OTP' first.");
+            return;
+        }
+
+        if (System.currentTimeMillis() > otpExpiryTime) {
+            ValidationUtils.showError(this, "OTP code has expired. Please request a new code.");
+            return;
+        }
+
+        if (!generatedOTP.equals(enteredOTP)) {
+            ValidationUtils.showError(this, "Invalid OTP code. Please check your email.");
+            return;
+        }
+
+        if (newPassword.length() < 6) {
+            ValidationUtils.showError(this, "New password must be at least 6 characters.");
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            ValidationUtils.showError(this, "New passwords do not match.");
+            return;
+        }
+
+        boolean updated = QueueDatabase.updatePassword(currentUsername, newPassword);
+
+        if (updated) {
+            ValidationUtils.showSuccess(this, "Password updated successfully!");
+            jPasswordFieldCurrent.setText("");
+            jTextFieldOTP.setText("");
+            jPasswordFieldNew.setText("");
+            jPasswordFieldConfirm.setText("");
+            generatedOTP = null;
+        } else {
+            ValidationUtils.showError(this, "Failed to update password in database.");
+        }
+    }//GEN-LAST:event_jButtonUpdatePasswordActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+        Tellerframe frame = new Tellerframe(permissions);
+        frame.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton2ActionPerformed
+private void startResendCooldown() {
+        jButtonSendOTP.setEnabled(false);
+        resendCooldown = 60;
+
+        if (cooldownTimer != null && cooldownTimer.isRunning()) {
+            cooldownTimer.stop();
+        }
+
+        cooldownTimer = new javax.swing.Timer(1000, new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                resendCooldown--;
+                if (resendCooldown > 0) {
+                    jButtonSendOTP.setText("Resend in (" + resendCooldown + "s)");
+                } else {
+                    cooldownTimer.stop();
+                    jButtonSendOTP.setText("Send 6-Digit OTP");
+                    jButtonSendOTP.setEnabled(true);
+                }
+            }
+        });
+        cooldownTimer.start();
+    }
+
+    private String maskEmail(String email) {
+        int atIndex = email.indexOf("@");
+        if (atIndex <= 2) return email;
+        return email.substring(0, 2) + "****" + email.substring(atIndex);
+    }
     /**
+     * 
      * @param args the command line arguments
      */
     public static void main(String args[]) {
