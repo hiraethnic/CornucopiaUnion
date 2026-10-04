@@ -941,6 +941,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         jButton12 = new javax.swing.JButton();
         jButton25 = new javax.swing.JButton();
+        accinfobtn = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
@@ -1176,6 +1177,13 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton25.setForeground(new java.awt.Color(255, 255, 255));
         jButton25.setText("Logout");
 
+        accinfobtn.setBackground(new java.awt.Color(12, 35, 74));
+        accinfobtn.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        accinfobtn.setForeground(new java.awt.Color(255, 255, 255));
+        accinfobtn.setText("Account info");
+        accinfobtn.setActionCommand("Account info");
+        accinfobtn.addActionListener(this::accinfobtnActionPerformed);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -1194,7 +1202,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(299, 299, 299)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jButton3)
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1209,15 +1217,20 @@ public class Tellerframe extends javax.swing.JFrame {
                                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)))
-                                .addComponent(jLabel2)
-                                .addGap(161, 161, 161)
-                                .addComponent(jLabel3)
-                                .addGap(47, 47, 47)
-                                .addComponent(jLabel4)
-                                .addGap(47, 47, 47)
-                                .addComponent(jLabel5)
-                                .addGap(31, 31, 31))))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel2)
+                                        .addGap(161, 161, 161)
+                                        .addComponent(jLabel3)
+                                        .addGap(47, 47, 47)
+                                        .addComponent(jLabel4)
+                                        .addGap(47, 47, 47)
+                                        .addComponent(jLabel5)
+                                        .addGap(31, 31, 31))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                        .addComponent(accinfobtn)
+                                        .addContainerGap())))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton25)
@@ -1235,7 +1248,9 @@ public class Tellerframe extends javax.swing.JFrame {
                     .addComponent(jLabel3)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(accinfobtn)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel7)
@@ -1305,7 +1320,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 265, Short.MAX_VALUE)))
+                        .addGap(0, 267, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -2907,7 +2922,7 @@ public class Tellerframe extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 688, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
         );
 
         pack();
@@ -3011,6 +3026,16 @@ public class Tellerframe extends javax.swing.JFrame {
     private void jTextField24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField24ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField24ActionPerformed
+
+    private void accinfobtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accinfobtnActionPerformed
+        // TODO add your handling code here:
+        
+        TellerAccountInfoFrame tellerinfoframe = new TellerAccountInfoFrame();
+        
+        tellerinfoframe.setVisible(true);
+        
+        this.dispose();
+    }//GEN-LAST:event_accinfobtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -3126,6 +3151,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JPanel With;
     private javax.swing.JPanel Xchange;
     private javax.swing.JTextField accholder;
+    private javax.swing.JButton accinfobtn;
     private javax.swing.JTextField accname;
     private javax.swing.JTextField accnum;
     private javax.swing.JLabel accountnameh;
