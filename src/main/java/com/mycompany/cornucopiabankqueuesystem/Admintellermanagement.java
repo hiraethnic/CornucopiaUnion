@@ -84,7 +84,7 @@ private void clearFields() {
     EmployeeName.setText("");
     jTextField2.setText("");
     jTextField3.setText("");
-    jTextField4.setText("");
+    contactNumber.setText("");
     UserName.setText("");
     PassWord.setText("");
     jCheckBox1.setSelected(false);
@@ -105,23 +105,30 @@ private void loadSelectedTeller() {
     String[] profile = QueueDatabase.getTellerProfile(username);
     TellerPermissions perms = QueueDatabase.getTellerPermissions(username);
     if (profile == null || perms == null) { clearFields(); return; }
- 
-    EmployeeName.setText(profile[0]);
-    jTextField2.setText(profile[1]);
-    jTextField3.setText(profile[2]);
-    jTextField4.setText(profile[3]);
+
+    // Added bounds checking and null safety to prevent exceptions from hiding the data
+    EmployeeName.setText(profile.length > 0 && profile[0] != null ? profile[0] : "");
+    jTextField2.setText(profile.length > 1 && profile[1] != null ? profile[1] : "");
+    jTextField3.setText(profile.length > 2 && profile[2] != null ? profile[2] : "");
+    contactNumber.setText(profile.length > 3 && profile[3] != null ? profile[3] : "");
+    
     UserName.setText(username);
-    PassWord.setText(profile[5] == null ? "" : profile[5]);
-    String st = profile[4] == null ? "ACTIVE" : profile[4].toUpperCase();
+    
+    // Safety checks for Status, Password, and Online status
+    String st = (profile.length > 4 && profile[4] != null) ? profile[4].toUpperCase() : "ACTIVE";
     AccountStatus.setSelectedItem(st.equals("TERMINATED") ? "Terminated" : st.equals("INACTIVE") ? "Inactive" : "Active");
-    jToggleButton2.setSelected("1".equals(profile[6]));
+    
+    PassWord.setText(profile.length > 5 && profile[5] != null ? profile[5] : "");
+    jToggleButton2.setSelected(profile.length > 6 && "1".equals(profile[6]));
     showOnlineState();
+    
     jCheckBox1.setSelected(perms.canAccountCreation());
     jCheckBox2.setSelected(perms.canCashDeposits());
     jCheckBox3.setSelected(perms.canBillPayments());
     jCheckBox4.setSelected(perms.canFundTransfers());
     jCheckBox5.setSelected(perms.canCashWithdrawals());
     jCheckBox6.setSelected(perms.canForeignExchange());
+    
     loadActivity(username);
 }
  
@@ -181,13 +188,15 @@ private void loadActivity(String username) {
         jLabel11 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        contactNumber = new javax.swing.JTextField();
         jCheckBox6 = new javax.swing.JCheckBox();
+        jButton2 = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton6 = new javax.swing.JButton();
         jToggleButton2 = new javax.swing.JToggleButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -217,7 +226,7 @@ private void loadActivity(String username) {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(16, 16, 16)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 291, Short.MAX_VALUE)
                 .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
@@ -314,10 +323,16 @@ private void loadActivity(String username) {
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setText("Contact Number:");
 
-        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        contactNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jCheckBox6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox6.setText("Foreignexchange");
+
+        jButton2.setBackground(new java.awt.Color(15, 23, 42));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("DELETE ACCOUNT");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -355,7 +370,7 @@ private void loadActivity(String username) {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                            .addComponent(jTextField4))
+                            .addComponent(contactNumber))
                         .addGap(26, 26, 26))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -372,10 +387,15 @@ private void loadActivity(String username) {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(AccountStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(ResetPassword)
-                        .addGap(18, 18, 18)
-                        .addComponent(SaveModifications)
-                        .addGap(0, 90, Short.MAX_VALUE))))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(ResetPassword)
+                                .addGap(18, 18, 18)
+                                .addComponent(SaveModifications))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(80, 80, 80)
+                                .addComponent(jButton2)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -391,7 +411,7 @@ private void loadActivity(String username) {
                     .addComponent(jLabel5)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(contactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -405,7 +425,7 @@ private void loadActivity(String username) {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jCheckBox2)
                     .addComponent(jCheckBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 23, Short.MAX_VALUE)
+                .addGap(18, 20, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(UserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -418,8 +438,9 @@ private void loadActivity(String username) {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(AccountStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23))
+                    .addComponent(AccountStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
+                .addGap(22, 22, 22))
         );
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -451,6 +472,11 @@ private void loadActivity(String username) {
         jToggleButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jToggleButton2.addActionListener(this::jToggleButton2ActionPerformed);
 
+        jButton4.setBackground(new java.awt.Color(51, 51, 255));
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("REFRESH");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -463,20 +489,25 @@ private void loadActivity(String username) {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel10))
-                        .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel10)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18)
+                                .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
-                        .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(jButton4)
+                        .addGap(19, 19, 19))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -489,7 +520,9 @@ private void loadActivity(String username) {
                         .addComponent(jLabel2)
                         .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(31, 31, 31)
-                .addComponent(jLabel3)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
@@ -529,7 +562,7 @@ private void loadActivity(String username) {
     String name = EmployeeName.getText();
     String employeeId = jTextField2.getText();
     String email = jTextField3.getText();
-    String contact = jTextField4.getText();
+    String contact = contactNumber.getText();
  
     if (!ValidationUtils.isValidName(name)) {
         ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
@@ -620,6 +653,14 @@ private void loadActivity(String username) {
         // TODO add your handling code here:
     }//GEN-LAST:event_EmployeeNameActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+      
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -653,7 +694,10 @@ private void loadActivity(String username) {
     private javax.swing.JButton SaveModifications;
     private javax.swing.JComboBox<String> SelectEmployee;
     private javax.swing.JTextField UserName;
+    private javax.swing.JTextField contactNumber;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton6;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
@@ -681,7 +725,6 @@ private void loadActivity(String username) {
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JToggleButton jToggleButton2;
     // End of variables declaration//GEN-END:variables
 }

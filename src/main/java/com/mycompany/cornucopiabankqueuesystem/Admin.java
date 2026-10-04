@@ -404,8 +404,8 @@ public class Admin extends javax.swing.JFrame {
        String fullName = jTextField1.getText();   // Employee full name
         String username = jTextField5.getText();   // System username
         String password = jTextField6.getText();   // Initial password
-        String employeeId = jTextField2.getText(); // Employee ID
-        String email = jTextField3.getText();      // Email address
+        String email = jTextField2.getText();      // Email address (Corrected)
+        String employeeId = jTextField3.getText(); // Employee ID (Corrected)
         String contact = jTextField4.getText();    // Contact number
         // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
         // (then use new String(field.getPassword())).
