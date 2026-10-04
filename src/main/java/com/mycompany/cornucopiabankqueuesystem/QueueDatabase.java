@@ -56,6 +56,11 @@ public final class QueueDatabase {
         // Older databases: add the new permission columns.
         addColumnIfMissing(conn, "can_bill_payments", "ALTER TABLE users ADD COLUMN can_bill_payments INTEGER NOT NULL DEFAULT 0");
         addColumnIfMissing(conn, "can_foreign_exchange", "ALTER TABLE users ADD COLUMN can_foreign_exchange INTEGER NOT NULL DEFAULT 0");
+        // Teller profile columns (used by Admin + Teller Management).
+        addColumnIfMissing(conn, "employee_id", "ALTER TABLE users ADD COLUMN employee_id TEXT");
+        addColumnIfMissing(conn, "email", "ALTER TABLE users ADD COLUMN email TEXT");
+        addColumnIfMissing(conn, "contact_number", "ALTER TABLE users ADD COLUMN contact_number TEXT");
+        addColumnIfMissing(conn, "status", "ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'ACTIVE'");
     }
 
     public static boolean usernameExists(String username) {
@@ -108,7 +113,7 @@ public final class QueueDatabase {
      */
     public static TellerPermissions authenticate(String username, String password) {
         initializeUsersTable();
-        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ? AND status = 'ACTIVE'";
         Connection conn = getConnection();
         if (conn == null) return null;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -134,6 +139,184 @@ public final class QueueDatabase {
     
     
     
+    // ---------------------------------------------------------------
+    // TELLER MANAGEMENT (used by the Admintellermanagement form)
+    // ---------------------------------------------------------------
+
+    /** Saves a new teller with full profile (employee ID, email, contact) and permissions. */
+    public static synchronized boolean createTeller(String username, String password, String fullName,
+            String employeeId, String email, String contact, TellerPermissions p) {
+        initializeUsersTable();
+        String sql = "INSERT INTO users (username, password, full_name, employee_id, email, contact_number, "
+                + "can_account_creation, can_cash_deposits, can_bill_payments, can_fund_transfers, "
+                + "can_cash_withdrawals, can_foreign_exchange) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username.trim());
+            ps.setString(2, password); // plain text, same as createTeller() above
+            ps.setString(3, fullName.trim());
+            ps.setString(4, employeeId.trim());
+            ps.setString(5, email.trim());
+            ps.setString(6, contact.trim());
+            ps.setInt(7, p.canAccountCreation() ? 1 : 0);
+            ps.setInt(8, p.canCashDeposits() ? 1 : 0);
+            ps.setInt(9, p.canBillPayments() ? 1 : 0);
+            ps.setInt(10, p.canFundTransfers() ? 1 : 0);
+            ps.setInt(11, p.canCashWithdrawals() ? 1 : 0);
+            ps.setInt(12, p.canForeignExchange() ? 1 : 0);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not create teller " + username, ex);
+            return false;
+        }
+    }
+
+    /** True if another teller (not excludeUsername) already uses this employee ID. */
+    public static boolean employeeIdExists(String employeeId, String excludeUsername) {
+        initializeUsersTable();
+        String sql = "SELECT COUNT(*) FROM users WHERE LOWER(employee_id) = LOWER(?) AND LOWER(username) <> LOWER(?)";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, employeeId.trim());
+            ps.setString(2, excludeUsername == null ? "" : excludeUsername.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error checking employee ID", ex);
+            return false;
+        }
+    }
+
+    /** Profile of one teller: {fullName, employeeId, email, contact, status}, or null if not found. */
+    public static String[] getTellerProfile(String username) {
+        initializeUsersTable();
+        String sql = "SELECT full_name, employee_id, email, contact_number, status FROM users WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new String[]{
+                        rs.getString("full_name"),
+                        rs.getString("employee_id") == null ? "" : rs.getString("employee_id"),
+                        rs.getString("email") == null ? "" : rs.getString("email"),
+                        rs.getString("contact_number") == null ? "" : rs.getString("contact_number"),
+                        rs.getString("status")};
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not load teller " + username, ex);
+        }
+        return null;
+    }
+
+    /** Permissions of one teller, or null if not found. */
+    public static TellerPermissions getTellerPermissions(String username) {
+        initializeUsersTable();
+        String sql = "SELECT * FROM users WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return new TellerPermissions(
+                            rs.getInt("can_account_creation") == 1,
+                            rs.getInt("can_cash_deposits") == 1,
+                            rs.getInt("can_bill_payments") == 1,
+                            rs.getInt("can_fund_transfers") == 1,
+                            rs.getInt("can_cash_withdrawals") == 1,
+                            rs.getInt("can_foreign_exchange") == 1)
+                            .withIdentity(rs.getString("username"), rs.getString("full_name"));
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not load permissions for " + username, ex);
+        }
+        return null;
+    }
+
+    /** Updates a teller's profile, permissions and status ("ACTIVE" / "INACTIVE"). Username never changes. */
+    public static synchronized boolean updateTeller(String username, String fullName, String employeeId,
+            String email, String contact, TellerPermissions p, String status) {
+        String sql = "UPDATE users SET full_name = ?, employee_id = ?, email = ?, contact_number = ?, "
+                + "can_account_creation = ?, can_cash_deposits = ?, can_bill_payments = ?, "
+                + "can_fund_transfers = ?, can_cash_withdrawals = ?, can_foreign_exchange = ?, status = ? "
+                + "WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, fullName.trim());
+            ps.setString(2, employeeId.trim());
+            ps.setString(3, email.trim());
+            ps.setString(4, contact.trim());
+            ps.setInt(5, p.canAccountCreation() ? 1 : 0);
+            ps.setInt(6, p.canCashDeposits() ? 1 : 0);
+            ps.setInt(7, p.canBillPayments() ? 1 : 0);
+            ps.setInt(8, p.canFundTransfers() ? 1 : 0);
+            ps.setInt(9, p.canCashWithdrawals() ? 1 : 0);
+            ps.setInt(10, p.canForeignExchange() ? 1 : 0);
+            ps.setString(11, status);
+            ps.setString(12, username);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not update teller " + username, ex);
+            return false;
+        }
+    }
+
+    public static synchronized boolean updateTellerPassword(String username, String newPassword) {
+        String sql = "UPDATE users SET password = ? WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // plain text, same as createTeller()
+            ps.setString(2, username);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not update password for " + username, ex);
+            return false;
+        }
+    }
+
+    /**
+     * Records handled by one teller (newest first, max 50), including account
+     * creations. Each row: {time, ticketNo, transactionType, status, handledBy}.
+     * Matches on the "(username)" part of confirmed_by so old records still
+     * show up even if the teller's full name is changed later.
+     */
+    public static List<String[]> getTellerActivity(String username) {
+        List<String[]> list = new ArrayList<>();
+        String sql = "SELECT COALESCE(updated_at, created_at) AS t, ticket_no, category, transaction_type, "
+                + "status, confirmed_by FROM queue_tickets WHERE confirmed_by LIKE ? ESCAPE '\\' "
+                + "ORDER BY id DESC LIMIT 50";
+        Connection conn = getConnection();
+        if (conn == null) return list;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            String safe = username.replace("\\", "\\\\").replace("_", "\\_").replace("%", "\\%");
+            ps.setString(1, "%(" + safe + ")");
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    String ticket = rs.getString("ticket_no");
+                    String type = rs.getString("transaction_type");
+                    if (type == null || type.isEmpty()) type = rs.getString("category");
+                    if (ticket != null && ticket.startsWith("AC-")) {
+                        type = "Account Creation - " + rs.getString("category");
+                    }
+                    list.add(new String[]{rs.getString("t"), ticket, type,
+                        rs.getString("status"), rs.getString("confirmed_by")});
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not load activity for " + username, ex);
+        }
+        return list;
+    }
+
     // ---------------------------------------------------------------
     // ADMINS (used by the creationAdmin form)
     // ---------------------------------------------------------------
@@ -673,10 +856,7 @@ public final class QueueDatabase {
         }
     }
 
-    /** Inserts a new bank account with an initial balance and uploaded ID file path */
-   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
-        return createBankAccount(accountNo, name, accountType, balance, idPath, null);
-   }
+  
 
    /** Same as above, but also records which teller account confirmed it. */
    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
