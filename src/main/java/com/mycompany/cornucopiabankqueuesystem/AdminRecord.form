@@ -40,7 +40,7 @@
     <Container class="javax.swing.JPanel" name="ACCOUNTPANEL">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="cc" green="cc" red="cc" type="rgb"/>
+          <Color blue="f9" green="f6" red="f4" type="rgb"/>
         </Property>
       </Properties>
 

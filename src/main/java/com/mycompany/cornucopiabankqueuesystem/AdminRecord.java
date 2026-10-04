@@ -82,7 +82,7 @@ public class AdminRecord extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        ACCOUNTPANEL.setBackground(new java.awt.Color(204, 204, 204));
+        ACCOUNTPANEL.setBackground(new java.awt.Color(244, 246, 249));
         ACCOUNTPANEL.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel2.setBackground(new java.awt.Color(15, 23, 42));
