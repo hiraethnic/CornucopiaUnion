@@ -17,14 +17,24 @@ public class AdminRecord extends javax.swing.JFrame {
      */
     public AdminRecord() {
         initComponents();
-         QueueDatabase.initialize(); 
+        QueueDatabase.initialize(); 
+        setupTellerColumns();
         loadTransactionLogs();
         setLocationRelativeTo(null);
     }
     
     
     
-    
+        private void setupTellerColumns() {
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(
+            new Object[][]{},
+            new String[]{"TICKET NO.", "DATE", "TIME", "TRANSACTION TYPE", "NAME", "ACCOUNT NO.",
+                "AMOUNT", "REFERENCE NO.", "TELLER USER"}) {
+            @Override
+            public boolean isCellEditable(int row, int col) { return false; }
+        };
+        AccountList.setModel(model);
+    }
     
     
     
@@ -41,9 +51,9 @@ public class AdminRecord extends javax.swing.JFrame {
         String query = "SELECT * FROM queue_tickets";
         
         if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            query += " WHERE ticket_no LIKE ? OR customer_name LIKE ? OR reference_no LIKE ? OR transaction_type LIKE ? OR counter LIKE ?";
+             query += " WHERE ticket_no LIKE ? OR customer_name LIKE ? OR reference_no LIKE ? OR transaction_type LIKE ? OR counter LIKE ? OR confirmed_by LIKE ? OR released_by LIKE ?";
         }
-        query += " ORDER BY id DESC";
+         query += " ORDER BY id DESC";
 
         java.sql.PreparedStatement pst = conn.prepareStatement(query);
         
@@ -54,6 +64,8 @@ public class AdminRecord extends javax.swing.JFrame {
             pst.setString(3, keyword);
             pst.setString(4, keyword);
             pst.setString(5, keyword);
+            pst.setString(6, keyword);
+            pst.setString(7, keyword);
         }
 
         java.sql.ResultSet rs = pst.executeQuery();
@@ -70,6 +82,12 @@ public class AdminRecord extends javax.swing.JFrame {
             } else {
                 datePart = createdAt;
             }
+            
+            String tellerUser = rs.getString("confirmed_by");
+            if (tellerUser == null || tellerUser.trim().isEmpty()) {
+                tellerUser = rs.getString("released_by");
+            }
+            if (tellerUser == null) tellerUser = "";
 
             model.addRow(new Object[]{
                 rs.getString("ticket_no"),        // Ticket No
@@ -77,10 +95,10 @@ public class AdminRecord extends javax.swing.JFrame {
                 timePart,                         // Time
                 rs.getString("transaction_type"), // Transaction Type (deposit, withdraw, etc.)
                 rs.getString("customer_name"),    // Name
-                rs.getString("reference_no"),     // Account No / Reference
+                rs.getString("reference_no"),     // Account No
                 rs.getString("amount"),           // Amount
-                rs.getString("reference_no"),     // Reference ID
-                rs.getString("counter")           // Teller / Counter employee
+                rs.getString("reference_no"),     // Reference No
+                tellerUser                        // Teller user
             });
         }
         
@@ -291,7 +309,7 @@ public class AdminRecord extends javax.swing.JFrame {
 
             },
             new String [] {
-                "TICKET NO.", "DATE", "TIME", "TRANSACTION TYPE", "NAME", "ACCOUNT NO.", "AMOUNT", "REFERENCE NO.", "TELLER"
+                "TICKET NO.", "DATE", "TIME", "TRANSACTION TYPE", "NAME", "ACCOUNT NO.", "AMOUNT", "REFERENCE NO.", "TELLER USER"
             }
         ) {
             boolean[] canEdit = new boolean [] {
