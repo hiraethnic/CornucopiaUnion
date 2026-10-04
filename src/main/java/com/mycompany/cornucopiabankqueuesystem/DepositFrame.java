@@ -60,16 +60,16 @@ public class DepositFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel3.setBackground(new java.awt.Color(244, 246, 249));
+        jPanel3.setBackground(new java.awt.Color(212, 160, 23));
 
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
         jLabel1.setText("Centria Unified");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(212, 175, 55));
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Deposit kiosk");
 
         jPanel2.setBackground(new java.awt.Color(253, 220, 92));

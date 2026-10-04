@@ -40,9 +40,10 @@ public final class QueueDatabase {
                 + "full_name TEXT NOT NULL,"
                 + "can_account_creation INTEGER NOT NULL DEFAULT 0,"
                 + "can_cash_deposits INTEGER NOT NULL DEFAULT 0,"
-                + "can_account_termination INTEGER NOT NULL DEFAULT 0,"
+                + "can_bill_payments INTEGER NOT NULL DEFAULT 0,"
                 + "can_fund_transfers INTEGER NOT NULL DEFAULT 0,"
                 + "can_cash_withdrawals INTEGER NOT NULL DEFAULT 0,"
+                + "can_foreign_exchange INTEGER NOT NULL DEFAULT 0,"
                 + "created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))"
                 + ")";
         Connection conn = getConnection();
@@ -52,6 +53,9 @@ public final class QueueDatabase {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create users table", ex);
         }
+        // Older databases: add the new permission columns.
+        addColumnIfMissing(conn, "can_bill_payments", "ALTER TABLE users ADD COLUMN can_bill_payments INTEGER NOT NULL DEFAULT 0");
+        addColumnIfMissing(conn, "can_foreign_exchange", "ALTER TABLE users ADD COLUMN can_foreign_exchange INTEGER NOT NULL DEFAULT 0");
     }
 
     public static boolean usernameExists(String username) {
@@ -75,8 +79,8 @@ public final class QueueDatabase {
             String fullName, TellerPermissions p) {
         initializeUsersTable();
         String sql = "INSERT INTO users (username, password, full_name, can_account_creation, "
-                + "can_cash_deposits, can_account_termination, can_fund_transfers, can_cash_withdrawals) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                + "can_cash_deposits, can_bill_payments, can_fund_transfers, can_cash_withdrawals, can_foreign_exchange) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = getConnection();
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -87,9 +91,10 @@ public final class QueueDatabase {
             ps.setString(3, fullName.trim());
             ps.setInt(4, p.canAccountCreation() ? 1 : 0);
             ps.setInt(5, p.canCashDeposits() ? 1 : 0);
-            ps.setInt(6, p.canAccountTermination() ? 1 : 0);
+            ps.setInt(6, p.canBillPayments() ? 1 : 0);
             ps.setInt(7, p.canFundTransfers() ? 1 : 0);
             ps.setInt(8, p.canCashWithdrawals() ? 1 : 0);
+            ps.setInt(9, p.canForeignExchange() ? 1 : 0);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create teller " + username, ex);
@@ -114,9 +119,10 @@ public final class QueueDatabase {
                     return new TellerPermissions(
                             rs.getInt("can_account_creation") == 1,
                             rs.getInt("can_cash_deposits") == 1,
-                            rs.getInt("can_account_termination") == 1,
+                            rs.getInt("can_bill_payments") == 1,
                             rs.getInt("can_fund_transfers") == 1,
-                            rs.getInt("can_cash_withdrawals") == 1);
+                            rs.getInt("can_cash_withdrawals") == 1,
+                            rs.getInt("can_foreign_exchange") == 1);
                 }
             }
         } catch (SQLException ex) {
@@ -544,26 +550,51 @@ public final class QueueDatabase {
      *
      * @return true if a ticket was called, false if the queue was empty
      */
+    /** Calls the next waiting ticket of ANY type (no permission limit). */
     public static synchronized Ticket callNext(String counter) {
+        return callNext(counter, TellerPermissions.allGranted());
+    }
+
+    /**
+     * Calls the next waiting ticket that this teller is allowed to serve.
+     * Tickets for functions the teller doesn't have are skipped and stay waiting
+     * for another teller.
+     */
+    public static synchronized Ticket callNext(String counter, TellerPermissions perms) {
         if (getActiveTicket(counter) != null) {
-            return null; 
+            return null;
         }
-        String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
-                + "transaction_type = category, updated_at = datetime('now','localtime') "
-                + "WHERE id = (SELECT id FROM queue_tickets WHERE status = 'WAITING' "
-                + "ORDER BY priority DESC, id ASC LIMIT 1)";
         Connection conn = getConnection();
         if (conn == null) return null;
+
+        int chosenId = -1;
+        String pick = "SELECT id, category FROM queue_tickets WHERE status = 'WAITING' "
+                + "ORDER BY priority DESC, id ASC";
+        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(pick)) {
+            while (rs.next()) {
+                if (perms != null && perms.canHandle(rs.getString("category"))) {
+                    chosenId = rs.getInt("id");
+                    break;
+                }
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not look up next ticket", ex);
+            return null;
+        }
+        if (chosenId < 0) return null;
+
+        String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
+                + "transaction_type = category, updated_at = datetime('now','localtime') WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, counter);
-            int updated = ps.executeUpdate();
-            return updated > 0 ? getActiveTicket(counter) : null;
+            ps.setInt(2, chosenId);
+            return ps.executeUpdate() > 0 ? getActiveTicket(counter) : null;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not call next ticket", ex);
             return null;
         }
-        
     }
+
     public static synchronized void saveKioskData(String ticketNo, String referenceNo, double amount) {
         String sql = "UPDATE queue_tickets SET reference_no = ?, amount = ? WHERE ticket_no = ?";
         Connection conn = getConnection();

@@ -62,21 +62,21 @@ public class KioskFrame extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 0));
+        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
         jLabel1.setText("Centria Unified");
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(301, 12, -1, 35));
 
         jLabel2.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Self-Service Banking Kiosk");
-        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(245, 59, -1, -1));
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 40, -1, -1));
 
         jLabel3.setFont(new java.awt.Font("SansSerif", 3, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("\"Serving You with Abundance\"");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(232, 89, -1, -1));
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 70, -1, -1));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 752, -1));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 752, 100));
 
         btnBillsPayment.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnBillsPayment.setText(" Bills Payment");
@@ -124,10 +124,10 @@ public class KioskFrame extends javax.swing.JFrame {
         fundTransferbtn.addActionListener(this::fundTransferbtnActionPerformed);
         getContentPane().add(fundTransferbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(579, 272, 167, 97));
 
-        jPanel3.setBackground(new java.awt.Color(255, 215, 0));
+        jPanel3.setBackground(new java.awt.Color(212, 160, 23));
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel4.setFont(new java.awt.Font("SansSerif", 0, 24)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Welcome! Please select your transaction:");
 
@@ -136,16 +136,16 @@ public class KioskFrame extends javax.swing.JFrame {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(162, Short.MAX_VALUE)
+                .addContainerGap(132, Short.MAX_VALUE)
                 .addComponent(jLabel4)
-                .addGap(154, 154, 154))
+                .addGap(156, 156, 156))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(56, 56, 56)
+                .addGap(35, 35, 35)
                 .addComponent(jLabel4)
-                .addContainerGap(392, Short.MAX_VALUE))
+                .addContainerGap(413, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 760, 480));

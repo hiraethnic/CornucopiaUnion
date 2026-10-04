@@ -162,7 +162,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(15, 23, 42));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
         jLabel1.setText("ADMIN PORTAL - ACCOUNT MANAGEMENT");
 
         jButton1.setBackground(new java.awt.Color(15, 23, 42));
