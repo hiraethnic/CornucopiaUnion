@@ -60,7 +60,7 @@ public class DepositFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel3.setBackground(new java.awt.Color(244, 246, 249));
+        jPanel3.setBackground(new java.awt.Color(212, 160, 23));
 
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
 

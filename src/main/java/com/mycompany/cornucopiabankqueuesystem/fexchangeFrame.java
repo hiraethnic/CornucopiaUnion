@@ -237,6 +237,8 @@ package com.mycompany.cornucopiabankqueuesystem;
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
+        jPanel3.setBackground(new java.awt.Color(212, 160, 23));
+
         jPanel4.setBackground(new java.awt.Color(253, 220, 92));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
