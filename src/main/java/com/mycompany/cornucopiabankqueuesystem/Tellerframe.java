@@ -27,21 +27,33 @@ public class Tellerframe extends javax.swing.JFrame {
     /**
      * Creates new form Tellerframe
      */
-    public Tellerframe(TellerPermissions permissions) {
+ public Tellerframe(TellerPermissions permissions) {
         this.permissions = permissions;
         this.tellerName = permissions.getDisplayName();
         initComponents();
-        
-       
-        
+ 
+        // Logout (or closing the window) marks this teller offline.
+        jButton25.addActionListener(e -> {
+            QueueDatabase.setTellerOnline(permissions.getUsername(), false);
+            new Loginadminteller().setVisible(true);
+            this.dispose();
+        });
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                QueueDatabase.setTellerOnline(permissions.getUsername(), false);
+            }
+        });
+ 
         QueueDatabase.initialize();
         setupCustomLogic();
         applyPermissions();
         refreshAllData();
-
+ 
         refreshTimer = new javax.swing.Timer(3000, e -> refreshAllData());
         refreshTimer.start();
     }
+ 
 
      public Tellerframe() {
         this(TellerPermissions.allGranted());

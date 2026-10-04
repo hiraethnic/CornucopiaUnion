@@ -157,7 +157,7 @@
                                               <Component id="jButton5" min="-2" pref="125" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace pref="55" max="32767" attributes="0"/>
+                                              <EmptySpace pref="63" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -517,7 +517,7 @@
                                       <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="265" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="267" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>

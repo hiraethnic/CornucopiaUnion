@@ -61,6 +61,7 @@ public final class QueueDatabase {
         addColumnIfMissing(conn, "email", "ALTER TABLE users ADD COLUMN email TEXT");
         addColumnIfMissing(conn, "contact_number", "ALTER TABLE users ADD COLUMN contact_number TEXT");
         addColumnIfMissing(conn, "status", "ALTER TABLE users ADD COLUMN status TEXT NOT NULL DEFAULT 'ACTIVE'");
+        addColumnIfMissing(conn, "online", "ALTER TABLE users ADD COLUMN online INTEGER NOT NULL DEFAULT 0");
     }
 
     public static boolean usernameExists(String username) {
@@ -121,7 +122,7 @@ public final class QueueDatabase {
             ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new TellerPermissions(
+                    TellerPermissions perms = new TellerPermissions(
                             rs.getInt("can_account_creation") == 1,
                             rs.getInt("can_cash_deposits") == 1,
                             rs.getInt("can_bill_payments") == 1,
@@ -129,6 +130,8 @@ public final class QueueDatabase {
                             rs.getInt("can_cash_withdrawals") == 1,
                             rs.getInt("can_foreign_exchange") == 1)
                             .withIdentity(rs.getString("username"), rs.getString("full_name"));
+                    setTellerOnline(perms.getUsername(), true);   // shows green in Teller Management
+                    return perms;
                 }
             }
         } catch (SQLException ex) {
@@ -190,10 +193,10 @@ public final class QueueDatabase {
         }
     }
 
-    /** Profile of one teller: {fullName, employeeId, email, contact, status}, or null if not found. */
+    /** Profile of one teller: {fullName, employeeId, email, contact, status, password, online("1"/"0")}, or null. */
     public static String[] getTellerProfile(String username) {
         initializeUsersTable();
-        String sql = "SELECT full_name, employee_id, email, contact_number, status FROM users WHERE username = ?";
+        String sql = "SELECT full_name, employee_id, email, contact_number, status, password, online FROM users WHERE username = ?";
         Connection conn = getConnection();
         if (conn == null) return null;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -205,7 +208,9 @@ public final class QueueDatabase {
                         rs.getString("employee_id") == null ? "" : rs.getString("employee_id"),
                         rs.getString("email") == null ? "" : rs.getString("email"),
                         rs.getString("contact_number") == null ? "" : rs.getString("contact_number"),
-                        rs.getString("status")};
+                        rs.getString("status"),
+                        rs.getString("password"),
+                        String.valueOf(rs.getInt("online"))};
                 }
             }
         } catch (SQLException ex) {
@@ -265,6 +270,21 @@ public final class QueueDatabase {
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not update teller " + username, ex);
+            return false;
+        }
+    }
+
+    /** Marks a teller online (true) or offline (false). */
+    public static synchronized boolean setTellerOnline(String username, boolean online) {
+        String sql = "UPDATE users SET online = ? WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, online ? 1 : 0);
+            ps.setString(2, username);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not update online status for " + username, ex);
             return false;
         }
     }
@@ -856,10 +876,7 @@ public final class QueueDatabase {
         }
     }
 
-    /** Inserts a new bank account with an initial balance and uploaded ID file path */
-      public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
-        return createBankAccount(accountNo, name, accountType, balance, idPath, null);
-   }
+  
 
    /** Same as above, but also records which teller account confirmed it. */
    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
