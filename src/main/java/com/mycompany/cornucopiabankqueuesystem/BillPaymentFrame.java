@@ -20,7 +20,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         QueueDatabase.initialize();
         applyRealTimeValidation();
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
-        
+        setLocationRelativeTo(null);
         
         
         

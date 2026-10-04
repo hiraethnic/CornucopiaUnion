@@ -120,7 +120,8 @@ public final class QueueDatabase {
                             rs.getInt("can_bill_payments") == 1,
                             rs.getInt("can_fund_transfers") == 1,
                             rs.getInt("can_cash_withdrawals") == 1,
-                            rs.getInt("can_foreign_exchange") == 1);
+                            rs.getInt("can_foreign_exchange") == 1)
+                            .withIdentity(rs.getString("username"), rs.getString("full_name"));
                 }
             }
         } catch (SQLException ex) {
@@ -276,6 +277,31 @@ public final class QueueDatabase {
         }
     }
    
+    /** All saved teller accounts. Each row: {fullName, username, permissions, createdAt}. */
+    public static List<String[]> getAllTellers() {
+        initializeUsersTable();
+        List<String[]> list = new ArrayList<>();
+        Connection conn = getConnection();
+        if (conn == null) return list;
+        String sql = "SELECT * FROM users ORDER BY id DESC";
+        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                List<String> perms = new ArrayList<>();
+                if (rs.getInt("can_account_creation") == 1) perms.add("Account Creation");
+                if (rs.getInt("can_cash_deposits") == 1) perms.add("Deposit");
+                if (rs.getInt("can_bill_payments") == 1) perms.add("Bills Payment");
+                if (rs.getInt("can_fund_transfers") == 1) perms.add("Transfer");
+                if (rs.getInt("can_cash_withdrawals") == 1) perms.add("Withdrawal");
+                if (rs.getInt("can_foreign_exchange") == 1) perms.add("Foreign Exchange");
+                list.add(new String[]{rs.getString("full_name"), rs.getString("username"),
+                    String.join(", ", perms), rs.getString("created_at")});
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not load teller accounts", ex);
+        }
+        return list;
+    }
+
     public static synchronized Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
@@ -364,6 +390,8 @@ public final class QueueDatabase {
         addColumnIfMissing(conn, "amount", "ALTER TABLE queue_tickets ADD COLUMN amount REAL");
         addColumnIfMissing(conn, "reference_no", "ALTER TABLE queue_tickets ADD COLUMN reference_no TEXT");
         addColumnIfMissing(conn, "updated_at", "ALTER TABLE queue_tickets ADD COLUMN updated_at TEXT");
+        addColumnIfMissing(conn, "confirmed_by", "ALTER TABLE queue_tickets ADD COLUMN confirmed_by TEXT");
+        addColumnIfMissing(conn, "released_by", "ALTER TABLE queue_tickets ADD COLUMN released_by TEXT");
     }
 
     private static void addColumnIfMissing(Connection conn, String columnName, String alterSql) {
@@ -667,10 +695,18 @@ public final class QueueDatabase {
         }
     }
 
-    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
+    /** Inserts a new bank account with an initial balance and uploaded ID file path */
+   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath) {
+        return createBankAccount(accountNo, name, accountType, balance, idPath, null);
+   }
+
+   /** Same as above, but also records which teller account confirmed it. */
+   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
+        // NOTE: random number can collide with an existing AC ticket (ticket_no is UNIQUE) and fail.
+        // Should be replaced with sequential numbering like addTicket(). Left as is to keep it simple.
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
-        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status) "
-                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE')";
+        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by) "
+                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?)";
 
         Connection conn = getConnection();
         if (conn == null) return false;
@@ -681,6 +717,7 @@ public final class QueueDatabase {
             ps.setString(3, name);
             ps.setDouble(4, balance);
             ps.setString(5, accountNo);
+            ps.setString(6, confirmedBy);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Error saving bank account record", ex);

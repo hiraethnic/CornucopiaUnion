@@ -20,6 +20,8 @@ public class Tellerframe extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Tellerframe.class.getName());
     private String uploadedIdFilePath = null;
     private final TellerPermissions permissions;
+     /** Logged-in teller saved in the records as confirmer / releaser. */
+    private final String tellerName;
 
 
     /**
@@ -27,6 +29,7 @@ public class Tellerframe extends javax.swing.JFrame {
      */
     public Tellerframe(TellerPermissions permissions) {
         this.permissions = permissions;
+        this.tellerName = permissions.getDisplayName();
         initComponents();
         
        
@@ -514,22 +517,23 @@ public class Tellerframe extends javax.swing.JFrame {
             ValidationUtils.showError(this, "No active ticket to cancel.");
             return;
         }
-
-        String sql = "UPDATE queue_tickets SET status = 'WAITING', counter = NULL, updated_at = datetime('now','localtime') "
+ 
+        String sql = "UPDATE queue_tickets SET status = 'WAITING', counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
                    + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
-
+ 
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
-            ps.setString(1, activeTicket.ticketNo);
+            ps.setString(1, tellerName);
+            ps.setString(2, activeTicket.ticketNo);
             if (ps.executeUpdate() > 0) {
                 ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " returned back to waiting queue!");
-
+ 
                 activeTicket = null;
                 customer.setText("");
                 currencyt1.setText("");
                 customer.setText("");
                 jLabel36.setText("₱ 0.00");
                 
-
+ 
                 refreshAllData();
             }
         } catch (java.sql.SQLException ex) {
@@ -688,7 +692,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
             currencyacc.setText(newAccountNumber);
 
-            boolean created = QueueDatabase.createBankAccount(newAccountNumber, name, accType, initialBalance, uploadedIdFilePath);
+           boolean created = QueueDatabase.createBankAccount(newAccountNumber, name, accType, initialBalance, uploadedIdFilePath, tellerName);
 
             if (!created) {
                 ValidationUtils.showError(this, "Failed to save bank account to database.");
@@ -841,12 +845,14 @@ public class Tellerframe extends javax.swing.JFrame {
                      + "-REF-" + System.currentTimeMillis();
 
         // FIX: Update transaction_type instead of overwriting reference_no
-        String sql = "UPDATE queue_tickets SET status = 'DONE', valid_id_submitted = 1, transaction_type = ?, "
+        String sql = "UPDATE queue_tickets SET status = 'DONE', valid_id_submitted = 1, transaction_type = ?, confirmed_by = ?, "
                    + "updated_at = datetime('now','localtime') WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
-
+ 
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
             ps.setString(1, activeTicket.category); 
-            ps.setString(2, activeTicket.ticketNo);
+            ps.setString(2, tellerName);
+            ps.setString(3, activeTicket.ticketNo);
+        
 
             if (ps.executeUpdate() > 0) {
                 ValidationUtils.showSuccess(this, "Transaction Confirmed & Saved!\nReference No: " + refNo);
