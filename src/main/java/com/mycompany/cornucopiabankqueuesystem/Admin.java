@@ -323,6 +323,7 @@ public class Admin extends javax.swing.JFrame {
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(0, 0, 153));
         jButton2.setText("Teller Management");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -400,15 +401,30 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-      String fullName = jTextField1.getText();   // Employee full name
+       String fullName = jTextField1.getText();   // Employee full name
         String username = jTextField5.getText();   // System username
         String password = jTextField6.getText();   // Initial password
+        String employeeId = jTextField2.getText(); // Employee ID
+        String email = jTextField3.getText();      // Email address
+        String contact = jTextField4.getText();    // Contact number
         // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
         // (then use new String(field.getPassword())).
  
         // --- validation ---
         if (!ValidationUtils.isValidName(fullName)) {
             ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
+            return;
+        }
+        if (!ValidationUtils.isValidReferenceNumber(employeeId)) {
+            ValidationUtils.showError(this, "Employee ID must be 4-30 characters (letters, numbers, hyphen).");
+            return;
+        }
+        if (!ValidationUtils.isValidEmail(email)) {
+            ValidationUtils.showError(this, "Enter a valid email address (e.g. name@example.com).");
+            return;
+        }
+        if (!ValidationUtils.isValidContactNumber(contact)) {
+            ValidationUtils.showError(this, "Contact number must be 09XXXXXXXXX or +639XXXXXXXXX.");
             return;
         }
         if (!ValidationUtils.isValidUsername(username)) {
@@ -429,6 +445,10 @@ public class Admin extends javax.swing.JFrame {
             ValidationUtils.showError(this, "That username is already taken.");
             return;
         }
+        if (QueueDatabase.employeeIdExists(employeeId, "")) {
+            ValidationUtils.showError(this, "That employee ID is already used by another teller.");
+            return;
+        }
  
         // --- read checkboxes ---
         TellerPermissions permissions = new TellerPermissions(
@@ -440,7 +460,7 @@ public class Admin extends javax.swing.JFrame {
                 foreignexchan.isSelected());  // Foreign exchange
  
         // --- save ---
-        if (QueueDatabase.createTeller(username, password, fullName, permissions)) {
+        if (QueueDatabase.createTeller(username, password, fullName, employeeId, email, contact, permissions)) {
             ValidationUtils.showSuccess(this, "Teller account created for " + fullName.trim() + ".");
             clearForm();
         } else {
@@ -452,6 +472,11 @@ public class Admin extends javax.swing.JFrame {
          new Loginadminteller().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+      new Admintellermanagement().setVisible(true);
+      this.dispose();  
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

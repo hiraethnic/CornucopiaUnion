@@ -81,10 +81,12 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jPanel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="SelectEmployee" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jToggleButton2" alignment="0" min="-2" pref="26" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="SelectEmployee" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
@@ -243,6 +245,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jCheckBox5" min="-2" max="-2" attributes="0"/>
                                   <Component id="jCheckBox3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jCheckBox6" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -255,7 +258,7 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="EmployeeName" min="-2" pref="208" max="-2" attributes="0"/>
-                                  <Component id="EmployeeID" min="-2" pref="208" max="-2" attributes="0"/>
+                                  <Component id="jTextField2" min="-2" pref="208" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="77" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -264,8 +267,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="EmailAdress" pref="197" max="32767" attributes="0"/>
-                                  <Component id="ContactNumber" max="32767" attributes="0"/>
+                                  <Component id="jTextField3" pref="197" max="32767" attributes="0"/>
+                                  <Component id="jTextField4" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
@@ -291,7 +294,7 @@
                               <Component id="ResetPassword" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="SaveModifications" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="90" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -305,14 +308,14 @@
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="EmployeeName" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="EmailAdress" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="EmployeeID" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextField2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ContactNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jTextField4" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -326,7 +329,10 @@
                           <Component id="jCheckBox3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="jCheckBox2" min="-2" max="-2" attributes="0"/>
+                          <Component id="jCheckBox6" min="-2" pref="24" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace type="separate" pref="23" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -373,7 +379,7 @@
                 <Property name="text" type="java.lang.String" value="Employee ID:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="EmployeeID">
+            <Component class="javax.swing.JTextField" name="jTextField2">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
@@ -433,9 +439,10 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="1">
-                    <StringItem index="0" value=" "/>
+                    <StringItem index="0" value=""/>
                   </StringArray>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
@@ -480,7 +487,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Account termination"/>
+                <Property name="text" type="java.lang.String" value="Billspayment"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="jCheckBox1">
@@ -526,7 +533,7 @@
                 <Property name="text" type="java.lang.String" value="Email Adress:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="EmailAdress">
+            <Component class="javax.swing.JTextField" name="jTextField3">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
@@ -541,11 +548,19 @@
                 <Property name="text" type="java.lang.String" value="Contact Number:"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="ContactNumber">
+            <Component class="javax.swing.JTextField" name="jTextField4">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="0"/>
                 </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="jCheckBox6">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Segoe UI" size="14" style="1"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Foreignexchange"/>
               </Properties>
             </Component>
           </SubComponents>

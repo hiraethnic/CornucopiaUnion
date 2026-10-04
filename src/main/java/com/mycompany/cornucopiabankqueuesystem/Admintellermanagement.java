@@ -15,10 +15,107 @@ public class Admintellermanagement extends javax.swing.JFrame {
     /**
      * Creates new form Admintellermanagement
      */
+    
+    private boolean loading = false;   // true while the dropdown is being refilled
+    
     public Admintellermanagement() {
-        initComponents();
-    }
+         initComponents();
+    QueueDatabase.initializeUsersTable();
+    setLocationRelativeTo(null);
 
+    jLabel6.setText("Permissions:");
+    jCheckBox3.setText("Bills payment");
+    AccountStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Active", "Inactive"}));
+    UserName.setEditable(false);   // username is the login ID
+
+    SelectEmployee.addActionListener(e -> {
+        if (!loading) loadSelectedTeller();
+    });
+    jButton6.addActionListener(e -> {   // BACK
+        new Admin().setVisible(true);
+        this.dispose();
+    });
+
+    loadTellerList(null);
+    }
+    
+    
+    /** Dropdown text is "Full Name (username)"; this pulls the username back out. */
+private String selectedUsername() {
+    Object item = SelectEmployee.getSelectedItem();
+    if (item == null) return null;
+    String text = item.toString();
+    int open = text.lastIndexOf('(');
+    int close = text.lastIndexOf(')');
+    if (open < 0 || close < open) return null;
+    return text.substring(open + 1, close);
+}
+
+private void loadTellerList(String selectUsername) {
+    loading = true;
+    SelectEmployee.removeAllItems();
+    for (String[] t : QueueDatabase.getAllTellers()) {
+        SelectEmployee.addItem(t[0] + " (" + t[1] + ")");
+    }
+    if (selectUsername != null) {
+        for (int i = 0; i < SelectEmployee.getItemCount(); i++) {
+            if (SelectEmployee.getItemAt(i).endsWith("(" + selectUsername + ")")) {
+                SelectEmployee.setSelectedIndex(i);
+                break;
+            }
+        }
+    }
+    loading = false;
+    loadSelectedTeller();
+}
+
+private void clearFields() {
+    EmployeeName.setText("");
+    jTextField2.setText("");
+    jTextField3.setText("");
+    jTextField4.setText("");
+    UserName.setText("");
+    PassWord.setText("");
+    jCheckBox1.setSelected(false);
+    jCheckBox2.setSelected(false);
+    jCheckBox3.setSelected(false);
+    jCheckBox4.setSelected(false);
+    jCheckBox5.setSelected(false);
+    jCheckBox6.setSelected(false);
+    AccountStatus.setSelectedIndex(0);
+    ((javax.swing.table.DefaultTableModel) jTable1.getModel()).setRowCount(0);
+}
+
+private void loadSelectedTeller() {
+    String username = selectedUsername();
+    if (username == null) { clearFields(); return; }
+    String[] profile = QueueDatabase.getTellerProfile(username);
+    TellerPermissions perms = QueueDatabase.getTellerPermissions(username);
+    if (profile == null || perms == null) { clearFields(); return; }
+
+    EmployeeName.setText(profile[0]);
+    jTextField2.setText(profile[1]);
+    jTextField3.setText(profile[2]);
+    jTextField4.setText(profile[3]);
+    UserName.setText(username);
+    PassWord.setText("");   // never show the stored password
+    AccountStatus.setSelectedItem("INACTIVE".equalsIgnoreCase(profile[4]) ? "Inactive" : "Active");
+    jCheckBox1.setSelected(perms.canAccountCreation());
+    jCheckBox2.setSelected(perms.canCashDeposits());
+    jCheckBox3.setSelected(perms.canBillPayments());
+    jCheckBox4.setSelected(perms.canFundTransfers());
+    jCheckBox5.setSelected(perms.canCashWithdrawals());
+    jCheckBox6.setSelected(perms.canForeignExchange());
+    loadActivity(username);
+}
+
+private void loadActivity(String username) {
+    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) jTable1.getModel();
+    model.setRowCount(0);
+    for (String[] row : QueueDatabase.getTellerActivity(username)) {
+        model.addRow(row);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -40,7 +137,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         EmployeeName = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        EmployeeID = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         UserName = new javax.swing.JTextField();
@@ -56,9 +153,10 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jCheckBox4 = new javax.swing.JCheckBox();
         jCheckBox5 = new javax.swing.JCheckBox();
         jLabel11 = new javax.swing.JLabel();
-        EmailAdress = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
-        ContactNumber = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jCheckBox6 = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -130,7 +228,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Employee ID:");
 
-        EmployeeID.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Assigned Desk:");
@@ -149,7 +247,8 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jLabel9.setText("Account Status:");
 
         AccountStatus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        AccountStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " " }));
+        AccountStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
+        AccountStatus.setToolTipText("");
 
         ResetPassword.setBackground(new java.awt.Color(153, 0, 0));
         ResetPassword.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -164,7 +263,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
         SaveModifications.addActionListener(this::SaveModificationsActionPerformed);
 
         jCheckBox3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jCheckBox3.setText("Account termination");
+        jCheckBox3.setText("Billspayment");
 
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setText("Account creation");
@@ -182,12 +281,15 @@ public class Admintellermanagement extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel11.setText("Email Adress:");
 
-        EmailAdress.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setText("Contact Number:");
 
-        ContactNumber.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+
+        jCheckBox6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jCheckBox6.setText("Foreignexchange");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -206,7 +308,8 @@ public class Admintellermanagement extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jCheckBox5)
-                            .addComponent(jCheckBox3))
+                            .addComponent(jCheckBox3)
+                            .addComponent(jCheckBox6))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -216,15 +319,15 @@ public class Admintellermanagement extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(EmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(EmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(77, 77, 77)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(EmailAdress, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
-                            .addComponent(ContactNumber))
+                            .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                            .addComponent(jTextField4))
                         .addGap(26, 26, 26))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -244,7 +347,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
                         .addComponent(ResetPassword)
                         .addGap(18, 18, 18)
                         .addComponent(SaveModifications)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 90, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -254,13 +357,13 @@ public class Admintellermanagement extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(EmployeeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
-                    .addComponent(EmailAdress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(EmployeeID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12)
-                    .addComponent(ContactNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
@@ -271,7 +374,9 @@ public class Admintellermanagement extends javax.swing.JFrame {
                     .addComponent(jCheckBox4)
                     .addComponent(jCheckBox3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jCheckBox2)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jCheckBox2)
+                    .addComponent(jCheckBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 23, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
@@ -349,10 +454,11 @@ public class Admintellermanagement extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(31, 31, 31)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -386,11 +492,85 @@ public class Admintellermanagement extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void SaveModificationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveModificationsActionPerformed
-        // TODO add your handling code here:
+     String username = selectedUsername();
+    if (username == null) {
+        ValidationUtils.showError(this, "Select a teller first.");
+        return;
+    }
+    String name = EmployeeName.getText();
+    String employeeId = jTextField2.getText();
+    String email = jTextField3.getText();
+    String contact = jTextField4.getText();
+
+    if (!ValidationUtils.isValidName(name)) {
+        ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
+        return;
+    }
+    if (!ValidationUtils.isValidReferenceNumber(employeeId)) {
+        ValidationUtils.showError(this, "Employee ID must be 4-30 characters (letters, numbers, hyphen).");
+        return;
+    }
+    if (QueueDatabase.employeeIdExists(employeeId, username)) {
+        ValidationUtils.showError(this, "That employee ID is already used by another teller.");
+        return;
+    }
+    if (!ValidationUtils.isValidEmail(email)) {
+        ValidationUtils.showError(this, "Enter a valid email address (e.g. name@example.com).");
+        return;
+    }
+    if (!ValidationUtils.isValidContactNumber(contact)) {
+        ValidationUtils.showError(this, "Contact number must be 09XXXXXXXXX or +639XXXXXXXXX.");
+        return;
+    }
+    if (!ValidationUtils.isValidComboSelection(AccountStatus.getSelectedItem())) {
+        ValidationUtils.showError(this, "Select an account status.");
+        return;
+    }
+    boolean active = "Active".equals(AccountStatus.getSelectedItem().toString());
+    if (active && !(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
+            || jCheckBox4.isSelected() || jCheckBox5.isSelected() || jCheckBox6.isSelected())) {
+        ValidationUtils.showError(this, "An active teller needs at least one permission.");
+        return;
+    }
+
+    TellerPermissions permissions = new TellerPermissions(
+            jCheckBox1.isSelected(),   // Account creation
+            jCheckBox2.isSelected(),   // Cash deposits
+            jCheckBox3.isSelected(),   // Bills payment
+            jCheckBox4.isSelected(),   // Fund transfers
+            jCheckBox5.isSelected(),   // Cash withdrawals
+            jCheckBox6.isSelected());   // Foreign exchange
+
+    if (QueueDatabase.updateTeller(username, name, employeeId, email, contact,
+            permissions, active ? "ACTIVE" : "INACTIVE")) {
+        ValidationUtils.showSuccess(this, "Changes saved for " + name.trim() + ".");
+        loadTellerList(username);   // name may have changed
+    } else {
+        ValidationUtils.showError(this, "Could not save the changes. Please try again.");
+    }   
     }//GEN-LAST:event_SaveModificationsActionPerformed
 
     private void ResetPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ResetPasswordActionPerformed
-        // TODO add your handling code here:
+     String username = selectedUsername();
+    if (username == null) {
+        ValidationUtils.showError(this, "Select a teller first.");
+        return;
+    }
+    String newPassword = PassWord.getText();
+    if (!ValidationUtils.isValidPassword(newPassword)) {
+        ValidationUtils.showError(this, "Type the new password (at least 6 characters) in the Password box first.");
+        return;
+    }
+    int choice = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Change the password of " + username + "?", "Confirm", javax.swing.JOptionPane.YES_NO_OPTION);
+    if (choice != javax.swing.JOptionPane.YES_OPTION) return;
+
+    if (QueueDatabase.updateTellerPassword(username, newPassword)) {
+        ValidationUtils.showSuccess(this, "Password updated for " + username + ".");
+        PassWord.setText("");
+    } else {
+        ValidationUtils.showError(this, "Could not update the password. Please try again.");
+    }
     }//GEN-LAST:event_ResetPasswordActionPerformed
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
@@ -424,9 +604,6 @@ public class Admintellermanagement extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> AccountStatus;
-    private javax.swing.JTextField ContactNumber;
-    private javax.swing.JTextField EmailAdress;
-    private javax.swing.JTextField EmployeeID;
     private javax.swing.JTextField EmployeeName;
     private javax.swing.JTextField PassWord;
     private javax.swing.JButton ResetPassword;
@@ -440,6 +617,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox3;
     private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JCheckBox jCheckBox5;
+    private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -458,6 +636,9 @@ public class Admintellermanagement extends javax.swing.JFrame {
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     private javax.swing.JToggleButton jToggleButton2;
     // End of variables declaration//GEN-END:variables
 }
