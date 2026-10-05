@@ -329,6 +329,7 @@ public class AdminRecord extends javax.swing.JFrame {
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("BACK");
+        jButton5.addActionListener(this::jButton5ActionPerformed);
         ACCOUNTPANEL.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 510, -1, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -370,6 +371,15 @@ public class AdminRecord extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+         Admin adminnaframe = new Admin();
+        
+        adminnaframe.setVisible(true);
+        
+        this.dispose();
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments

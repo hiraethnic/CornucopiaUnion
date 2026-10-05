@@ -463,6 +463,7 @@ private void loadActivity(String username) {
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("BACK");
+        jButton6.addActionListener(this::jButton6ActionPerformed);
 
         jToggleButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jToggleButton2.addActionListener(this::jToggleButton2ActionPerformed);
@@ -674,6 +675,15 @@ private void loadActivity(String username) {
      // REFRESH: reload the teller list, profile, online state and activity, keeping the same teller selected.
     loadTellerList(selectedUsername()); 
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        // TODO add your handling code here:
+         Admin adminnaframe = new Admin();
+        
+        adminnaframe.setVisible(true);
+        
+        this.dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
