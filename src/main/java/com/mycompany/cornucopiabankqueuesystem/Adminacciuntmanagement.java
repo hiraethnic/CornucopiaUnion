@@ -407,7 +407,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Search for an account first.");
             return;
         }
-
+     
         boolean isCurrentlyLocked = jButton3.getText().equals("UNLOCK");
         boolean success = QueueDatabase.toggleAccountLock(accNo, !isCurrentlyLocked);
         

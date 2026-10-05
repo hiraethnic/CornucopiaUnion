@@ -318,7 +318,8 @@ public class Admin extends javax.swing.JFrame {
 
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(0, 0, 153));
-        jButton6.setText("Account Manager");
+        jButton6.setText("Account Management");
+        jButton6.addActionListener(this::jButton6ActionPerformed);
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(0, 0, 153));
@@ -392,7 +393,8 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+    new AdminRecord().setVisible(true);
+      this.dispose();   
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -477,6 +479,11 @@ public class Admin extends javax.swing.JFrame {
       new Admintellermanagement().setVisible(true);
       this.dispose();  
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+       new Adminacciuntmanagement().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     /**
      * @param args the command line arguments
