@@ -81,13 +81,13 @@ public class Admin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(244, 246, 249));
 
-        jPanel2.setBackground(new java.awt.Color(15, 23, 42));
+        jPanel2.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
         jLabel1.setText("ADMIN PORTAL - ACCOUNT CREATION AND SCOPE ASSIGNMENT");
 
-        jButton1.setBackground(new java.awt.Color(0, 23, 42));
+        jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
         jButton1.addActionListener(this::jButton1ActionPerformed);
@@ -114,7 +114,7 @@ public class Admin extends javax.swing.JFrame {
         );
 
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(0, 0, 153));
+        jButton3.setForeground(new java.awt.Color(30, 58, 138));
         jButton3.setText("Records and System Logs");
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
@@ -304,25 +304,25 @@ public class Admin extends javax.swing.JFrame {
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
-        jButton4.setBackground(new java.awt.Color(153, 0, 51));
+        jButton4.setBackground(new java.awt.Color(220, 38, 38));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("Clear form");
+        jButton4.setText("CLEAR FORM");
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
-        jButton5.setBackground(new java.awt.Color(0, 0, 255));
+        jButton5.setBackground(new java.awt.Color(30, 58, 138));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("Create account");
+        jButton5.setText("CREATE ACCOUNT");
         jButton5.addActionListener(this::jButton5ActionPerformed);
 
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(0, 0, 153));
+        jButton6.setForeground(new java.awt.Color(30, 58, 138));
         jButton6.setText("Account Management");
         jButton6.addActionListener(this::jButton6ActionPerformed);
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(0, 0, 153));
+        jButton2.setForeground(new java.awt.Color(30, 58, 138));
         jButton2.setText("Teller Management");
         jButton2.addActionListener(this::jButton2ActionPerformed);
 

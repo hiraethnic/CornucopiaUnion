@@ -1166,7 +1166,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel6.setForeground(new java.awt.Color(251, 191, 36));
         jLabel6.setText("Teller window");
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
@@ -2842,7 +2842,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel27.setText("HEALD TICKETS");
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel28.setText("C - 017");
+        jLabel28.setText("C- 017");
 
         jLabel29.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel29.setText("Ederson Mata");

@@ -82,7 +82,7 @@
         <Container class="javax.swing.JPanel" name="jPanel2">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="2a" green="17" red="f" type="rgb"/>
+              <Color blue="4a" green="23" red="c" type="rgb"/>
             </Property>
           </Properties>
 
@@ -118,7 +118,7 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="17" green="a0" red="d4" type="rgb"/>
+                  <Color blue="24" green="bf" red="fb" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="CREATION ADMIN"/>
               </Properties>

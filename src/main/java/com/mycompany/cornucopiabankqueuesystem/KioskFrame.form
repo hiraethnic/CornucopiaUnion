@@ -57,7 +57,7 @@
               <Font name="SansSerif" size="18" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="17" green="a0" red="d4" type="rgb"/>
+              <Color blue="24" green="bf" red="fb" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Centria Unified"/>
           </Properties>
@@ -276,7 +276,7 @@
     <Container class="javax.swing.JPanel" name="jPanel3">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="17" green="a0" red="d4" type="rgb"/>
+          <Color blue="f9" green="f6" red="f4" type="rgb"/>
         </Property>
       </Properties>
       <Constraints>
@@ -288,10 +288,10 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="1" attributes="0">
-                  <EmptySpace pref="132" max="32767" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="143" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
+                  <EmptySpace pref="145" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -315,7 +315,7 @@
               <Font name="SansSerif" size="24" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="ff" green="ff" red="ff" type="rgb"/>
+              <Color blue="8a" green="3a" red="1e" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Welcome! Please select your transaction:"/>
           </Properties>

@@ -271,7 +271,7 @@
                   <Font name="Segoe UI" size="18" style="1"/>
                 </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="17" green="a0" red="d4" type="rgb"/>
+                  <Color blue="24" green="bf" red="fb" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Teller window"/>
               </Properties>
@@ -3441,7 +3441,7 @@
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Segoe UI" size="14" style="1"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="C - 017"/>
+                <Property name="text" type="java.lang.String" value="C- 017"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel29">

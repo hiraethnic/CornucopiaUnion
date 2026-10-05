@@ -144,13 +144,13 @@ public class AdminRecord extends javax.swing.JFrame {
         ACCOUNTPANEL.setBackground(new java.awt.Color(244, 246, 249));
         ACCOUNTPANEL.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(15, 23, 42));
+        jPanel2.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
         jLabel1.setText("ADMIN RECORD SYSTEM LOGS");
 
-        jButton1.setBackground(new java.awt.Color(0, 23, 42));
+        jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
         jButton1.addActionListener(this::jButton1ActionPerformed);
@@ -253,10 +253,12 @@ public class AdminRecord extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(244, 246, 249));
 
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(30, 58, 138));
         jButton2.setText("TRANSACTION LOGS");
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
-        jButton4.setBackground(new java.awt.Color(51, 51, 255));
+        jButton4.setBackground(new java.awt.Color(30, 58, 138));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("REFRESH");
         jButton4.addActionListener(this::jButton4ActionPerformed);
@@ -269,7 +271,7 @@ public class AdminRecord extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setBackground(new java.awt.Color(0, 0, 153));
+        jButton6.setBackground(new java.awt.Color(30, 58, 138));
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("SEARCH");
@@ -282,11 +284,11 @@ public class AdminRecord extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(55, 55, 55)
-                .addComponent(jButton6)
-                .addGap(18, 18, 18)
+                .addGap(119, 119, 119)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(jButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 264, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addGap(27, 27, 27))
         );
@@ -325,7 +327,7 @@ public class AdminRecord extends javax.swing.JFrame {
 
         ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1090, 390));
 
-        jButton5.setBackground(new java.awt.Color(0, 0, 153));
+        jButton5.setBackground(new java.awt.Color(30, 58, 138));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("BACK");

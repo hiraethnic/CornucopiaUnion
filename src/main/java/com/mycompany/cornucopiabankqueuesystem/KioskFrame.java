@@ -62,7 +62,7 @@ public class KioskFrame extends javax.swing.JFrame {
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
         jLabel1.setText("Centria Unified");
         jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(301, 12, -1, 35));
 
@@ -124,21 +124,21 @@ public class KioskFrame extends javax.swing.JFrame {
         fundTransferbtn.addActionListener(this::fundTransferbtnActionPerformed);
         getContentPane().add(fundTransferbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(579, 272, 167, 97));
 
-        jPanel3.setBackground(new java.awt.Color(212, 160, 23));
+        jPanel3.setBackground(new java.awt.Color(244, 246, 249));
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setForeground(new java.awt.Color(30, 58, 138));
         jLabel4.setText("Welcome! Please select your transaction:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(132, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(143, 143, 143)
                 .addComponent(jLabel4)
-                .addGap(156, 156, 156))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

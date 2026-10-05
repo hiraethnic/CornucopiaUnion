@@ -57,10 +57,10 @@ public class creationAdmin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(244, 246, 249));
 
-        jPanel2.setBackground(new java.awt.Color(15, 23, 42));
+        jPanel2.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
         jLabel1.setText("CREATION ADMIN");
 
         logout.setBackground(new java.awt.Color(0, 23, 42));

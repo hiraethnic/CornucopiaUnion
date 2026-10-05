@@ -140,7 +140,7 @@
               <Font name="Segoe UI" size="24" style="1"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="17" green="a0" red="d4" type="rgb"/>
+              <Color blue="24" green="bf" red="fb" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="Centria Unified"/>
           </Properties>

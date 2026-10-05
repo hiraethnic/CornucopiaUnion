@@ -69,7 +69,7 @@ public class TransferFunds extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel11.setForeground(new java.awt.Color(251, 191, 36));
         jLabel11.setText("Centria Unified");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N

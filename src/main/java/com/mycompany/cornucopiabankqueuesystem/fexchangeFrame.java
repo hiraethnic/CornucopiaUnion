@@ -218,7 +218,7 @@ package com.mycompany.cornucopiabankqueuesystem;
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(212, 160, 23));
+        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
         jLabel1.setText("FOREIGN EXCHANGE SERVICES (FOREX)");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -238,7 +238,7 @@ package com.mycompany.cornucopiabankqueuesystem;
                 .addContainerGap(31, Short.MAX_VALUE))
         );
 
-        jPanel3.setBackground(new java.awt.Color(212, 160, 23));
+        jPanel3.setBackground(new java.awt.Color(244, 246, 249));
 
         jPanel4.setBackground(new java.awt.Color(253, 220, 92));
 
