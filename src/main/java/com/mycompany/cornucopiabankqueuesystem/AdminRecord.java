@@ -87,7 +87,8 @@ public class AdminRecord extends javax.swing.JFrame {
             if (tellerUser == null || tellerUser.trim().isEmpty()) {
                 tellerUser = rs.getString("released_by");
             }
-            if (tellerUser == null) tellerUser = "";
+            
+            if (tellerUser == null || tellerUser.trim().isEmpty()) tellerUser = "Not recorded";
 
             model.addRow(new Object[]{
                 rs.getString("ticket_no"),        // Ticket No

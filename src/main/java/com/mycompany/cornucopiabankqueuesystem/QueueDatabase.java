@@ -289,6 +289,21 @@ public final class QueueDatabase {
         }
     }
 
+    /** Permanently removes a teller account. Past transaction records keep the teller's name. */
+    /** Permanently removes a teller account. Past transaction records keep the teller's name. */
+    public static synchronized boolean deleteTeller(String username) {
+    String sql = "DELETE FROM users WHERE username = ?";
+    Connection conn = getConnection();
+    if (conn == null) return false;
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setString(1, username);
+        return ps.executeUpdate() > 0;
+    } catch (SQLException ex) {
+        logger.log(Level.SEVERE, "Could not delete teller " + username, ex);
+        return false;
+    }
+}
+
     public static synchronized boolean updateTellerPassword(String username, String newPassword) {
         String sql = "UPDATE users SET password = ? WHERE username = ?";
         Connection conn = getConnection();
@@ -799,11 +814,11 @@ public final class QueueDatabase {
         if (conn == null) return null;
 
         int chosenId = -1;
-        String pick = "SELECT id, category FROM queue_tickets WHERE status = 'WAITING' "
+        String pick = "SELECT id, ticket_no, category FROM queue_tickets WHERE status = 'WAITING' "
                 + "ORDER BY priority DESC, id ASC";
         try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(pick)) {
             while (rs.next()) {
-                if (perms != null && perms.canHandle(rs.getString("category"))) {
+                if (perms != null && perms.canHandleTicket(rs.getString("ticket_no"), rs.getString("category"))) {
                     chosenId = rs.getInt("id");
                     break;
                 }

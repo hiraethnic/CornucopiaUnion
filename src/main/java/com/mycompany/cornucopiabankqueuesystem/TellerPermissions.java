@@ -61,6 +61,19 @@ public class TellerPermissions {
      * True if this teller may serve a ticket of the given category
      * (e.g. "Deposit", "Foreign Exchange"). Unknown categories are denied.
      */
+    public boolean canHandleTicket(String ticketNo, String category) {
+        if (ticketNo != null) {
+            String t = ticketNo.toUpperCase();
+            if (t.startsWith("AC-")) return accountCreation;
+            if (t.startsWith("FX-")) return foreignExchange;
+            if (t.startsWith("WD-")) return cashWithdrawals;
+            if (t.startsWith("DP-")) return cashDeposits;
+            if (t.startsWith("TR-")) return fundTransfers;
+            if (t.startsWith("BP-")) return billPayments;
+        }
+        return canHandle(category);
+    }
+
     public boolean canHandle(String category) {
         if (category == null) return false;
         String c = category.toLowerCase();

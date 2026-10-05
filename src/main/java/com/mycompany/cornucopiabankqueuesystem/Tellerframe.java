@@ -12,7 +12,7 @@ package com.mycompany.cornucopiabankqueuesystem;
  * @author Lenovo
  */
 public class Tellerframe extends javax.swing.JFrame {
-     private final String counterName = "Counter 1";
+      private final String counterName;
     private QueueDatabase.Ticket activeTicket = null;
     private boolean isEditMode = false;
     private javax.swing.Timer refreshTimer;
@@ -30,6 +30,8 @@ public class Tellerframe extends javax.swing.JFrame {
  public Tellerframe(TellerPermissions permissions) {
         this.permissions = permissions;
         this.tellerName = permissions.getDisplayName();
+        this.counterName = permissions.getUsername().isEmpty()
+        ? "Counter 1" : "Counter - " + permissions.getUsername();
         initComponents();
         setLocationRelativeTo(null);
  
@@ -57,7 +59,7 @@ public class Tellerframe extends javax.swing.JFrame {
  
 
      public Tellerframe() {
-        this(TellerPermissions.allGranted());
+      this(TellerPermissions.allGranted().withIdentity("testteller", "Test Teller"));
     }
 
     /** Shows only the top buttons this teller is allowed to use. */
@@ -450,9 +452,9 @@ public class Tellerframe extends javax.swing.JFrame {
             ValidationUtils.showError(this, "Finish, Cancel, or clear the current ticket first!");
             return;
         }
-        QueueDatabase.Ticket next = QueueDatabase.callNext(counterName);
+         QueueDatabase.Ticket next = QueueDatabase.callNext(counterName, permissions);
         if (next == null) {
-            ValidationUtils.showError(this, "No customers waiting in queue.");
+            ValidationUtils.showError(this, "No waiting customers for the transactions you are allowed to handle.");
             return;
         }
 
@@ -510,6 +512,10 @@ public class Tellerframe extends javax.swing.JFrame {
    private void holdActiveTicket() {
         if (activeTicket == null) {
             ValidationUtils.showError(this, "No active ticket selected.");
+            return;
+        }
+        if (!permissions.canHandleTicket(activeTicket.ticketNo, activeTicket.category)) {
+            ValidationUtils.showError(this, "You are not allowed to process this transaction type.");
             return;
         }
 
@@ -577,7 +583,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel36.setText("₱ 0.00");
     }
 
-   private void recallHeldTicket() {
+    private void recallHeldTicket() {
         if (activeTicket != null) {
             ValidationUtils.showError(this, "Finish or clear current ticket before recalling history!");
             return;
@@ -586,33 +592,37 @@ public class Tellerframe extends javax.swing.JFrame {
             ValidationUtils.showError(this, "No tickets available to recall.");
             return;
         }
-
+ 
         QueueDatabase.Ticket ticketToRecall = pastDoneTickets.get(0);
-
+        if (!permissions.canHandleTicket(ticketToRecall.ticketNo, ticketToRecall.category)) {
+            ValidationUtils.showError(this, "You are not allowed to recall this transaction type.");
+            return;
+        }
+ 
         String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, updated_at = datetime('now','localtime') "
                    + "WHERE ticket_no = ?";
-
+ 
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
             ps.setString(1, counterName);
             ps.setString(2, ticketToRecall.ticketNo);
-
+ 
             if (ps.executeUpdate() > 0) {
                 ValidationUtils.showSuccess(this, "Ticket " + ticketToRecall.ticketNo + " recalled as Active Ticket!");
-
+ 
                 activeTicket = QueueDatabase.getActiveTicket(counterName);
                 autoSwitchAndFillPanel(activeTicket);
-
+ 
                 isEditMode = false;
                 setFieldsEditable(false);
                 resetEditButtonLabels();
-
+ 
                 refreshAllData();
             }
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, "Recall history error", ex);
         }
     }
-   
+        
  
     private void setFieldsEditable(boolean editable) {
         customer.setEditable(editable);
@@ -653,6 +663,10 @@ public class Tellerframe extends javax.swing.JFrame {
  private void confirmAndPrintTransaction() {
         if (activeTicket == null) {
             ValidationUtils.showError(this, "No active transaction to confirm.");
+            return;
+        }
+        if (!permissions.canHandleTicket(activeTicket.ticketNo, activeTicket.category)) {
+            ValidationUtils.showError(this, "You are not allowed to process this transaction type.");
             return;
         }
 
@@ -3055,7 +3069,8 @@ public class Tellerframe extends javax.swing.JFrame {
     }
     
     
-   private void showPanel(javax.swing.JPanel panel) {
+    private void showPanel(javax.swing.JPanel panel) {
+        if (!isPanelAllowed(panel)) return;
         jPanel7.removeAll();
         jPanel7.add(panel);
         jPanel7.repaint();

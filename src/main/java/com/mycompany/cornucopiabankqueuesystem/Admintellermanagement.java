@@ -77,6 +77,7 @@ private void loadTellerList(String selectUsername) {
             }
         }
     }
+    
     loading = false;
     loadSelectedTeller();
 }
@@ -655,11 +656,30 @@ private void loadActivity(String username) {
     }//GEN-LAST:event_EmployeeNameActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        // DELETE ACCOUNT
+    String username = selectedUsername();
+    if (username == null) {
+        ValidationUtils.showError(this, "Select a teller first.");
+        return;
+    }
+    int choice = javax.swing.JOptionPane.showConfirmDialog(this,
+            "Permanently delete the teller account \"" + username + "\"?\n"
+            + "This cannot be undone. Past transaction records are kept.",
+            "Confirm Delete", javax.swing.JOptionPane.YES_NO_OPTION,
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+    if (choice != javax.swing.JOptionPane.YES_OPTION) return;
+
+    if (QueueDatabase.deleteTeller(username)) {
+        ValidationUtils.showSuccess(this, "Teller " + username + " deleted.");
+        loadTellerList(null);
+    } else {
+        ValidationUtils.showError(this, "Could not delete the account. Please try again.");
+    }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-      
+     // REFRESH: reload the teller list, profile, online state and activity, keeping the same teller selected.
+    loadTellerList(selectedUsername()); 
     }//GEN-LAST:event_jButton4ActionPerformed
 
     /**
