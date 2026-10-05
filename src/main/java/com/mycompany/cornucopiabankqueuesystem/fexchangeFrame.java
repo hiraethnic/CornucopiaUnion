@@ -95,6 +95,7 @@ package com.mycompany.cornucopiabankqueuesystem;
 }
         public fexchangeFrame() {
             initComponents();
+            setLocationRelativeTo(null);
             QueueDatabase.initialize();
             applyRealTimeValidation();
             // loads lng if offline

@@ -19,6 +19,7 @@ public class DepositFrame extends javax.swing.JFrame {
         initComponents();
         QueueDatabase.initialize();
         applyRealTimeValidation();
+        setLocationRelativeTo(null);
     }
 
     /**

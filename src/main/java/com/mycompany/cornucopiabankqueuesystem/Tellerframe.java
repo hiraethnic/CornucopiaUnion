@@ -31,6 +31,7 @@ public class Tellerframe extends javax.swing.JFrame {
         this.permissions = permissions;
         this.tellerName = permissions.getDisplayName();
         initComponents();
+        setLocationRelativeTo(null);
  
         // Logout (or closing the window) marks this teller offline.
         jButton25.addActionListener(e -> {
