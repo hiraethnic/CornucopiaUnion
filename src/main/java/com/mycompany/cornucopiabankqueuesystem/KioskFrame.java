@@ -125,6 +125,7 @@ public class KioskFrame extends javax.swing.JFrame {
         getContentPane().add(fundTransferbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(579, 272, 167, 97));
 
         jPanel3.setBackground(new java.awt.Color(244, 246, 249));
+        jPanel3.setName(""); // NOI18N
 
         jLabel4.setBackground(new java.awt.Color(0, 0, 0));
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
@@ -138,7 +139,7 @@ public class KioskFrame extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(143, 143, 143)
                 .addComponent(jLabel4)
-                .addContainerGap(145, Short.MAX_VALUE))
+                .addContainerGap(147, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
