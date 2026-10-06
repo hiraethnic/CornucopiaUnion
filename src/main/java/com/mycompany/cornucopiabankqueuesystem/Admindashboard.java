@@ -17,6 +17,51 @@ public class Admindashboard extends javax.swing.JFrame {
      */
     public Admindashboard() {
         initComponents();
+        setLocationRelativeTo(null);
+        QueueDatabase.initialize();
+        
+        refreshDashboard(); // Load immediately 
+        
+        // Auto-refresh every 3 seconds
+        new javax.swing.Timer(3000, e -> refreshDashboard()).start();
+    }
+    
+    private void refreshDashboard() {
+        // 1. Cash in, Cash out, Net Cash Flow
+        double[] cash = QueueDatabase.getTodayCashFlow();
+        cashinshow.setText(String.format("₱ %,.2f", cash[0]));
+        cashoutshow.setText(String.format("₱ %,.2f", cash[1]));
+        netcashshow.setText(String.format("₱ %,.2f", cash[2]));
+        
+        // 2. Transactions
+        int[] counts = QueueDatabase.getTodayTransactionCounts();
+        transactionshow.setText(counts[0] + " Done / " + counts[1] + " Pending");
+        
+        // 3. Teller Activity Table
+        javax.swing.table.DefaultTableModel model = new javax.swing.table.DefaultTableModel(
+            new Object [][] {},
+            new String [] {"Teller", "Serving", "Status", "Served", "Cash In", "Cash Out"}
+        );
+        
+        for(Object[] row : QueueDatabase.getTellerDashboardActivity()) {
+            model.addRow(row);
+        }
+        
+        jTable1.setModel(model);
+        
+        // 4. Alerts 
+        java.util.List<String> alerts = QueueDatabase.getDashboardAlerts();
+        jLabel10.setText(alerts.size() > 0 ? alerts.get(0) : "✓ No pending alerts");
+        jLabel11.setText(alerts.size() > 1 ? alerts.get(1) : "");
+        jLabel12.setText(alerts.size() > 2 ? alerts.get(2) : "");
+        jLabel13.setText(alerts.size() > 3 ? alerts.get(3) : "");
+        
+        // 5. Recent Activity 
+        java.util.List<String> recent = QueueDatabase.getRecentActivity();
+        jLabel14.setText(recent.size() > 0 ? "• " + recent.get(0) : "No recent activity");
+        jLabel15.setText(recent.size() > 1 ? "• " + recent.get(1) : "");
+        jLabel16.setText(recent.size() > 2 ? "• " + recent.get(2) : "");
+        jLabel17.setText(recent.size() > 3 ? "• " + recent.get(3) : "");
     }
 
     /**
@@ -131,7 +176,7 @@ public class Admindashboard extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(cashinshow, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cashinshow))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -244,7 +289,15 @@ public class Admindashboard extends javax.swing.JFrame {
             new String [] {
                 "Teller", "Now Serving", "Status", "Served", "Cash In", "Cash Out"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);

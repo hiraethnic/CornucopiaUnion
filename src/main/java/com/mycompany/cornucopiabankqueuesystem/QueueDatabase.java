@@ -918,25 +918,24 @@ public final class QueueDatabase {
         }
     }
    
-    public static synchronized double getAccountBalance(String accountNo, String name) {
-     String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND LOWER(customer_name) = LOWER(?) AND status = 'DONE' LIMIT 1";
-     Connection conn = getConnection();
-     if (conn == null) return -1.0;
+   public static synchronized double getAccountBalance(String accountNo, String name) {
+        // Updated to target the main AC- record and check the lock status
+        String sql = "SELECT amount, status FROM queue_tickets WHERE reference_no = ? AND LOWER(customer_name) = LOWER(?) AND ticket_no LIKE 'AC-%' LIMIT 1";
+        Connection conn = getConnection();
+        if (conn == null) return -1.0;
 
-     try (PreparedStatement ps = conn.prepareStatement(sql)) {
-         ps.setString(1, accountNo);
-         ps.setString(2, name);
-         try (ResultSet rs = ps.executeQuery()) {
-             if (rs.next()) {
-                 return rs.getDouble("amount");
-             }
-         }
-     } catch (SQLException ex) {
-         logger.log(Level.SEVERE, "Error fetching account balance for " + accountNo, ex);
-     }
-     return -1.0;
- }
-
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, accountNo);
+            ps.setString(2, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    if ("LOCKED".equals(rs.getString("status"))) return -2.0; // -2.0 means locked
+                    return rs.getDouble("amount");
+                }
+            }
+        } catch (SQLException ex) { }
+        return -1.0; // -1.0 means not found
+    }
  /**
   * Updates the balance of an existing bank account.
   * 
@@ -1000,17 +999,20 @@ public final class QueueDatabase {
     }
     
     public static synchronized double getBalanceByNumber(String accountNo) {
-        String sql = "SELECT amount FROM queue_tickets WHERE reference_no = ? AND status = 'DONE' LIMIT 1";
+        String sql = "SELECT amount, status FROM queue_tickets WHERE reference_no = ? AND ticket_no LIKE 'AC-%' LIMIT 1";
         java.sql.Connection conn = getConnection();
         if (conn == null) return -1.0;
         
         try (java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, accountNo);
             try (java.sql.ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getDouble("amount");
+                if (rs.next()) {
+                    if ("LOCKED".equals(rs.getString("status"))) return -2.0; 
+                    return rs.getDouble("amount");
+                }
             }
         } catch (java.sql.SQLException ex) {}
-        return -1.0; // Returns -1 if account doesn't exist
+        return -1.0; 
     }
     
     public static String[] getAccountDetails(String searchTerm) {
@@ -1145,6 +1147,123 @@ public final class QueueDatabase {
             logger.log(Level.SEVERE, "Error toggling account lock", ex);
             return false;
         }
+    }
+    
+    // --- ADMIN DASHBOARD FUNCTIONS ---
+
+    public static double[] getTodayCashFlow() {
+        double cashIn = 0.0, cashOut = 0.0;
+        String sql = "SELECT category, amount FROM queue_tickets WHERE status = 'DONE' AND date(updated_at) = date('now', 'localtime')";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    String cat = rs.getString("category").toLowerCase();
+                    double amt = rs.getDouble("amount");
+                    if (cat.contains("deposit") || cat.contains("bill") || cat.contains("account")) {
+                        cashIn += amt;
+                    } else if (cat.contains("withdraw")) {
+                        cashOut += amt;
+                    }
+                }
+            } catch (SQLException ex) { }
+        }
+        return new double[]{cashIn, cashOut, cashIn - cashOut};
+    }
+
+    public static int[] getTodayTransactionCounts() {
+        int done = 0, pending = 0;
+        String sql = "SELECT status FROM queue_tickets WHERE date(created_at) = date('now', 'localtime') OR date(updated_at) = date('now', 'localtime')";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    if ("DONE".equals(rs.getString("status"))) done++;
+                    else pending++;
+                }
+            } catch (SQLException ex) { }
+        }
+        return new int[]{done, pending};
+    }
+
+    public static java.util.List<Object[]> getTellerDashboardActivity() {
+        java.util.List<Object[]> rows = new java.util.ArrayList<>();
+        Connection conn = getConnection();
+        if (conn == null) return rows;
+
+        // Fetch all users
+        String userSql = "SELECT username, online FROM users";
+        try (Statement userSt = conn.createStatement(); ResultSet userRs = userSt.executeQuery(userSql)) {
+            while (userRs.next()) {
+                String username = userRs.getString("username");
+                boolean isOnline = userRs.getInt("online") == 1;
+
+                // Current serving
+                String currentServing = "None";
+                String activeSql = "SELECT ticket_no FROM queue_tickets WHERE status IN ('SERVING', 'HELD') AND counter LIKE '%" + username + "%' LIMIT 1";
+                try(Statement actSt = conn.createStatement(); ResultSet actRs = actSt.executeQuery(activeSql)){
+                    if(actRs.next()) currentServing = actRs.getString("ticket_no");
+                }
+
+                // Stats today (FIXED: Uses 'counter' to correctly track who did the transaction)
+                int served = 0;
+                double cashIn = 0, cashOut = 0;
+                String statSql = "SELECT category, amount FROM queue_tickets WHERE status = 'DONE' AND counter LIKE '%" + username + "%' AND date(updated_at) = date('now', 'localtime')";
+                try(Statement statSt = conn.createStatement(); ResultSet statRs = statSt.executeQuery(statSql)){
+                    while(statRs.next()) {
+                        served++;
+                        String cat = statRs.getString("category").toLowerCase();
+                        double amt = statRs.getDouble("amount");
+                        if (cat.contains("deposit") || cat.contains("bill") || cat.contains("account")) cashIn += amt;
+                        else if (cat.contains("withdraw")) cashOut += amt;
+                    }
+                }
+                
+                String status = !isOnline ? "Offline" : (currentServing.equals("None") ? "Idle" : "Serving");
+                
+                // FIXED: Removed complex formatting so it shows as normal numbers without the "..."
+                rows.add(new Object[]{
+                    username, currentServing, status, served, 
+                    cashIn, cashOut
+                });
+            }
+        } catch (SQLException ex) { }
+        return rows;
+    }
+
+    public static java.util.List<String> getDashboardAlerts() {
+        java.util.List<String> alerts = new java.util.ArrayList<>();
+        Connection conn = getConnection();
+        if (conn == null) return alerts;
+        
+        try (Statement st = conn.createStatement()) {
+            // Large withdrawals
+            ResultSet rs1 = st.executeQuery("SELECT ticket_no, amount FROM queue_tickets WHERE status = 'DONE' AND category LIKE '%withdraw%' AND amount >= 50000 AND date(updated_at) = date('now', 'localtime')");
+            while(rs1.next()) alerts.add("⚠️ Large Withdrawal: " + rs1.getString("ticket_no") + " (₱ " + rs1.getDouble("amount") + ")");
+            
+            // Long waits
+            ResultSet rs2 = st.executeQuery("SELECT ticket_no FROM queue_tickets WHERE status = 'WAITING' AND (julianday('now', 'localtime') - julianday(created_at)) * 24 * 60 > 30");
+            while(rs2.next()) alerts.add("⚠️ Long Wait: Ticket " + rs2.getString("ticket_no") + " waiting > 30 mins");
+            
+            // Idle tellers
+            ResultSet rs3 = st.executeQuery("SELECT username FROM users WHERE status = 'ACTIVE' AND online = 1 AND username NOT IN (SELECT counter FROM queue_tickets WHERE status IN ('SERVING', 'HELD') AND counter IS NOT NULL)");
+            while(rs3.next()) alerts.add("⚠️ Idle Teller: " + rs3.getString("username") + " has no active ticket");
+        } catch (SQLException ex) { }
+        return alerts;
+    }
+
+    public static java.util.List<String> getRecentActivity() {
+        java.util.List<String> list = new java.util.ArrayList<>();
+        String sql = "SELECT category, confirmed_by, updated_at FROM queue_tickets WHERE status = 'DONE' ORDER BY updated_at DESC LIMIT 4";
+        Connection conn = getConnection();
+        if (conn != null) {
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+                while (rs.next()) {
+                    list.add(rs.getString("category") + " by " + rs.getString("confirmed_by") + " at " + rs.getString("updated_at").substring(11));
+                }
+            } catch (SQLException ex) { }
+        }
+        return list;
     }
 
     

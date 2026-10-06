@@ -420,8 +420,12 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
         
+        // 1. Validate Source Account
         double sourceBalance = QueueDatabase.getBalanceByNumber(accountNumber);
-        if (sourceBalance < 0) {
+        if (sourceBalance == -2.0) {
+            ValidationUtils.showError(this, "Transfer Failed: Your Source Account is LOCKED and cannot be used.");
+            return;
+        } else if (sourceBalance < 0) {
             ValidationUtils.showError(this, "Transfer Failed: Source Account Number does not exist in our records.");
             return;
         }
@@ -431,10 +435,13 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        // ADD THIS: Validate if the destination account actually exists in the database
-        if (QueueDatabase.getAccountBalance(destinationAccount, accountName) < 0) {
-            ValidationUtils.showError(this, 
-                    "Transfer Failed: Destination Account Number and Name do not match our system records.");
+        // 2. Validate Destination Account
+        double destBalance = QueueDatabase.getAccountBalance(destinationAccount, accountName);
+        if (destBalance == -2.0) {
+            ValidationUtils.showError(this, "Transfer Failed: The Destination Account is LOCKED and cannot receive funds.");
+            return;
+        } else if (destBalance < 0) {
+            ValidationUtils.showError(this, "Transfer Failed: Destination Account Number and Name do not match our records.");
             return;
         }
 
@@ -457,6 +464,8 @@ public class TransferFunds extends javax.swing.JFrame {
             jTextField3.requestFocusInWindow();
             return;
         }
+        
+        
 
         // 7. Generate the "TR" ticket for Transfer
         String ticket = QueueDatabase.addTicket("TR", "Transfer Funds", accountName, jCheckBox1.isSelected());

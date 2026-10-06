@@ -174,7 +174,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Payment Mode:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Debit / Account Deduction", "Check" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Unified Card" }));
 
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setForeground(new java.awt.Color(139, 101, 8));
@@ -366,6 +366,8 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             jComboBox1.requestFocusInWindow();
             return;
         }
+        
+        
 
         String ticket = QueueDatabase.addTicket("BP", biller.toString(), accountName, jCheckBox1.isSelected());
         QueueDatabase.saveKioskData(ticket, refNumber, amount.longValue());
