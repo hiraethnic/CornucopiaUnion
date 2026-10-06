@@ -402,6 +402,15 @@ public class DepositFrame extends javax.swing.JFrame {
             jComboBox1.requestFocusInWindow();
             return;
         }
+        
+        double currentBalance = QueueDatabase.getAccountBalance(accountNumber, accountName);
+        if (currentBalance == -2.0) {
+            ValidationUtils.showError(this, "Transaction Failed: This account is LOCKED and cannot be used.");
+            return;
+        } else if (currentBalance < 0) {
+            ValidationUtils.showError(this, "Transaction Failed: Account Number and Name do not match our system records.");
+            return;
+        }
 
         String ticket = QueueDatabase.addTicket("DP", "Deposit", accountName, jCheckBox1.isSelected());
 

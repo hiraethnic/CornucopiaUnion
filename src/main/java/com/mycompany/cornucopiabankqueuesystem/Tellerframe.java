@@ -176,6 +176,17 @@ public class Tellerframe extends javax.swing.JFrame {
         accname.getDocument().addDocumentListener(withdrawListener);
         withdrawamount.getDocument().addDocumentListener(withdrawListener);
         
+        javax.swing.event.DocumentListener billsListener = new javax.swing.event.DocumentListener() {
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateBills(); }
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateBills(); }
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateBills(); }
+        };
+
+        accholder.getDocument().addDocumentListener(billsListener);
+        DepositamountT.getDocument().addDocumentListener(billsListener);
+        
+        jComboBox2.addActionListener(evt -> validateAndCalculateBills());
+        
         javax.swing.event.DocumentListener transferListener = new javax.swing.event.DocumentListener() {
             public void insertUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateTransfer(); }
             public void removeUpdate(javax.swing.event.DocumentEvent e) { validateAndCalculateTransfer(); }
@@ -783,6 +794,63 @@ public class Tellerframe extends javax.swing.JFrame {
                     + "Amount Deposited: PHP " + String.format("%,.2f", depositAmount) + "\n"
                     + "New Balance: PHP " + String.format("%,.2f", newBalance));
         }
+        
+        // --- BILLS PAYMENT ---
+        else if (category.contains("bill") || activeTicket.ticketNo.startsWith("BP")) {
+            String billAmtStr = DepositamountT.getText().trim().replaceAll("[^0-9.]", "");
+            if (billAmtStr.isEmpty()) {
+                ValidationUtils.showError(this, "Please enter a valid bill amount.");
+                return;
+            }
+            double amount = Double.parseDouble(billAmtStr);
+
+            // 1. Pop-up asking Teller if it's Cash or Card
+            int choice = javax.swing.JOptionPane.showOptionDialog(this,
+                "How is the customer paying for this bill?",
+                "Select Payment Method",
+                javax.swing.JOptionPane.DEFAULT_OPTION,
+                javax.swing.JOptionPane.QUESTION_MESSAGE,
+                null,
+                new String[]{"Card / Account Deduction", "Cash"},
+                "Cash");
+
+            // 2. Logic for Card Deduction
+            if (choice == 0) { 
+                String accNo = javax.swing.JOptionPane.showInputDialog(this, 
+                    "Enter Bank Account Number to deduct from:", 
+                    "Card Payment", 
+                    javax.swing.JOptionPane.QUESTION_MESSAGE);
+                    
+                if (accNo == null || accNo.trim().isEmpty()) {
+                    return; // User cancelled the pop-up, stop transaction
+                }
+                
+                double currentBalance = QueueDatabase.getBalanceByNumber(accNo);
+                
+                if (currentBalance == -2.0) {
+                    ValidationUtils.showError(this, "Payment Failed: This account is LOCKED and cannot be used.");
+                    return;
+                } else if (currentBalance < 0) {
+                    ValidationUtils.showError(this, "Payment Failed: Account Number does not exist in our records.");
+                    return;
+                } else if (currentBalance < amount) {
+                    ValidationUtils.showError(this, "Payment Failed: Insufficient funds in the account.");
+                    return;
+                }
+                
+                // Deduct the balance
+                QueueDatabase.updateAccountBalance(accNo, currentBalance - amount);
+                javax.swing.JOptionPane.showMessageDialog(this, 
+                    "PHP " + String.format("%,.2f", amount) + " successfully deducted from Account " + accNo, 
+                    "Payment Deducted", 
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    
+            } else if (choice == -1) {
+                return; // User closed the dialog with the X button, stop transaction
+            }
+            
+            // If choice == 1 (Cash), it skips the deduction logic entirely and proceeds to finish the ticket.
+        }
 
         // --- WITHDRAWAL ---
         else if (category.contains("withdraw") || activeTicket.ticketNo.startsWith("WD")) {
@@ -901,6 +969,8 @@ public class Tellerframe extends javax.swing.JFrame {
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, "Confirm transaction DB error", ex);
         }
+        
+        
     }
   
   private void validateAndCalculateWithdrawal() {
@@ -937,6 +1007,8 @@ public class Tellerframe extends javax.swing.JFrame {
             jTextField29.setText("PHP " + String.format("%,.2f", remainingBalance));
         }
     }
+  
+  
   
   
 
@@ -1007,6 +1079,10 @@ public class Tellerframe extends javax.swing.JFrame {
         SelectorBills = new javax.swing.JComboBox<>();
         accountnameh = new javax.swing.JLabel();
         accholder = new javax.swing.JTextField();
+        jComboBox2 = new javax.swing.JComboBox<>();
+        jLabel23 = new javax.swing.JLabel();
+        accountnameh1 = new javax.swing.JLabel();
+        BankAccNumber = new javax.swing.JTextField();
         jPanel34 = new javax.swing.JPanel();
         jLabel82 = new javax.swing.JLabel();
         jLabel106 = new javax.swing.JLabel();
@@ -1242,7 +1318,7 @@ public class Tellerframe extends javax.swing.JFrame {
                                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)))
                                 .addComponent(jLabel2)
                                 .addGap(161, 161, 161)
                                 .addComponent(jLabel3)
@@ -1338,7 +1414,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 267, Short.MAX_VALUE)))
+                        .addGap(0, 269, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1547,31 +1623,50 @@ public class Tellerframe extends javax.swing.JFrame {
 
         accholder.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Unified Card", " " }));
+
+        jLabel23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel23.setText("Payment Mode:");
+
+        accountnameh1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        accountnameh1.setForeground(new java.awt.Color(0, 51, 102));
+        accountnameh1.setText("Bank Account No.");
+
         javax.swing.GroupLayout jPanel33Layout = new javax.swing.GroupLayout(jPanel33);
         jPanel33.setLayout(jPanel33Layout);
         jPanel33Layout.setHorizontalGroup(
             jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+            .addGroup(jPanel33Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel105)
-                    .addComponent(Billcategory, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel103)
-                    .addComponent(referenceno, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
-                        .addComponent(SelectorBills, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
-                        .addComponent(jLabel104)
-                        .addGap(36, 36, 36))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
-                        .addComponent(accholder, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
-                        .addComponent(accountnameh)
-                        .addContainerGap())))
+                    .addGroup(jPanel33Layout.createSequentialGroup()
+                        .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel105)
+                            .addComponent(Billcategory, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel103)
+                            .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(referenceno, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 288, Short.MAX_VALUE)
+                        .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+                                .addComponent(SelectorBills, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+                                .addComponent(jLabel104)
+                                .addGap(36, 36, 36))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+                                .addComponent(accountnameh)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+                                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(accountnameh1)
+                                    .addComponent(accholder, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                                    .addComponent(BankAccNumber))
+                                .addContainerGap())))
+                    .addGroup(jPanel33Layout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel33Layout.setVerticalGroup(
             jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1595,7 +1690,17 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(referenceno, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(accholder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel33Layout.createSequentialGroup()
+                        .addComponent(jLabel23)
+                        .addGap(1, 1, 1)
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel33Layout.createSequentialGroup()
+                        .addComponent(accountnameh1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(BankAccNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
         );
 
         jPanel34.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 2, true));
@@ -1654,7 +1759,7 @@ public class Tellerframe extends javax.swing.JFrame {
             .addGroup(jPanel35Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel81, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
                 .addComponent(jButton24)
                 .addGap(18, 18, 18)
                 .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3143,12 +3248,53 @@ public class Tellerframe extends javax.swing.JFrame {
             totalphpdeducted.setText("PHP " + String.format("%,.2f", newBalance));
         }
     }
+   
+   private void validateAndCalculateBills() {
+        // 1. Check if payment mode is Cash
+        String paymentMode = jComboBox2.getSelectedItem() != null ? jComboBox2.getSelectedItem().toString() : "";
+        if (paymentMode.equalsIgnoreCase("Cash")) {
+            jTextField1.setText("N/A (Cash Payment)");
+            estimatedbalanceT.setText("N/A (Cash Payment)");
+            return;
+        }
+
+        // 2. If it's a Card/Account, do the normal calculation
+        String accountName = accholder.getText().trim();
+        String billAmtStr = DepositamountT.getText().trim().replaceAll("[^0-9.]", "");
+
+        if (accountName.isEmpty()) {
+            jTextField1.setText("PHP 0.00");
+            estimatedbalanceT.setText("PHP 0.00");
+            return;
+        }
+
+        String[] details = QueueDatabase.getAccountDetails(accountName);
+        if (details == null) {
+            jTextField1.setText("Account Not Found");
+            estimatedbalanceT.setText("N/A");
+            return;
+        }
+
+        double currentBalance = 0.0;
+        try { currentBalance = Double.parseDouble(details[3]); } catch (Exception e) {}
+
+        jTextField1.setText("PHP " + String.format("%,.2f", currentBalance));
+
+        double billAmt = 0.0;
+        if (!billAmtStr.isEmpty()) {
+            try { billAmt = Double.parseDouble(billAmtStr); } catch (NumberFormatException e) {}
+        }
+
+        double estimatedBalance = currentBalance - billAmt;
+        estimatedbalanceT.setText("PHP " + String.format("%,.2f", estimatedBalance));
+    }
     
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ACC;
     private javax.swing.JPanel BILLS;
+    private javax.swing.JTextField BankAccNumber;
     private javax.swing.JComboBox<String> Billcategory;
     private javax.swing.JLabel Customer;
     private javax.swing.JLabel Customer1;
@@ -3163,6 +3309,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JTextField accname;
     private javax.swing.JTextField accnum;
     private javax.swing.JLabel accountnameh;
+    private javax.swing.JLabel accountnameh1;
     private javax.swing.JTextField currencyacc;
     private javax.swing.JTextField currencyt1;
     private javax.swing.JTextField customer;
@@ -3198,6 +3345,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
     private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -3220,6 +3368,7 @@ public class Tellerframe extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel27;
