@@ -19,10 +19,22 @@ public class KioskFrame extends javax.swing.JFrame {
      */
     public KioskFrame() {
         initComponents();
-       
+    styleButtonTransparent(btnForeignExchange);
+    styleButtonTransparent(jButton3);
+    styleButtonTransparent(btnBillsPayment);
+    styleButtonTransparent(withdrawbtn);
+    styleButtonTransparent(depositbtn);
+    styleButtonTransparent(fundTransferbtn);
         setLocationRelativeTo(null);
     }
+   
     
+    private void styleButtonTransparent(javax.swing.JButton button) {
+    button.setOpaque(false);
+    button.setContentAreaFilled(false);
+    button.setBorderPainted(false);
+    button.setFocusPainted(false);
+}
    
         
     
@@ -42,16 +54,16 @@ public class KioskFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        btnBillsPayment = new javax.swing.JButton();
-        btnForeignExchange = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jButton3 = new javax.swing.JButton();
+        btnForeignExchange = new javax.swing.JButton();
         withdrawbtn = new javax.swing.JButton();
         depositbtn = new javax.swing.JButton();
         fundTransferbtn = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
+        btnBillsPayment = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cornucopia Union - Self-Service Kiosk");
@@ -78,24 +90,6 @@ public class KioskFrame extends javax.swing.JFrame {
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 752, 100));
 
-        btnBillsPayment.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnBillsPayment.setText(" Bills Payment");
-        btnBillsPayment.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
-        btnBillsPayment.addActionListener(this::btnBillsPaymentActionPerformed);
-        getContentPane().add(btnBillsPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 272, 167, 97));
-
-        btnForeignExchange.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnForeignExchange.setText("Foreign Exchange");
-        btnForeignExchange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
-        btnForeignExchange.addActionListener(this::btnForeignExchangeActionPerformed);
-        getContentPane().add(btnForeignExchange, new org.netbeans.lib.awtextra.AbsoluteConstraints(579, 169, 167, 97));
-
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Account Application");
-        jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
-        jButton3.addActionListener(this::jButton3ActionPerformed);
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 169, 167, 97));
-
         jPanel1.setBackground(new java.awt.Color(12, 35, 74));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -106,48 +100,44 @@ public class KioskFrame extends javax.swing.JFrame {
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 516, 752, 139));
 
-        withdrawbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        withdrawbtn.setText("Withdraw");
-        withdrawbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
-        withdrawbtn.addActionListener(this::withdrawbtnActionPerformed);
-        getContentPane().add(withdrawbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 381, 167, 97));
-
-        depositbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        depositbtn.setText("Deposit");
-        depositbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
-        depositbtn.addActionListener(this::depositbtnActionPerformed);
-        getContentPane().add(depositbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(579, 381, 167, 97));
-
-        fundTransferbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        fundTransferbtn.setText("Fund transfer");
-        fundTransferbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 215, 0), 3));
-        fundTransferbtn.addActionListener(this::fundTransferbtnActionPerformed);
-        getContentPane().add(fundTransferbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(579, 272, 167, 97));
-
         jPanel3.setBackground(new java.awt.Color(244, 246, 249));
         jPanel3.setName(""); // NOI18N
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 24)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(30, 58, 138));
-        jLabel4.setText("Welcome! Please select your transaction:");
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        jButton3.addActionListener(this::jButton3ActionPerformed);
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 280, 60));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(143, 143, 143)
-                .addComponent(jLabel4)
-                .addContainerGap(147, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jLabel4)
-                .addContainerGap(413, Short.MAX_VALUE))
-        );
+        btnForeignExchange.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnForeignExchange.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        btnForeignExchange.addActionListener(this::btnForeignExchangeActionPerformed);
+        jPanel3.add(btnForeignExchange, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 237, 270, 40));
+
+        withdrawbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        withdrawbtn.setForeground(new java.awt.Color(255, 255, 255));
+        withdrawbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        withdrawbtn.addActionListener(this::withdrawbtnActionPerformed);
+        jPanel3.add(withdrawbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 367, 280, 50));
+
+        depositbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        depositbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        depositbtn.addActionListener(this::depositbtnActionPerformed);
+        jPanel3.add(depositbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 370, 280, 50));
+
+        fundTransferbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        fundTransferbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        fundTransferbtn.addActionListener(this::fundTransferbtnActionPerformed);
+        jPanel3.add(fundTransferbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 297, 270, 50));
+
+        btnBillsPayment.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnBillsPayment.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        btnBillsPayment.addActionListener(this::btnBillsPaymentActionPerformed);
+        jPanel3.add(btnBillsPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 300, 280, 50));
+
+        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\kioskdesign.jpg")); // NOI18N
+        jLabel6.setText("jLabel6");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 750, 400));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 760, 480));
 
@@ -243,8 +233,8 @@ TransferFunds TransferFunds = new TransferFunds();
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
