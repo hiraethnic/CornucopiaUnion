@@ -545,6 +545,12 @@ public class Tellerframe extends javax.swing.JFrame {
             return;
         }
 
+        // ADD THIS BLOCK: Actually tell the database to change the status to 'HELD'
+        if (!QueueDatabase.holdTicket(activeTicket.ticketNo)) {
+            ValidationUtils.showError(this, "Database Error: Could not place ticket on hold.");
+            return;
+        }
+
         // 1. Switch to the designated panel and autofill the customer's data
         autoSwitchAndFillPanel(activeTicket);
 
@@ -553,7 +559,7 @@ public class Tellerframe extends javax.swing.JFrame {
         setFieldsEditable(true);
         resetEditButtonLabels();
         
-        ValidationUtils.showSuccess(this, "Ticket loaded into panel! You can now process the transaction.");
+        ValidationUtils.showSuccess(this, "Ticket loaded into panel and placed on HOLD! You can now process the transaction.");
     }
    
    
@@ -562,24 +568,55 @@ public class Tellerframe extends javax.swing.JFrame {
             ValidationUtils.showError(this, "No active ticket to cancel.");
             return;
         }
- 
-        String sql = "UPDATE queue_tickets SET status = 'WAITING', counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
-                   + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
- 
-        try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
-            ps.setString(1, tellerName);
-            ps.setString(2, activeTicket.ticketNo);
-            if (ps.executeUpdate() > 0) {
-                ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " returned back to waiting queue!");
- 
-                activeTicket = null;
-                customer.setText("");
-                currencyt1.setText("");
-                customer.setText("");
-                jLabel36.setText("₱ 0.00");
+
+        java.sql.Connection conn = QueueDatabase.getConnection();
+        if (conn == null) return;
+
+        try {
+            // 1. Check if this ticket has been cancelled before by reading its priority
+            int currentPriority = 0;
+            String checkSql = "SELECT priority FROM queue_tickets WHERE ticket_no = ?";
+            try (java.sql.PreparedStatement ps = conn.prepareStatement(checkSql)) {
+                ps.setString(1, activeTicket.ticketNo);
+                try (java.sql.ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        currentPriority = rs.getInt("priority");
+                    }
+                }
+            }
+
+            String updateSql;
+            String message;
+
+            if (currentPriority >= 0) {
+                // FIRST CANCEL: Return to WAITING, but set priority to -1 (puts it at the absolute back of the queue)
+                updateSql = "UPDATE queue_tickets SET status = 'WAITING', priority = -1, counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
+                          + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
+                message = "Ticket " + activeTicket.ticketNo + " missed their turn. Moved to the LAST of the queue!";
+            } else {
+                // SECOND CANCEL: Permanently cancel it
+                updateSql = "UPDATE queue_tickets SET status = 'CANCELLED', counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
+                          + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
+                message = "Ticket " + activeTicket.ticketNo + " missed their turn again. PERMANENTLY CANCELLED.";
+            }
+
+            // 2. Execute the update
+            try (java.sql.PreparedStatement psUpdate = conn.prepareStatement(updateSql)) {
+                psUpdate.setString(1, tellerName);
+                psUpdate.setString(2, activeTicket.ticketNo);
                 
- 
-                refreshAllData();
+                if (psUpdate.executeUpdate() > 0) {
+                    ValidationUtils.showSuccess(this, message);
+
+                    // Clear the active ticket and UI fields
+                    activeTicket = null;
+                    customer.setText("");
+                    currencyt1.setText("");
+                    customer1.setText("");
+                    jLabel36.setText("₱ 0.00");
+                    
+                    refreshAllData();
+                }
             }
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, "Cancel error", ex);
@@ -926,20 +963,39 @@ public class Tellerframe extends javax.swing.JFrame {
         
         // --- TRANSFER FUNDS ---
         else if (category.contains("transfer") || activeTicket.ticketNo.startsWith("TR")) {
+            String sourceAccount = sourceacc.getText().trim();
             String destAccount = destinationaccbank.getText().trim();
             String destName = recieptname.getText().trim();
             
-            // 1. Check if the destination account actually exists in the database
-            double currentBalance = QueueDatabase.getAccountBalance(destAccount, destName);
-            if (currentBalance < 0) {
-                ValidationUtils.showError(this, "Transfer Failed: Destination Account Number and Name do not match our system records.");
-                return; // Stops the transaction if the account doesn't exist
-            }
-            
-            // 2. Add the transferred funds to the destination account
             String amtStr = transferamountphp.getText().trim().replaceAll("[^0-9.]", "");
             double amount = amtStr.isEmpty() ? 0 : Double.parseDouble(amtStr);
-            QueueDatabase.updateAccountBalance(destAccount, currentBalance + amount);
+            
+            if (sourceAccount.isEmpty() || destAccount.isEmpty()) {
+                ValidationUtils.showError(this, "Transfer Failed: Both Source and Destination accounts are required.");
+                return;
+            }
+
+            // 1. Check Source Account & Balance at confirm time
+            double sourceBalance = QueueDatabase.getBalanceByNumber(sourceAccount);
+            if (sourceBalance < 0) {
+                ValidationUtils.showError(this, "Transfer Failed: Source Account does not exist or is locked.");
+                return;
+            }
+            if (sourceBalance < amount) {
+                ValidationUtils.showError(this, "Transfer Failed: Insufficient funds in the Source Account.");
+                return;
+            }
+
+            // 2. Check if the destination account actually exists in the database
+            double destBalance = QueueDatabase.getAccountBalance(destAccount, destName);
+            if (destBalance < 0) {
+                ValidationUtils.showError(this, "Transfer Failed: Destination Account Number and Name do not match our system records.");
+                return; 
+            }
+            
+            // 3. Move the money: Deduct from source, add to destination
+            QueueDatabase.updateAccountBalance(sourceAccount, sourceBalance - amount);
+            QueueDatabase.updateAccountBalance(destAccount, destBalance + amount);
         }
 
         // Mark ticket as DONE in DB
@@ -1749,6 +1805,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton24.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton24.setForeground(new java.awt.Color(255, 255, 255));
         jButton24.setText("Confirm and Print");
+        jButton24.addActionListener(this::jButton24ActionPerformed);
 
         jButton23.setBackground(new java.awt.Color(0, 0, 153));
         jButton23.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -3156,6 +3213,11 @@ public class Tellerframe extends javax.swing.JFrame {
     private void jTextField24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField24ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField24ActionPerformed
+
+    private void jButton24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton24ActionPerformed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_jButton24ActionPerformed
 
     /**
      * @param args the command line arguments
