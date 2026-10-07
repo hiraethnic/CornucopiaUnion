@@ -19,12 +19,68 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         initComponents();
         QueueDatabase.initialize();
         applyRealTimeValidation();
+        setupComboBoxLogic();
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
         setLocationRelativeTo(null);
         
         
         
     }
+    
+    private void setupComboBoxLogic() {
+        cmbCategory.addActionListener(evt -> {
+            cmbBiller.removeAllItems();
+            String selectedCategory = (String) cmbCategory.getSelectedItem();
+            
+            if (selectedCategory == null) return;
+            
+            // Populate billers based on the selected category
+            switch (selectedCategory) {
+                case "Electric Utility":
+                    cmbBiller.addItem("Meralco");
+                    cmbBiller.addItem("Davao Light");
+                    break;
+                case "Water Utility":
+                    cmbBiller.addItem("Maynilad");
+                    cmbBiller.addItem("Manila Water");
+                    break;
+                case "Telecoms & Internet":
+                    cmbBiller.addItem("Globe Telecom / Globe At Home");
+                    cmbBiller.addItem("PLDT / Smart");
+                    cmbBiller.addItem("Converge");
+                    break;
+                case "Government Agency":
+                    cmbBiller.addItem("SSS (PRN Payment)");
+                    cmbBiller.addItem("Pag-IBIG Fund");
+                    cmbBiller.addItem("PhilHealth");
+                    break;
+                case "Credit Cards & Loans":
+                    cmbBiller.addItem("BDO Credit Card");
+                    cmbBiller.addItem("Metrobank Card");
+                    cmbBiller.addItem("Home Credit");
+                    break;
+            }
+        });
+
+        // Automatically add "+63" if a Telecom biller is selected
+        cmbBiller.addActionListener(evt -> {
+            String selectedBiller = (String) cmbBiller.getSelectedItem();
+            if (selectedBiller != null) {
+                if (selectedBiller.contains("Globe") || selectedBiller.contains("Smart")) {
+                    txtRefNumber.setText("+63");
+                } else {
+                    txtRefNumber.setText(""); // Clears it for normal billers
+                }
+            }
+        });
+        
+        // Trigger it once at startup so it loads the first category correctly
+        if (cmbCategory.getItemCount() > 0) {
+            cmbCategory.setSelectedIndex(0);
+        }
+    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -367,6 +423,14 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
         
+        // Temporarily strip the "+" just for the numeric check
+        if (!ValidationUtils.isValidNumericReferenceNumber(refNumber.replace("+", ""))) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid account/reference number (4-20 digits, numbers only).");
+            txtRefNumber.requestFocusInWindow();
+            return;
+        }
+        
       // --- NEW POP-UP LOGIC STARTS HERE ---
         String finalRef = refNumber;
         
@@ -429,10 +493,21 @@ public class BillPaymentFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtAmountActionPerformed
 
     private void applyRealTimeValidation() {
-        // Reference Number: Max 11 digits, numbers only
+        // Reference Number: Allows '+' at the start, max 15 characters
         txtRefNumber.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                if (!Character.isDigit(evt.getKeyChar()) || txtRefNumber.getText().length() >= 11) evt.consume();
+                char c = evt.getKeyChar();
+                
+                // Allow digits, but also allow '+' if it is the very first character
+                if (!Character.isDigit(c) && c != '+') {
+                    evt.consume();
+                }
+                if (c == '+' && txtRefNumber.getText().length() > 0) {
+                    evt.consume(); 
+                }
+                if (txtRefNumber.getText().length() >= 15) {
+                    evt.consume();
+                }
             }
         });
 
