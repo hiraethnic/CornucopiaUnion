@@ -38,31 +38,17 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         LOCK.addActionListener(this::editName);
         
            // ID photo panel: starts empty, click the photo to open it bigger
-        uploadphoto.setIcon(null);
-        uploadphoto.setText("No account selected");
-        uploadphoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        uploadphoto.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                openIdPhoto();
+           uploadphoto.setIcon(null);
+           uploadphoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+           uploadphoto.addMouseListener(new java.awt.event.MouseAdapter() {
+           @Override
+         public void mouseClicked(java.awt.event.MouseEvent e) {
+        openIdPhoto();
             }
-        });
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        }); 
+         
         // --- ADD THIS TO AUTO-REFRESH THE TABLE & BALANCE EVERY 3 SECONDS ---
-        new javax.swing.Timer(3000, e -> {
+        new javax.swing.Timer(1000, e -> {
             String currentAcc = AccNo.getText().trim();
             if (!currentAcc.isEmpty()) {
                 loadHistory(currentAcc); // Pulls new transaction rows automatically
@@ -76,6 +62,9 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         }).start();
         
     }
+    
+    
+    
     
     private void searchAccount(java.awt.event.ActionEvent evt) {
         String searchTerm = jTextField1.getText().trim();
@@ -111,6 +100,15 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
     }
     
    private String idPhotoPath = null;
+    private String lastDbIdPath = null;
+ 
+    /** Called by the timer: reloads the photo only when the saved ID path has changed. */
+    private void refreshIdPhoto(String accNo) {
+        String path = QueueDatabase.getAccountIdPath(accNo);
+        if (java.util.Objects.equals(path, lastDbIdPath)) return;
+        lastDbIdPath = path;
+        showIdPhoto(accNo);
+    }
  
     private void showIdPhoto(String accNo) {
         idPhotoPath = null;
@@ -137,10 +135,18 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             uploadphoto.setText("Cannot display this ID file");
             return;
         }
+        // shrink to fit the panel (about 300 x 280), keep proportions
+        double scale = Math.min(300.0 / icon.getIconWidth(), 280.0 / icon.getIconHeight());
+        if (scale > 1) scale = 1;
+        int w = (int) (icon.getIconWidth() * scale);
+        int h = (int) (icon.getIconHeight() * scale);
+        uploadphoto.setText(null);
+        uploadphoto.setIcon(new javax.swing.ImageIcon(
+                icon.getImage().getScaledInstance(w, h, java.awt.Image.SCALE_SMOOTH)));
     }
     
       private void openIdPhoto() {
-        if (idPhotoPath == null) return;
+         if (idPhotoPath == null) return;
         try {
             if (idPhotoPath.toLowerCase().endsWith(".pdf")) {
                 java.awt.Desktop.getDesktop().open(new java.io.File(idPhotoPath));
@@ -155,9 +161,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Could not open the ID file.");
         }
     }
-    
-    
-
+ 
     private void loadHistory(String accNo) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
@@ -167,6 +171,9 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             model.addRow(row);
         }
     }
+   
+
+    
 
     private void editName(java.awt.event.ActionEvent evt) {
         String accNo = AccNo.getText().trim();
@@ -433,11 +440,9 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
         jPanel6.setRequestFocusEnabled(false);
         jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel6.add(uploadphoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 10, 310, 270));
 
-        uploadphoto.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\Your-paragraph-text.png")); // NOI18N
-        jPanel6.add(uploadphoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
-
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 200, 420, 300));
+        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 200, 400, 290));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
