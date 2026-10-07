@@ -1233,6 +1233,9 @@
                         </Property>
                         <Property name="text" type="java.lang.String" value="Confirm and Print"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton24ActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JButton" name="jButton23">
                       <Properties>
