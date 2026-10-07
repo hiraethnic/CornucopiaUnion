@@ -398,7 +398,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         if (!ValidationUtils.isValidName(accountName)) {
             ValidationUtils.showError(this,
-                    "Please enter a valid account holder name (letters only).");
+                    "Please enter a james tayao necosia  holder name (letters only).");
             txtAccountName.requestFocusInWindow();
             return;
         }
