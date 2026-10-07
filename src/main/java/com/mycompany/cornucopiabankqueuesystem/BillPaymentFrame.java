@@ -367,15 +367,33 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
         
+        // --- NEW POP-UP LOGIC STARTS HERE ---
+        String finalRef = refNumber;
         
-
+        // If they select Unified Card, show the popup!
+        if (paymentMode.toString().equals("Unified Card")) {
+            String accNo = javax.swing.JOptionPane.showInputDialog(this, 
+                "Enter Bank Account Number to link to this Bill:", 
+                "Card Payment", 
+                javax.swing.JOptionPane.QUESTION_MESSAGE);
+                
+            if (accNo == null || accNo.trim().isEmpty()) {
+                return; // Stops if they click cancel
+            }
+            // Combines the Biller Ref + Bank Account so it auto-fills on the Teller's screen!
+            finalRef = refNumber + " / Bank Acc: " + accNo;
+        }
+        
+        // Generates the ticket and saves the combined info
         String ticket = QueueDatabase.addTicket("BP", biller.toString(), accountName, jCheckBox1.isSelected());
-        QueueDatabase.saveKioskData(ticket, refNumber, amount.longValue());
+        QueueDatabase.saveKioskData(ticket, finalRef, amount.longValue());
+        // --- NEW POP-UP LOGIC ENDS HERE ---
+
         ValidationUtils.showSuccess(this,
                 "Payment accepted!\n"
                 + "Queue ticket: " + ticket + "\n"
                 + "Biller: " + biller + "\n"
-                + "Reference No.: " + refNumber + "\n"
+                + "Reference No.: " + finalRef + "\n"
                 + "Amount: PHP " + String.format("%,.2f", amount) + "\n"
                 + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
 
