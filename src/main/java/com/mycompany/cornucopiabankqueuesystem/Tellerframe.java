@@ -568,24 +568,55 @@ public class Tellerframe extends javax.swing.JFrame {
             ValidationUtils.showError(this, "No active ticket to cancel.");
             return;
         }
- 
-        String sql = "UPDATE queue_tickets SET status = 'WAITING', counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
-                   + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
- 
-        try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
-            ps.setString(1, tellerName);
-            ps.setString(2, activeTicket.ticketNo);
-            if (ps.executeUpdate() > 0) {
-                ValidationUtils.showSuccess(this, "Ticket " + activeTicket.ticketNo + " returned back to waiting queue!");
- 
-                activeTicket = null;
-                customer.setText("");
-                currencyt1.setText("");
-                customer.setText("");
-                jLabel36.setText("₱ 0.00");
+
+        java.sql.Connection conn = QueueDatabase.getConnection();
+        if (conn == null) return;
+
+        try {
+            // 1. Check if this ticket has been cancelled before by reading its priority
+            int currentPriority = 0;
+            String checkSql = "SELECT priority FROM queue_tickets WHERE ticket_no = ?";
+            try (java.sql.PreparedStatement ps = conn.prepareStatement(checkSql)) {
+                ps.setString(1, activeTicket.ticketNo);
+                try (java.sql.ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        currentPriority = rs.getInt("priority");
+                    }
+                }
+            }
+
+            String updateSql;
+            String message;
+
+            if (currentPriority >= 0) {
+                // FIRST CANCEL: Return to WAITING, but set priority to -1 (puts it at the absolute back of the queue)
+                updateSql = "UPDATE queue_tickets SET status = 'WAITING', priority = -1, counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
+                          + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
+                message = "Ticket " + activeTicket.ticketNo + " missed their turn. Moved to the LAST of the queue!";
+            } else {
+                // SECOND CANCEL: Permanently cancel it
+                updateSql = "UPDATE queue_tickets SET status = 'CANCELLED', counter = NULL, released_by = ?, updated_at = datetime('now','localtime') "
+                          + "WHERE ticket_no = ? AND status IN ('SERVING','HELD')";
+                message = "Ticket " + activeTicket.ticketNo + " missed their turn again. PERMANENTLY CANCELLED.";
+            }
+
+            // 2. Execute the update
+            try (java.sql.PreparedStatement psUpdate = conn.prepareStatement(updateSql)) {
+                psUpdate.setString(1, tellerName);
+                psUpdate.setString(2, activeTicket.ticketNo);
                 
- 
-                refreshAllData();
+                if (psUpdate.executeUpdate() > 0) {
+                    ValidationUtils.showSuccess(this, message);
+
+                    // Clear the active ticket and UI fields
+                    activeTicket = null;
+                    customer.setText("");
+                    currencyt1.setText("");
+                    customer1.setText("");
+                    jLabel36.setText("₱ 0.00");
+                    
+                    refreshAllData();
+                }
             }
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, "Cancel error", ex);

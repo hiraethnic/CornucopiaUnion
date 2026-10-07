@@ -814,31 +814,45 @@ public final class QueueDatabase {
         Connection conn = getConnection();
         if (conn == null) return null;
 
-        int chosenId = -1;
-        String pick = "SELECT id, ticket_no, category FROM queue_tickets WHERE status = 'WAITING' "
-                + "ORDER BY priority DESC, id ASC";
-        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(pick)) {
-            while (rs.next()) {
-                if (perms != null && perms.canHandleTicket(rs.getString("ticket_no"), rs.getString("category"))) {
-                    chosenId = rs.getInt("id");
-                    break;
+        // Loop to try picking a ticket until successful or the queue is empty
+        while (true) {
+            int chosenId = -1;
+            String pick = "SELECT id, ticket_no, category FROM queue_tickets WHERE status = 'WAITING' "
+                    + "ORDER BY priority DESC, id ASC";
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(pick)) {
+                while (rs.next()) {
+                    if (perms != null && perms.canHandleTicket(rs.getString("ticket_no"), rs.getString("category"))) {
+                        chosenId = rs.getInt("id");
+                        break;
+                    }
                 }
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Could not look up next ticket", ex);
+                return null;
             }
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Could not look up next ticket", ex);
-            return null;
-        }
-        if (chosenId < 0) return null;
+            
+            if (chosenId < 0) return null; // No available tickets for this teller
 
-        String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
-                + "transaction_type = category, updated_at = datetime('now','localtime') WHERE id = ?";
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, counter);
-            ps.setInt(2, chosenId);
-            return ps.executeUpdate() > 0 ? getActiveTicket(counter) : null;
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Could not call next ticket", ex);
-            return null;
+            // Added AND status = 'WAITING' to ensure it hasn't been taken by another teller
+            String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
+                    + "transaction_type = category, updated_at = datetime('now','localtime') "
+                    + "WHERE id = ? AND status = 'WAITING'";
+                    
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, counter);
+                ps.setInt(2, chosenId);
+                
+                // If it successfully updates 1 row, we secured the ticket!
+                if (ps.executeUpdate() > 0) {
+                    return getActiveTicket(counter);
+                }
+                
+                // If 0 rows updated, someone else took it first. 
+                // The loop restarts automatically to fetch the next person in line.
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Could not call next ticket", ex);
+                return null;
+            }
         }
     }
 
