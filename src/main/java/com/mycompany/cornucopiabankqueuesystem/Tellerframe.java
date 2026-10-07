@@ -184,6 +184,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         accholder.getDocument().addDocumentListener(billsListener);
         DepositamountT.getDocument().addDocumentListener(billsListener);
+        BankAccNumber.getDocument().addDocumentListener(billsListener);
         
         jComboBox2.addActionListener(evt -> validateAndCalculateBills());
         
@@ -401,11 +402,25 @@ public class Tellerframe extends javax.swing.JFrame {
         transferamountphp.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
     } 
     else if (cat.contains("bill") || ticketNo.startsWith("BP")) {
-        showPanel(BILLS);
-        accholder.setText(ticket.customerName != null ? ticket.customerName : "");
-        referenceno.setText(ticket.referenceNo != null ? ticket.referenceNo : "");
-        DepositamountT.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
-    }
+            showPanel(BILLS);
+            accholder.setText(ticket.customerName != null ? ticket.customerName : "");
+            
+            String ref = ticket.referenceNo != null ? ticket.referenceNo : "";
+            
+            // Detects the combined string and splits it into the two fields
+            if (ref.contains(" / Bank Acc: ")) {
+                String[] parts = ref.split(" / Bank Acc: ");
+                referenceno.setText(parts[0]);
+                BankAccNumber.setText(parts[1]);
+                jComboBox2.setSelectedItem("Unified Card"); // Auto-sets to Card
+            } else {
+                referenceno.setText(ref);
+                BankAccNumber.setText("");
+                jComboBox2.setSelectedItem("Cash"); // Default to Cash
+            }
+            
+            DepositamountT.setText(ticket.amount != null ? String.format("%.2f", ticket.amount) : "0.00");
+        }
 }
     
     private void updatePayoutCalculation() {
@@ -796,6 +811,7 @@ public class Tellerframe extends javax.swing.JFrame {
         }
         
         // --- BILLS PAYMENT ---
+        // --- BILLS PAYMENT ---
         else if (category.contains("bill") || activeTicket.ticketNo.startsWith("BP")) {
             String billAmtStr = DepositamountT.getText().trim().replaceAll("[^0-9.]", "");
             if (billAmtStr.isEmpty()) {
@@ -804,25 +820,18 @@ public class Tellerframe extends javax.swing.JFrame {
             }
             double amount = Double.parseDouble(billAmtStr);
 
-            // 1. Pop-up asking Teller if it's Cash or Card
-            int choice = javax.swing.JOptionPane.showOptionDialog(this,
-                "How is the customer paying for this bill?",
-                "Select Payment Method",
-                javax.swing.JOptionPane.DEFAULT_OPTION,
-                javax.swing.JOptionPane.QUESTION_MESSAGE,
-                null,
-                new String[]{"Card / Account Deduction", "Cash"},
-                "Cash");
+            // 1. Read the payment mode directly from the combo box
+            String paymentMode = jComboBox2.getSelectedItem() != null ? jComboBox2.getSelectedItem().toString() : "";
 
-            // 2. Logic for Card Deduction
-            if (choice == 0) { 
-                String accNo = javax.swing.JOptionPane.showInputDialog(this, 
-                    "Enter Bank Account Number to deduct from:", 
-                    "Card Payment", 
-                    javax.swing.JOptionPane.QUESTION_MESSAGE);
+            // 2. Logic for Card Deduction (No pop-ups!)
+            if (paymentMode.equalsIgnoreCase("Unified Card")) { 
+                
+                // Read the account number directly from the text field
+                String accNo = BankAccNumber.getText().trim();
                     
-                if (accNo == null || accNo.trim().isEmpty()) {
-                    return; // User cancelled the pop-up, stop transaction
+                if (accNo.isEmpty()) {
+                    ValidationUtils.showError(this, "Payment Failed: Bank Account Number is required for Card payments.");
+                    return; 
                 }
                 
                 double currentBalance = QueueDatabase.getBalanceByNumber(accNo);
@@ -845,11 +854,9 @@ public class Tellerframe extends javax.swing.JFrame {
                     "Payment Deducted", 
                     javax.swing.JOptionPane.INFORMATION_MESSAGE);
                     
-            } else if (choice == -1) {
-                return; // User closed the dialog with the X button, stop transaction
             }
             
-            // If choice == 1 (Cash), it skips the deduction logic entirely and proceeds to finish the ticket.
+            // If the combo box is set to "Cash", it skips the deduction entirely and just marks the ticket as DONE.
         }
 
         // --- WITHDRAWAL ---
@@ -3249,8 +3256,7 @@ public class Tellerframe extends javax.swing.JFrame {
         }
     }
    
-   private void validateAndCalculateBills() {
-        // 1. Check if payment mode is Cash
+  private void validateAndCalculateBills() {
         String paymentMode = jComboBox2.getSelectedItem() != null ? jComboBox2.getSelectedItem().toString() : "";
         if (paymentMode.equalsIgnoreCase("Cash")) {
             jTextField1.setText("N/A (Cash Payment)");
@@ -3258,25 +3264,22 @@ public class Tellerframe extends javax.swing.JFrame {
             return;
         }
 
-        // 2. If it's a Card/Account, do the normal calculation
-        String accountName = accholder.getText().trim();
+        // Now strictly uses the Bank Account Number for the database check
+        String bankAcc = BankAccNumber.getText().trim();
         String billAmtStr = DepositamountT.getText().trim().replaceAll("[^0-9.]", "");
 
-        if (accountName.isEmpty()) {
+        if (bankAcc.isEmpty()) {
             jTextField1.setText("PHP 0.00");
             estimatedbalanceT.setText("PHP 0.00");
             return;
         }
 
-        String[] details = QueueDatabase.getAccountDetails(accountName);
-        if (details == null) {
+        double currentBalance = QueueDatabase.getBalanceByNumber(bankAcc);
+        if (currentBalance < 0) {
             jTextField1.setText("Account Not Found");
             estimatedbalanceT.setText("N/A");
             return;
         }
-
-        double currentBalance = 0.0;
-        try { currentBalance = Double.parseDouble(details[3]); } catch (Exception e) {}
 
         jTextField1.setText("PHP " + String.format("%,.2f", currentBalance));
 

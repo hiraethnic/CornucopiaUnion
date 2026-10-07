@@ -367,28 +367,52 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
         
-        // --- NEW POP-UP LOGIC STARTS HERE ---
+      // --- NEW POP-UP LOGIC STARTS HERE ---
         String finalRef = refNumber;
         
-        // If they select Unified Card, show the popup!
         if (paymentMode.toString().equals("Unified Card")) {
-            String accNo = javax.swing.JOptionPane.showInputDialog(this, 
-                "Enter Bank Account Number to link to this Bill:", 
+            javax.swing.JTextField accField = new javax.swing.JTextField();
+            
+            // Forces exactly 11 digits and numbers only
+            accField.addKeyListener(new java.awt.event.KeyAdapter() {
+                public void keyTyped(java.awt.event.KeyEvent evt) {
+                    if (!Character.isDigit(evt.getKeyChar()) || accField.getText().length() >= 11) {
+                        evt.consume();
+                    }
+                }
+            });
+
+            int option = javax.swing.JOptionPane.showConfirmDialog(this, 
+                new Object[]{"Enter 11-digit Bank Account Number:", accField}, 
                 "Card Payment", 
-                javax.swing.JOptionPane.QUESTION_MESSAGE);
+                javax.swing.JOptionPane.OK_CANCEL_OPTION);
                 
-            if (accNo == null || accNo.trim().isEmpty()) {
+            if (option != javax.swing.JOptionPane.OK_OPTION) {
                 return; // Stops if they click cancel
             }
-            // Combines the Biller Ref + Bank Account so it auto-fills on the Teller's screen!
+            
+            String accNo = accField.getText();
+            if (accNo.length() != 11) {
+                ValidationUtils.showError(this, "Account number must be exactly 11 digits.");
+                return;
+            }
+            if (QueueDatabase.getBalanceByNumber(accNo) < 0) {
+                ValidationUtils.showError(this, "Account number does not exist in the database!");
+                return;
+            }
+            
+            // Combines Biller Ref + Bank Account so it auto-fills on Teller screen
             finalRef = refNumber + " / Bank Acc: " + accNo;
         }
-        
-        // Generates the ticket and saves the combined info
-        String ticket = QueueDatabase.addTicket("BP", biller.toString(), accountName, jCheckBox1.isSelected());
-        QueueDatabase.saveKioskData(ticket, finalRef, amount.longValue());
         // --- NEW POP-UP LOGIC ENDS HERE ---
 
+        // --- NEW POP-UP LOGIC ENDS HERE ---
+        
+        // 1. Generate the ticket and save it to the database! (This defines the 'ticket' variable)
+        String ticket = QueueDatabase.addTicket("BP", biller.toString(), accountName, jCheckBox1.isSelected());
+        QueueDatabase.saveKioskData(ticket, finalRef, amount.longValue());
+
+        // 2. Show the success message
         ValidationUtils.showSuccess(this,
                 "Payment accepted!\n"
                 + "Queue ticket: " + ticket + "\n"
