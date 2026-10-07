@@ -558,6 +558,7 @@ public final class QueueDatabase {
         addColumnIfMissing(conn, "updated_at", "ALTER TABLE queue_tickets ADD COLUMN updated_at TEXT");
         addColumnIfMissing(conn, "confirmed_by", "ALTER TABLE queue_tickets ADD COLUMN confirmed_by TEXT");
         addColumnIfMissing(conn, "released_by", "ALTER TABLE queue_tickets ADD COLUMN released_by TEXT");
+        addColumnIfMissing(conn, "id_document_path", "ALTER TABLE queue_tickets ADD COLUMN id_document_path TEXT");
     }
 
     private static void addColumnIfMissing(Connection conn, String columnName, String alterSql) {
@@ -895,11 +896,14 @@ public final class QueueDatabase {
 
    /** Same as above, but also records which teller account confirmed it. */
    public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
+        initialize(); // makes sure the id_document_path column exists
+        String savedIdPath = copyIdPhoto(idPath, accountNo);
+
         // NOTE: random number can collide with an existing AC ticket (ticket_no is UNIQUE) and fail.
         // Should be replaced with sequential numbering like addTicket(). Left as is to keep it simple.
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
-        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by) "
-                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?)";
+        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by, id_document_path) "
+                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?, ?)";
 
         Connection conn = getConnection();
         if (conn == null) return false;
@@ -911,11 +915,47 @@ public final class QueueDatabase {
             ps.setDouble(4, balance);
             ps.setString(5, accountNo);
             ps.setString(6, confirmedBy);
+            ps.setString(7, savedIdPath);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Error saving bank account record", ex);
             return false;
         }
+    }
+
+    /** Copies the uploaded ID photo into an "id_uploads" folder (named after the account number) so it stays available. */
+    private static String copyIdPhoto(String idPath, String accountNo) {
+        if (idPath == null || idPath.isEmpty()) return null;
+        try {
+            java.nio.file.Path src = java.nio.file.Paths.get(idPath);
+            String fileName = src.getFileName().toString();
+            String ext = fileName.contains(".") ? fileName.substring(fileName.lastIndexOf('.')) : "";
+            java.nio.file.Path folder = java.nio.file.Paths.get("id_uploads");
+            java.nio.file.Files.createDirectories(folder);
+            java.nio.file.Path dest = folder.resolve(accountNo + ext);
+            java.nio.file.Files.copy(src, dest, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return dest.toAbsolutePath().toString();
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "Could not copy ID photo, keeping original path", ex);
+            return idPath;
+        }
+    }
+
+    /** Path of the ID photo uploaded when this account was created, or null if none. */
+    public static String getAccountIdPath(String accountNo) {
+        initialize();
+        String sql = "SELECT id_document_path FROM queue_tickets WHERE reference_no = ? AND ticket_no LIKE 'AC-%' LIMIT 1";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, accountNo);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getString("id_document_path");
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching ID photo path", ex);
+        }
+        return null;
     }
    
    public static synchronized double getAccountBalance(String accountNo, String name) {

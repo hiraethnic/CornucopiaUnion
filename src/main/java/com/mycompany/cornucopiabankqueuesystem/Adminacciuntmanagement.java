@@ -37,6 +37,30 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jButton2.addActionListener(this::searchAccount);
         LOCK.addActionListener(this::editName);
         
+           // ID photo panel: starts empty, click the photo to open it bigger
+        uploadphoto.setIcon(null);
+        uploadphoto.setText("No account selected");
+        uploadphoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        uploadphoto.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                openIdPhoto();
+            }
+        });
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         // --- ADD THIS TO AUTO-REFRESH THE TABLE & BALANCE EVERY 3 SECONDS ---
         new javax.swing.Timer(3000, e -> {
             String currentAcc = AccNo.getText().trim();
@@ -80,9 +104,59 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
         AccName.setEditable(false);
         LOCK.setText("EDIT");
+        loadHistory(details[0]);
+        showIdPhoto(details[0]);
 
         loadHistory(details[0]);
     }
+    
+   private String idPhotoPath = null;
+ 
+    private void showIdPhoto(String accNo) {
+        idPhotoPath = null;
+        uploadphoto.setIcon(null);
+        uploadphoto.setText("No ID photo uploaded");
+ 
+        String path = QueueDatabase.getAccountIdPath(accNo);
+        if (path == null || path.isEmpty()) return;
+ 
+        java.io.File file = new java.io.File(path);
+        if (!file.exists()) {
+            uploadphoto.setText("ID file not found");
+            return;
+        }
+        idPhotoPath = path;
+ 
+        if (path.toLowerCase().endsWith(".pdf")) {
+            uploadphoto.setText("ID uploaded (PDF) - click to open");
+            return;
+        }
+ 
+        javax.swing.ImageIcon icon = new javax.swing.ImageIcon(path);
+        if (icon.getIconWidth() <= 0) {
+            uploadphoto.setText("Cannot display this ID file");
+            return;
+        }
+    }
+    
+      private void openIdPhoto() {
+        if (idPhotoPath == null) return;
+        try {
+            if (idPhotoPath.toLowerCase().endsWith(".pdf")) {
+                java.awt.Desktop.getDesktop().open(new java.io.File(idPhotoPath));
+                return;
+            }
+            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(idPhotoPath);
+            javax.swing.JScrollPane sp = new javax.swing.JScrollPane(new javax.swing.JLabel(icon));
+            sp.setPreferredSize(new java.awt.Dimension(
+                    Math.min(icon.getIconWidth() + 20, 800), Math.min(icon.getIconHeight() + 20, 600)));
+            JOptionPane.showMessageDialog(this, sp, "Valid ID - " + AccName.getText(), JOptionPane.PLAIN_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Could not open the ID file.");
+        }
+    }
+    
+    
 
     private void loadHistory(String accNo) {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -358,22 +432,10 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(901, 667, -1, -1));
 
         jPanel6.setRequestFocusEnabled(false);
+        jPanel6.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        uploadphoto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/mycompany/cornucopiabankqueuesystem/Your-paragraph-text.png"))); // NOI18N
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addGap(60, 60, 60)
-                .addComponent(uploadphoto)
-                .addContainerGap(60, Short.MAX_VALUE))
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(uploadphoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
+        uploadphoto.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\Your-paragraph-text.png")); // NOI18N
+        jPanel6.add(uploadphoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, -1, -1));
 
         jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 200, 420, 300));
 
