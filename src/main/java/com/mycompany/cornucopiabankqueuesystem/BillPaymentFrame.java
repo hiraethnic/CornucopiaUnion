@@ -384,7 +384,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         }
 
         if (!ValidationUtils.isValidComboSelection(biller)) {
-            ValidationUtils.showError(this, "Please select a biller.");
+            ValidationUtils.showError(this, "Please select a billerrrrrrrrrrrrrrr.");
             cmbBiller.requestFocusInWindow();
             return;
         }
