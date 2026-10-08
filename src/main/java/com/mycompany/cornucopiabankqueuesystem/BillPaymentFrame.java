@@ -465,6 +465,15 @@ public class BillPaymentFrame extends javax.swing.JFrame {
                 return;
             }
             
+            if (!ValidationUtils.isValidBillReference(refNumber)) {
+             ValidationUtils.showError(this,
+            "Please enter a valid account/reference number (4-10 digits, or +639 followed by 9 digits for mobile numbers).");
+             txtRefNumber.requestFocusInWindow();
+             return;
+             }
+            
+            
+            
             // Combines Biller Ref + Bank Account so it auto-fills on Teller screen
             finalRef = refNumber + " / Bank Acc: " + accNo;
         }
@@ -492,32 +501,43 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAmountActionPerformed
 
-    private void applyRealTimeValidation() {
-        // Reference Number: Allows '+' at the start, max 15 characters
-        txtRefNumber.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                char c = evt.getKeyChar();
-                
-                // Allow digits, but also allow '+' if it is the very first character
-                if (!Character.isDigit(c) && c != '+') {
-                    evt.consume();
-                }
-                if (c == '+' && txtRefNumber.getText().length() > 0) {
-                    evt.consume(); 
-                }
-                if (txtRefNumber.getText().length() >= 15) {
-                    evt.consume();
-                }
+  private void applyRealTimeValidation() {
+    // Reference number: 4-10 digits, or +639 followed by 9 digits
+    txtRefNumber.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            String current = txtRefNumber.getText();
+            if (c == '+') {
+                if (!current.isEmpty()) evt.consume();   // "+" only as the first character
+                return;
             }
-        });
+            if (!Character.isDigit(c)
+                    || current.length() >= ValidationUtils.billReferenceMaxLength(current)) {
+                evt.consume();
+            }
+        }
+    });
 
-        // Amount: Max 6 digits, whole numbers only (no decimals)
-        txtAmount.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                if (!Character.isDigit(evt.getKeyChar()) || txtAmount.getText().length() >= 6) evt.consume();
+    // Amount: up to 6 whole digits and up to 2 decimals (bills have centavos)
+    txtAmount.addKeyListener(new java.awt.event.KeyAdapter() {
+        public void keyTyped(java.awt.event.KeyEvent evt) {
+            char c = evt.getKeyChar();
+            String t = txtAmount.getText();
+            int dot = t.indexOf('.');
+            if (c == '.') {
+                if (dot >= 0 || t.isEmpty()) evt.consume();      // one dot, not first
+            } else if (Character.isDigit(c)) {
+                if (dot >= 0) {
+                    if (t.length() - dot > 2) evt.consume();     // max 2 decimals
+                } else if (t.length() >= 6) {
+                    evt.consume();                               // max 6 whole digits
+                }
+            } else {
+                evt.consume();
             }
-        });
-    }
+        }
+    });
+}
     
     /**
      * @param args the command line arguments

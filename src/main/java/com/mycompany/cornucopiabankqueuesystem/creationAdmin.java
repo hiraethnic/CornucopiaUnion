@@ -17,9 +17,42 @@ public class creationAdmin extends javax.swing.JFrame {
      */
     public creationAdmin() {
         initComponents();
-         setLocationRelativeTo(null);
-         QueueDatabase.initializeAdminsTable();
+        setLocationRelativeTo(null);
+        QueueDatabase.initializeAdminsTable();
+        
+        setupPasswordValidation();
          
+    }
+    
+    private void setupPasswordValidation() {
+        // Adds a listener that triggers every time text is inserted, removed, or changed
+        jTextField6.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+        });
+    }
+
+    private void validatePassword() {
+        String password = jTextField6.getText();
+        
+        // Validation Rubric Checks
+        boolean isNotEmpty = !password.trim().isEmpty();
+        boolean hasLength = password.length() >= 8;
+        boolean hasUpper = password.matches(".*[A-Z].*");
+        boolean hasLower = password.matches(".*[a-z].*");
+        boolean hasNumber = password.matches(".*\\d.*");
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); // Checks for any symbol (e.g., !, @, #, $, %)
+
+        // If all conditions are met, set text to default black, otherwise red
+        if (isNotEmpty && hasLength && hasUpper && hasLower && hasNumber && hasSpecial) {
+            jTextField6.setForeground(java.awt.Color.BLACK); // Normal / OK
+        } else {
+            jTextField6.setForeground(java.awt.Color.RED);   // Rubric not met
+        }
     }
 
     /**
@@ -293,6 +326,11 @@ public class creationAdmin extends javax.swing.JFrame {
     String username = jTextField5.getText();
     // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField.
     String password = jTextField6.getText();
+    boolean hasLength = password.length() >= 8;
+    boolean hasUpper = password.matches(".*[A-Z].*");
+    boolean hasLower = password.matches(".*[a-z].*");
+    boolean hasNumber = password.matches(".*\\d.*");
+    boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
 
     if (!ValidationUtils.isValidName(fullName)) {
         ValidationUtils.showError(this, "Enter a valid full name (letters only).");
@@ -314,8 +352,8 @@ public class creationAdmin extends javax.swing.JFrame {
         ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
         return;
     }
-    if (!ValidationUtils.isValidPassword(password)) {
-        ValidationUtils.showError(this, "Password must be at least 6 characters.");
+    if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
+        ValidationUtils.showError(this, "Password must be at least 8 characters and include an uppercase letter, lowercase letter, a number, and a special character.");
         return;
     }
     if (QueueDatabase.adminExists(adminId, username)) {

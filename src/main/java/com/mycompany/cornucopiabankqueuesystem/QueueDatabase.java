@@ -764,6 +764,27 @@ public final class QueueDatabase {
             return false;
         }
     }
+    
+    /** Updates a ticket's core details when a teller edits them */
+    public static synchronized boolean updateTicketDetails(String ticketNo, String customerName, String referenceNo, Double amount) {
+        String sql = "UPDATE queue_tickets SET customer_name = ?, reference_no = ?, amount = ?, updated_at = datetime('now','localtime') WHERE ticket_no = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, customerName);
+            ps.setString(2, referenceNo);
+            if (amount == null) {
+                ps.setNull(3, java.sql.Types.REAL);
+            } else {
+                ps.setDouble(3, amount);
+            }
+            ps.setString(4, ticketNo);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Could not update ticket details for " + ticketNo, ex);
+            return false;
+        }
+    }
 
     public static synchronized boolean confirmTransaction(String ticketNo, String transactionType,
             boolean validIdSubmitted, Double amount, String referenceNo) {
