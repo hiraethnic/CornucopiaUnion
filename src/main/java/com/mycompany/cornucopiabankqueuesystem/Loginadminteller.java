@@ -200,13 +200,12 @@ public class Loginadminteller extends javax.swing.JFrame {
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
-        jTextField1.setText("");
-        jPasswordField2.setText("");
-        
-        jCheckBox1.setSelected(false);
-        jPasswordField2.setEchoChar('\u2022');
-        
-        jTextField1.requestFocus();
+        if (jCheckBox1.isSelected()) {
+            jPasswordField2.setEchoChar((char) 0); // Shows the text
+        } else {
+            jPasswordField2.setEchoChar('\u2022'); // Hides with bullet points
+        }
+    
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     /**
