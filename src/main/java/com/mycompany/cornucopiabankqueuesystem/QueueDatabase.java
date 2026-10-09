@@ -559,7 +559,6 @@ public final class QueueDatabase {
         addColumnIfMissing(conn, "confirmed_by", "ALTER TABLE queue_tickets ADD COLUMN confirmed_by TEXT");
         addColumnIfMissing(conn, "released_by", "ALTER TABLE queue_tickets ADD COLUMN released_by TEXT");
         addColumnIfMissing(conn, "id_document_path", "ALTER TABLE queue_tickets ADD COLUMN id_document_path TEXT");
-        addColumnIfMissing(conn, "id_blob", "ALTER TABLE queue_tickets ADD COLUMN id_blob BLOB");
     }
 
     private static void addColumnIfMissing(Connection conn, String columnName, String alterSql) {
@@ -931,31 +930,18 @@ public final class QueueDatabase {
   
 
    /** Same as above, but also records which teller account confirmed it. */
-  public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
-        initialize(); 
+   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
+        initialize(); // makes sure the id_document_path column exists
+        String savedIdPath = copyIdPhoto(idPath, accountNo);
 
+        // NOTE: random number can collide with an existing AC ticket (ticket_no is UNIQUE) and fail.
+        // Should be replaced with sequential numbering like addTicket(). Left as is to keep it simple.
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
-        
-        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by, id_document_path, id_blob) "
-                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?, ?, ?)";
+        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by, id_document_path) "
+                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?, ?)";
 
         Connection conn = getConnection();
         if (conn == null) return false;
-
-        // --- SAFELY CONVERT THE IMAGE FILE INTO A BLOB ---
-        byte[] fileBytes = null;
-        if (idPath != null && !idPath.trim().isEmpty()) {
-            java.io.File imgFile = new java.io.File(idPath);
-            
-            // This safely checks if the file exists before attempting to read it, preventing the Windows Error
-            if (imgFile.exists() && imgFile.isFile()) { 
-                try {
-                    fileBytes = java.nio.file.Files.readAllBytes(imgFile.toPath());
-                } catch (Exception e) {
-                    System.out.println("Notice: Could not convert ID to BLOB - " + e.getMessage());
-                }
-            }
-        }
 
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, ticketNo);
@@ -964,10 +950,10 @@ public final class QueueDatabase {
             ps.setDouble(4, balance);
             ps.setString(5, accountNo);
             ps.setString(6, confirmedBy);
-            ps.setString(7, idPath);
-            ps.setBytes(8, fileBytes); // Saves the BLOB bytes into the database
+            ps.setString(7, savedIdPath);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error saving bank account record", ex);
             return false;
         }
     }
@@ -1004,19 +990,6 @@ public final class QueueDatabase {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Error fetching ID photo path", ex);
         }
-        return null;
-    }
-    
-    public static byte[] getAccountIdBlob(String accountNo) {
-        String sql = "SELECT id_blob FROM queue_tickets WHERE reference_no = ? AND ticket_no LIKE 'AC-%' LIMIT 1";
-        Connection conn = getConnection();
-        if (conn == null) return null;
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, accountNo);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return rs.getBytes("id_blob");
-            }
-        } catch (SQLException ex) { }
         return null;
     }
    

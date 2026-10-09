@@ -110,57 +110,47 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         loadHistory(details[0]);
     }
     
-   // Stores the BLOB binary data while the account is open
-    private byte[] currentIdBlob = null;
+   private String idPhotoPath = null;
  
     private void showIdPhoto(String accNo) {
-        currentIdBlob = null;
+        idPhotoPath = null;
         uploadphoto.setIcon(null);
-        uploadphoto.setText("Loading ID...");
+        uploadphoto.setText("No ID photo uploaded");
  
-        // 1. Fetch the Binary Large Object (BLOB) from the database
-        byte[] blobData = QueueDatabase.getAccountIdBlob(accNo);
-        
-        if (blobData == null || blobData.length == 0) {
-            uploadphoto.setText("No ID uploaded");
+        String path = QueueDatabase.getAccountIdPath(accNo);
+        if (path == null || path.isEmpty()) return;
+ 
+        java.io.File file = new java.io.File(path);
+        if (!file.exists()) {
+            uploadphoto.setText("ID file not found");
             return;
         }
-        
-        currentIdBlob = blobData;
+        idPhotoPath = path;
  
-        // 2. Convert the BLOB back into an image
-        try {
-            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(currentIdBlob);
-            if (icon.getIconWidth() > 0) {
-                // Resize the image to fit the label nicely so it doesn't break your UI
-                java.awt.Image img = icon.getImage().getScaledInstance(200, 150, java.awt.Image.SCALE_SMOOTH);
-                uploadphoto.setIcon(new javax.swing.ImageIcon(img));
-                uploadphoto.setText("");
-            } else {
-                uploadphoto.setText("ID is a PDF (Click to open)");
-            }
-        } catch (Exception e) {
+        if (path.toLowerCase().endsWith(".pdf")) {
+            uploadphoto.setText("ID uploaded (PDF) - click to open");
+            return;
+        }
+ 
+        javax.swing.ImageIcon icon = new javax.swing.ImageIcon(path);
+        if (icon.getIconWidth() <= 0) {
             uploadphoto.setText("Cannot display this ID file");
+            return;
         }
     }
     
-    private void openIdPhoto() {
-        if (currentIdBlob == null) return;
+      private void openIdPhoto() {
+        if (idPhotoPath == null) return;
         try {
-            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(currentIdBlob);
-            if (icon.getIconWidth() > 0) {
-                // Show a larger pop-up of the BLOB image
-                javax.swing.JScrollPane sp = new javax.swing.JScrollPane(new javax.swing.JLabel(icon));
-                sp.setPreferredSize(new java.awt.Dimension(
-                        Math.min(icon.getIconWidth() + 20, 800), Math.min(icon.getIconHeight() + 20, 600)));
-                JOptionPane.showMessageDialog(this, sp, "Valid ID - " + AccName.getText(), JOptionPane.PLAIN_MESSAGE);
-            } else {
-                // If the BLOB is a PDF document, extract it to a temp file and open it
-                java.io.File tempPdf = java.io.File.createTempFile("ID_Document_", ".pdf");
-                java.nio.file.Files.write(tempPdf.toPath(), currentIdBlob);
-                java.awt.Desktop.getDesktop().open(tempPdf);
-                tempPdf.deleteOnExit(); // Automatically cleans up the temp file
+            if (idPhotoPath.toLowerCase().endsWith(".pdf")) {
+                java.awt.Desktop.getDesktop().open(new java.io.File(idPhotoPath));
+                return;
             }
+            javax.swing.ImageIcon icon = new javax.swing.ImageIcon(idPhotoPath);
+            javax.swing.JScrollPane sp = new javax.swing.JScrollPane(new javax.swing.JLabel(icon));
+            sp.setPreferredSize(new java.awt.Dimension(
+                    Math.min(icon.getIconWidth() + 20, 800), Math.min(icon.getIconHeight() + 20, 600)));
+            JOptionPane.showMessageDialog(this, sp, "Valid ID - " + AccName.getText(), JOptionPane.PLAIN_MESSAGE);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Could not open the ID file.");
         }
