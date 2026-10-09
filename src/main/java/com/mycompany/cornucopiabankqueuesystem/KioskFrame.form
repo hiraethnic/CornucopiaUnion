@@ -290,7 +290,7 @@
         <Component class="javax.swing.JLabel" name="jLabel6">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\Rara\Documents\CornucopiaUnion\src\main\java\Images\kioskdesign.jpg"/>
+              <Image iconType="2" name="C:\Users\Lenovo\OneDrive\Documents\NetBeansProjects\CornucopiaUnion\src\main\java\com\mycompany\cornucopiabankqueuesystem\kioskdesign.jpg"/>
             </Property>
             <Property name="text" type="java.lang.String" value="jLabel6"/>
           </Properties>

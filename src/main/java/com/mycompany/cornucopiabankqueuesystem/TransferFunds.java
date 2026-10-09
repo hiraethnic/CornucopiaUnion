@@ -140,9 +140,8 @@ public class TransferFunds extends javax.swing.JFrame {
         jButton7.addActionListener(this::jButton7ActionPerformed);
         jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 500, -1, 30));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\transfund1 (1).png")); // NOI18N
-        jLabel2.setText("jLabel2");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 720, 600));
+        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\transfund1 (1).png")); // NOI18N
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 600));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(3, 0, 700, 600));
 

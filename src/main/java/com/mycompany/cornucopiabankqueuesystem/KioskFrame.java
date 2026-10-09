@@ -135,7 +135,7 @@ public class KioskFrame extends javax.swing.JFrame {
         btnBillsPayment.addActionListener(this::btnBillsPaymentActionPerformed);
         jPanel3.add(btnBillsPayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 300, 280, 50));
 
-        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\kioskdesign.jpg")); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\com\\mycompany\\cornucopiabankqueuesystem\\kioskdesign.jpg")); // NOI18N
         jLabel6.setText("jLabel6");
         jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 20, 750, 400));
 
