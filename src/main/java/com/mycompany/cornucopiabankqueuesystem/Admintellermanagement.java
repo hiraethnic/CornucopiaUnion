@@ -201,7 +201,7 @@ private void loadActivity(String username) {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 218, 106));
+        jPanel1.setBackground(new java.awt.Color(234, 243, 255));
         jPanel1.setPreferredSize(new java.awt.Dimension(786, 633));
 
         jPanel2.setBackground(new java.awt.Color(12, 35, 74));
@@ -212,7 +212,7 @@ private void loadActivity(String username) {
         jLabel1.setText("ADMIN PORTAL - TELLER MANAGEMENT");
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
         jButton1.addActionListener(this::jButton1ActionPerformed);
@@ -291,13 +291,13 @@ private void loadActivity(String username) {
         AccountStatus.setToolTipText("");
 
         ResetPassword.setBackground(new java.awt.Color(30, 58, 138));
-        ResetPassword.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ResetPassword.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         ResetPassword.setForeground(new java.awt.Color(255, 255, 255));
         ResetPassword.setText("EDIT PASSWORD");
         ResetPassword.addActionListener(this::ResetPasswordActionPerformed);
 
-        SaveModifications.setBackground(new java.awt.Color(0, 204, 0));
-        SaveModifications.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        SaveModifications.setBackground(new java.awt.Color(0, 153, 0));
+        SaveModifications.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         SaveModifications.setForeground(new java.awt.Color(255, 255, 255));
         SaveModifications.setText("SAVE MODIFICATIONS");
         SaveModifications.addActionListener(this::SaveModificationsActionPerformed);
@@ -340,7 +340,7 @@ private void loadActivity(String username) {
         jCheckBox6.setText("Foreignexchange");
 
         jButton2.setBackground(new java.awt.Color(220, 38, 38));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("DELETE ACCOUNT");
         jButton2.addActionListener(this::jButton2ActionPerformed);
@@ -399,7 +399,7 @@ private void loadActivity(String username) {
                                 .addComponent(AccountStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addComponent(ResetPassword)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 102, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(SaveModifications, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -435,7 +435,7 @@ private void loadActivity(String username) {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jCheckBox2)
                             .addComponent(jCheckBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 57, Short.MAX_VALUE)
+                        .addGap(18, 66, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel7)
                             .addComponent(UserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -481,7 +481,7 @@ private void loadActivity(String username) {
         jScrollPane1.setViewportView(jTable1);
 
         jButton6.setBackground(new java.awt.Color(30, 58, 138));
-        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton6.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("BACK");
         jButton6.addActionListener(this::jButton6ActionPerformed);
@@ -490,7 +490,7 @@ private void loadActivity(String username) {
         jToggleButton2.addActionListener(this::jToggleButton2ActionPerformed);
 
         jButton4.setBackground(new java.awt.Color(30, 58, 138));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("REFRESH");
         jButton4.addActionListener(this::jButton4ActionPerformed);

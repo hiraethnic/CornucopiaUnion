@@ -254,7 +254,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jLabel1.setText("ADMIN PORTAL - ACCOUNT MANAGEMENT");
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
         jButton1.addActionListener(this::jButton1ActionPerformed);
@@ -266,7 +266,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 387, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 499, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 495, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(16, 16, 16))
         );
@@ -292,7 +292,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jButton2.setBackground(new java.awt.Color(30, 58, 138));
-        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton2.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("SEARCH");
 
@@ -305,7 +305,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 305, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
                 .addComponent(jButton2)
                 .addGap(50, 50, 50))
         );
@@ -355,13 +355,13 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         BALance.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         jButton3.setBackground(new java.awt.Color(220, 38, 38));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("LOCK");
         jButton3.addActionListener(this::jButton3ActionPerformed);
 
         LOCK.setBackground(new java.awt.Color(30, 58, 138));
-        LOCK.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        LOCK.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         LOCK.setForeground(new java.awt.Color(255, 255, 255));
         LOCK.setText("EDIT");
 
@@ -441,7 +441,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, -1, -1));
 
         jButton4.setBackground(new java.awt.Color(30, 58, 138));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("BACK");
         jButton4.addActionListener(this::jButton4ActionPerformed);

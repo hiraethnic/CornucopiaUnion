@@ -88,7 +88,7 @@ public class creationAdmin extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(244, 246, 249));
+        jPanel1.setBackground(new java.awt.Color(234, 243, 255));
 
         jPanel2.setBackground(new java.awt.Color(12, 35, 74));
 
@@ -96,7 +96,8 @@ public class creationAdmin extends javax.swing.JFrame {
         jLabel1.setForeground(new java.awt.Color(251, 191, 36));
         jLabel1.setText("CREATION ADMIN");
 
-        logout.setBackground(new java.awt.Color(0, 23, 42));
+        logout.setBackground(new java.awt.Color(12, 35, 74));
+        logout.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         logout.setForeground(new java.awt.Color(255, 255, 255));
         logout.setText("Logout");
         logout.addActionListener(this::logoutActionPerformed);
@@ -246,13 +247,13 @@ public class creationAdmin extends javax.swing.JFrame {
         );
 
         jButton4.setBackground(new java.awt.Color(220, 38, 38));
-        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Clear form");
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jButton5.setBackground(new java.awt.Color(0, 0, 255));
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton5.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Create account");
         jButton5.addActionListener(this::jButton5ActionPerformed);
