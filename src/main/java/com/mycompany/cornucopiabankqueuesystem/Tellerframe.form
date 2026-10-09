@@ -157,7 +157,7 @@
                                               <Component id="jButton5" min="-2" pref="125" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="jButton1" min="-2" max="-2" attributes="0"/>
-                                              <EmptySpace pref="55" max="32767" attributes="0"/>
+                                              <EmptySpace pref="63" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -568,7 +568,7 @@
                                       <Component id="jLabel11" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel12" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="0" pref="269" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="271" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -775,7 +775,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="4a" green="23" red="c" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="jLabel26"/>
+                <Property name="text" type="java.lang.String" value="C - "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel38">
@@ -786,7 +786,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="4a" green="23" red="c" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="jLabel38"/>
+                <Property name="text" type="java.lang.String" value="D - "/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel40">
@@ -797,7 +797,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="4a" green="23" red="c" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="jLabel40"/>
+                <Property name="text" type="java.lang.String" value="F -"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel41">

@@ -26,6 +26,7 @@ public final class QueueDatabase {
     private static final String DB_URL = "jdbc:sqlite:cornucopiabank.db";
 
     private static Connection connection;
+    private static int consecutivePriorityCount = 0;
 
     private QueueDatabase() {
     }
@@ -605,6 +606,12 @@ public final class QueueDatabase {
             String customerName, boolean priority) {
         initialize();
         String ticketNo = nextTicketNumber(prefix);
+        
+        // Append -PWD to the ticket if it's a priority customer
+        if (priority) {
+            ticketNo += "-PWD";
+        }
+        
         String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, priority, status) "
                 + "VALUES (?, ?, ?, ?, 'WAITING')";
         Connection conn = getConnection();
@@ -837,26 +844,80 @@ public final class QueueDatabase {
         Connection conn = getConnection();
         if (conn == null) return null;
 
-        // Loop to try picking a ticket until successful or the queue is empty
         while (true) {
             int chosenId = -1;
-            String pick = "SELECT id, ticket_no, category FROM queue_tickets WHERE status = 'WAITING' "
-                    + "ORDER BY priority DESC, id ASC";
-            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(pick)) {
+            boolean chosenIsPriority = false;
+
+            // Fetch all waiting tickets ordered by oldest first, calculating wait time in minutes
+            String fetchSql = "SELECT id, ticket_no, category, priority, "
+                    + "(julianday('now', 'localtime') - julianday(created_at)) * 24 * 60 AS wait_mins "
+                    + "FROM queue_tickets WHERE status = 'WAITING' ORDER BY id ASC";
+
+            try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(fetchSql)) {
+                
+                int frustratedId = -1;
+                int oldestPriorityId = -1;
+                int oldestRegularId = -1;
+
                 while (rs.next()) {
-                    if (perms != null && perms.canHandleTicket(rs.getString("ticket_no"), rs.getString("category"))) {
-                        chosenId = rs.getInt("id");
-                        break;
+                    String ticketNo = rs.getString("ticket_no");
+                    String category = rs.getString("category");
+                    
+                    // Skip if teller lacks permission for this transaction
+                    if (perms != null && !perms.canHandleTicket(ticketNo, category)) {
+                        continue;
+                    }
+                    
+                    int id = rs.getInt("id");
+                    int priority = rs.getInt("priority");
+                    double waitMins = rs.getDouble("wait_mins");
+                    
+                    // 1. Time Limit Boost: Normal customer waiting > 20 mins
+                    if (priority == 0 && waitMins > 20 && frustratedId == -1) {
+                        frustratedId = id;
+                    }
+                    
+                    if (priority == 1 && oldestPriorityId == -1) {
+                        oldestPriorityId = id;
+                    }
+                    if (priority == 0 && oldestRegularId == -1) {
+                        oldestRegularId = id;
                     }
                 }
+                
+                // --- QUEUE ROUTING LOGIC ---
+                if (frustratedId != -1) {
+                    // Overrides all rules: Pull the frustrated regular customer immediately
+                    chosenId = frustratedId;
+                    chosenIsPriority = false;
+                } else {
+                    // Alternating Counter: 2 Priority then 1 Regular
+                    if (consecutivePriorityCount >= 2) {
+                        if (oldestRegularId != -1) {
+                            chosenId = oldestRegularId;
+                            chosenIsPriority = false;
+                        } else if (oldestPriorityId != -1) {
+                            chosenId = oldestPriorityId; // Fallback to priority if no regulars exist
+                            chosenIsPriority = true;
+                        }
+                    } else {
+                        if (oldestPriorityId != -1) {
+                            chosenId = oldestPriorityId;
+                            chosenIsPriority = true;
+                        } else if (oldestRegularId != -1) {
+                            chosenId = oldestRegularId; // Fallback to regular if no priorities exist
+                            chosenIsPriority = false;
+                        }
+                    }
+                }
+
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Could not look up next ticket", ex);
                 return null;
             }
             
-            if (chosenId < 0) return null; // No available tickets for this teller
+            if (chosenId < 0) return null; // Queue is empty for this teller
 
-            // Added AND status = 'WAITING' to ensure it hasn't been taken by another teller
             String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
                     + "transaction_type = category, updated_at = datetime('now','localtime') "
                     + "WHERE id = ? AND status = 'WAITING'";
@@ -865,13 +926,15 @@ public final class QueueDatabase {
                 ps.setString(1, counter);
                 ps.setInt(2, chosenId);
                 
-                // If it successfully updates 1 row, we secured the ticket!
                 if (ps.executeUpdate() > 0) {
+                    // Successfully secured the ticket, now manage the alternating counter
+                    if (chosenIsPriority) {
+                        consecutivePriorityCount++;
+                    } else {
+                        consecutivePriorityCount = 0; // Reset after a regular customer is pulled
+                    }
                     return getActiveTicket(counter);
                 }
-                
-                // If 0 rows updated, someone else took it first. 
-                // The loop restarts automatically to fetch the next person in line.
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Could not call next ticket", ex);
                 return null;

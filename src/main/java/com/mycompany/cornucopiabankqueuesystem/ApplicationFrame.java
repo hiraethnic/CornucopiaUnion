@@ -154,7 +154,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Account Type:");
 
-        cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Savings Account", "Checking Account", "Youth / Student Account" }));
+        cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unified Card" }));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Primary ID Presented:");

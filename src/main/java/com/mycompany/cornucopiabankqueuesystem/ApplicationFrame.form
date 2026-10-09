@@ -318,10 +318,8 @@
     <Component class="javax.swing.JComboBox" name="cmbAccountType">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="3">
-            <StringItem index="0" value="Savings Account"/>
-            <StringItem index="1" value="Checking Account"/>
-            <StringItem index="2" value="Youth / Student Account"/>
+          <StringArray count="1">
+            <StringItem index="0" value="Unified Card"/>
           </StringArray>
         </Property>
       </Properties>

@@ -465,7 +465,7 @@ public class Tellerframe extends javax.swing.JFrame {
     if (cat.contains("account") || cat.contains("opening") || cat.contains("creation") || ticketNo.startsWith("AC")) {
         showPanel(ACC);
         customername.setText(ticket.customerName != null ? ticket.customerName : "");
-        currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "Savings Account");
+        currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "Unified Card");
     } 
     else if (cat.contains("exchange") || cat.contains("forex") || ticketNo.startsWith("FX")) {
         showPanel(Xchange);
@@ -601,7 +601,7 @@ public class Tellerframe extends javax.swing.JFrame {
         if (category.contains("account") || category.contains("opening") || category.contains("creation") || category.contains("ac")) {
             showPanel(ACC);
             customername.setText(ticket.customerName != null ? ticket.customerName : "");
-            currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "Savings Account");
+            currencyacc.setText(ticket.referenceNo != null ? ticket.referenceNo : "Unified Card");
         }
         else if (category.contains("exchange") || category.contains("forex") || category.contains("fx")) {
             showPanel(Xchange);
@@ -868,7 +868,7 @@ public class Tellerframe extends javax.swing.JFrame {
         // --- ACCOUNT CREATION ---
         if (category.contains("account") || category.contains("opening") || category.contains("creation") || activeTicket.ticketNo.startsWith("AC")) {
             String name = customername.getText().trim();
-            String accType = "Savings Account";
+            String accType = "Unified Card";
 
             if (name.isEmpty()) {
                 ValidationUtils.showError(this, "Customer name cannot be empty.");
@@ -1530,7 +1530,7 @@ public class Tellerframe extends javax.swing.JFrame {
                                         .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jButton1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 63, Short.MAX_VALUE)))
                                 .addComponent(jLabel2)
                                 .addGap(161, 161, 161)
                                 .addComponent(jLabel3)
@@ -1629,7 +1629,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
                             .addComponent(jLabel12))
-                        .addGap(0, 269, Short.MAX_VALUE)))
+                        .addGap(0, 271, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -1693,15 +1693,15 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel26.setText("jLabel26");
+        jLabel26.setText("C - ");
 
         jLabel38.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel38.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel38.setText("jLabel38");
+        jLabel38.setText("D - ");
 
         jLabel40.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel40.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel40.setText("jLabel40");
+        jLabel40.setText("F -");
 
         jLabel41.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel41.setForeground(new java.awt.Color(12, 35, 74));
