@@ -40,6 +40,7 @@ public class Loginadminteller extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jPasswordField2 = new javax.swing.JPasswordField();
         jLabel2 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -91,6 +92,9 @@ public class Loginadminteller extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("PASSWORD:");
 
+        jCheckBox1.setText("Show Password");
+        jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -113,7 +117,8 @@ public class Loginadminteller extends javax.swing.JFrame {
                             .addComponent(jLabel11)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jPasswordField2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 204, Short.MAX_VALUE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING))))
+                                .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING))
+                            .addComponent(jCheckBox1)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(301, 301, 301)
                         .addComponent(jLabel2)))
@@ -133,7 +138,9 @@ public class Loginadminteller extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(68, 68, 68)
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBox1)
+                .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -191,6 +198,16 @@ public class Loginadminteller extends javax.swing.JFrame {
     jTextField1.requestFocus();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+        // TODO add your handling code here:
+        if (jCheckBox1.isSelected()) {
+            jPasswordField2.setEchoChar((char) 0); // Shows the text
+        } else {
+            jPasswordField2.setEchoChar('\u2022'); // Hides with bullet points
+        }
+    
+    }//GEN-LAST:event_jCheckBox1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -230,6 +247,7 @@ public class Loginadminteller extends javax.swing.JFrame {
     private javax.swing.JLabel a;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;

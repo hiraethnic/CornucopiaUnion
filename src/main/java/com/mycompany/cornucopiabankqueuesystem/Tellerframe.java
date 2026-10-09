@@ -115,6 +115,61 @@ public class Tellerframe extends javax.swing.JFrame {
         jButton7.setText("CANCEL");
 
         setFieldsEditable(false);
+        jTextField24.setEditable(false); // Deposit Est. Balance
+        jTextField7.setEditable(false);  // Deposit Current Balance
+        jTextField29.setEditable(false); // Withdraw Remaining Balance
+        jTextField9.setEditable(false);  // Withdraw Current Balance
+        totalphpdeducted.setEditable(false); // Transfer Remaining Balance
+        jTextField3.setEditable(false);  // Transfer Current Balance
+        estimatedbalanceT.setEditable(false); // Bills Est. Balance
+        jTextField1.setEditable(false);  // Bills Current Balance
+        
+        // --- REAL-TIME INPUT VALIDATION ---
+        
+        // 1. Account Number Filter (Numbers ONLY, Maximum 11 digits)
+        java.awt.event.KeyAdapter accountNoFilter = new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                javax.swing.JTextField tf = (javax.swing.JTextField) evt.getSource();
+                
+                // Block if it is NOT a digit OR if there are already 11 digits
+                if (!Character.isDigit(c) || tf.getText().length() >= 11) {
+                    evt.consume(); // Destroys the keystroke so it doesn't appear
+                }
+            }
+        };
+
+        // Apply to all account number fields across your panels
+        accnum.addKeyListener(accountNoFilter);             // Withdrawal
+        jTextField6.addKeyListener(accountNoFilter);        // Deposit
+        sourceacc.addKeyListener(accountNoFilter);          // Transfer Source
+        destinationaccbank.addKeyListener(accountNoFilter); // Transfer Destination
+        BankAccNumber.addKeyListener(accountNoFilter);      // Bills Payment Unified Card
+        // Note: currencyacc (Account Creation) is auto-generated so we don't strictly need to lock it
+
+        // 2. Amount Filter (Numbers and ONE decimal point ONLY)
+        java.awt.event.KeyAdapter amountFilter = new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                javax.swing.JTextField tf = (javax.swing.JTextField) evt.getSource();
+                
+                // Block letters and symbols (allow digits and a period)
+                if (!Character.isDigit(c) && c != '.') {
+                    evt.consume();
+                } 
+                // Block if they try to type a second period
+                else if (c == '.' && tf.getText().contains(".")) {
+                    evt.consume();
+                }
+            }
+        };
+
+        // Apply to all amount fields across your panels
+        withdrawamount.addKeyListener(amountFilter);        // Withdrawal
+        jTextField26.addKeyListener(amountFilter);          // Deposit
+        transferamountphp.addKeyListener(amountFilter);     // Transfer
+        DepositamountT.addKeyListener(amountFilter);        // Bills Payment
+        customer.addKeyListener(amountFilter);              // Foreign Exchange
 
         jButton1.addActionListener(evt -> showPanel(With));
         jButton2.addActionListener(evt -> showPanel(ACC));
@@ -205,7 +260,6 @@ public class Tellerframe extends javax.swing.JFrame {
         }
 
         isEditMode = !isEditMode;
-
         setFieldsEditable(isEditMode);
 
         String label = isEditMode ? "SAVE EDIT" : "EDIT";
@@ -219,7 +273,54 @@ public class Tellerframe extends javax.swing.JFrame {
         if (isEditMode) {
             ValidationUtils.showSuccess(this, "Fields unlocked! You can now edit the transaction details.");
         } else {
-            ValidationUtils.showSuccess(this, "Edits saved! Fields are locked again.");
+            // Grab the edited values based on the active transaction type
+            String category = activeTicket.category != null ? activeTicket.category.trim().toLowerCase() : "";
+            String newName = activeTicket.customerName;
+            String newRef = activeTicket.referenceNo;
+            Double newAmt = activeTicket.amount;
+
+            try {
+                if (category.contains("account") || activeTicket.ticketNo.startsWith("AC")) {
+                    newName = customername.getText().trim();
+                    newRef = currencyacc.getText().trim();
+                } else if (category.contains("deposit") || activeTicket.ticketNo.startsWith("DP")) {
+                    newName = jTextField5.getText().trim();
+                    newRef = jTextField6.getText().trim();
+                    newAmt = Double.parseDouble(jTextField26.getText().trim().replaceAll("[^0-9.]", ""));
+                } else if (category.contains("withdraw") || activeTicket.ticketNo.startsWith("WD")) {
+                    newName = accname.getText().trim();
+                    newRef = accnum.getText().trim();
+                    newAmt = Double.parseDouble(withdrawamount.getText().trim().replaceAll("[^0-9.]", ""));
+                } else if (category.contains("transfer") || activeTicket.ticketNo.startsWith("TR")) {
+                    newName = recieptname.getText().trim();
+                    newRef = sourceacc.getText().trim() + "," + destinationaccbank.getText().trim();
+                    newAmt = Double.parseDouble(transferamountphp.getText().trim().replaceAll("[^0-9.]", ""));
+                } else if (category.contains("bill") || activeTicket.ticketNo.startsWith("BP")) {
+                    newName = accholder.getText().trim();
+                    newRef = referenceno.getText().trim();
+                    if (!BankAccNumber.getText().trim().isEmpty()) {
+                        newRef += " / Bank Acc: " + BankAccNumber.getText().trim();
+                    }
+                    newAmt = Double.parseDouble(DepositamountT.getText().trim().replaceAll("[^0-9.]", ""));
+                } else if (category.contains("exchange") || activeTicket.ticketNo.startsWith("FX")) {
+                    newName = customer1.getText().trim();
+                    newRef = currencyt1.getText().trim();
+                    newAmt = Double.parseDouble(customer.getText().trim().replaceAll("[^0-9.]", ""));
+                }
+            } catch (Exception e) {
+                // Ignore parse errors; keeps the previous amount intact
+            }
+
+            // Write the audit log to the console
+            logger.info("AUDIT LOG [Ticket " + activeTicket.ticketNo + "] " +
+                    "OLD: Name=" + activeTicket.customerName + ", Ref=" + activeTicket.referenceNo + ", Amt=" + activeTicket.amount + " | " +
+                    "NEW: Name=" + newName + ", Ref=" + newRef + ", Amt=" + newAmt);
+
+            // Save new values to DB and refresh the active ticket object
+            QueueDatabase.updateTicketDetails(activeTicket.ticketNo, newName, newRef, newAmt);
+            activeTicket = QueueDatabase.getActiveTicket(counterName);
+
+            ValidationUtils.showSuccess(this, "Edits saved to ticket! Fields are locked again.");
         }
     }
      private void handleUploadID() {
@@ -273,7 +374,7 @@ public class Tellerframe extends javax.swing.JFrame {
             jLabel28.setText(t1.ticketNo); 
             jLabel29.setText(t1.customerName != null && !t1.customerName.isEmpty() ? t1.customerName : "No Name");
             jLabel30.setText(t1.category);
-            jLabel31.setText("DONE");
+            jLabel31.setText("HELLO");
             
         } else {
             jLabel28.setText("None");
@@ -451,22 +552,25 @@ public class Tellerframe extends javax.swing.JFrame {
     }
 
     private void fetchPastDoneTickets() {
-        String sql = "SELECT * FROM queue_tickets WHERE status = 'DONE' ORDER BY updated_at DESC LIMIT 2";
+        // Only fetch HELD tickets belonging to this teller, explicitly ignoring AC- rows
+        String sql = "SELECT * FROM queue_tickets WHERE status = 'HELD' AND counter = ? AND ticket_no NOT LIKE 'AC-%' ORDER BY updated_at DESC LIMIT 2";
         java.sql.Connection conn = QueueDatabase.getConnection();
         pastDoneTickets.clear();
         if (conn == null) return;
 
-        try (java.sql.PreparedStatement ps = conn.prepareStatement(sql);
-             java.sql.ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                pastDoneTickets.add(new QueueDatabase.Ticket(
-                    rs.getInt("id"), rs.getString("ticket_no"), rs.getString("category"),
-                    rs.getString("customer_name"), rs.getInt("priority") == 1,
-                    rs.getString("status"), rs.getString("counter"), rs.getString("created_at"),
-                    rs.getString("transaction_type"), rs.getInt("valid_id_submitted") == 1,
-                    rs.getObject("amount") == null ? null : rs.getDouble("amount"),
-                    rs.getString("reference_no")
-                ));
+        try (java.sql.PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, counterName); // Binds the search to the current teller's counter
+            try (java.sql.ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    pastDoneTickets.add(new QueueDatabase.Ticket(
+                        rs.getInt("id"), rs.getString("ticket_no"), rs.getString("category"),
+                        rs.getString("customer_name"), rs.getInt("priority") == 1,
+                        rs.getString("status"), rs.getString("counter"), rs.getString("created_at"),
+                        rs.getString("transaction_type"), rs.getInt("valid_id_submitted") == 1,
+                        rs.getObject("amount") == null ? null : rs.getDouble("amount"),
+                        rs.getString("reference_no")
+                    ));
+                }
             }
         } catch (java.sql.SQLException ex) {
             logger.log(java.util.logging.Level.SEVERE, "Error fetching past tickets", ex);
@@ -554,10 +658,17 @@ public class Tellerframe extends javax.swing.JFrame {
         // 1. Switch to the designated panel and autofill the customer's data
         autoSwitchAndFillPanel(activeTicket);
 
-        // 2. Automatically unlock the text fields so the teller can edit/process
-        isEditMode = true;
-        setFieldsEditable(true);
-        resetEditButtonLabels();
+        // 2. Keep the text fields LOCKED until they manually click Edit
+        isEditMode = false;
+        setFieldsEditable(false);
+        
+        // Ensure the buttons say "EDIT" instead of "SAVE EDIT"
+        jButton8.setText("EDIT");  
+        jButton17.setText("EDIT"); 
+        jButton19.setText("EDIT"); 
+        jButton21.setText("EDIT"); 
+        jButton16.setText("EDIT"); 
+        jButton23.setText("EDIT"); 
         
         ValidationUtils.showSuccess(this, "Ticket loaded into panel and placed on HOLD! You can now process the transaction.");
     }
@@ -688,26 +799,35 @@ public class Tellerframe extends javax.swing.JFrame {
         
  
     private void setFieldsEditable(boolean editable) {
+        // Foreign Exchange
         customer.setEditable(editable);
         currencyt1.setEditable(editable);
         customer1.setEditable(editable);
 
+        // Withdrawal
         accname.setEditable(editable);
         accnum.setEditable(editable);
         withdrawamount.setEditable(editable);
-        
-        jTextField29.setEditable(editable);
+       
 
+        // Deposit
         jTextField5.setEditable(editable);
         jTextField6.setEditable(editable);
+        jTextField26.setEditable(editable); // FIXED: Deposit Amount
 
+        // Transfer Funds
         recieptname.setEditable(editable);
         destinationaccbank.setEditable(editable);
+        sourceacc.setEditable(editable); // FIXED: Source Account
+        transferamountphp.setEditable(editable); // FIXED: Transfer Amount
 
+        // Bills Payment
         accholder.setEditable(editable);
         referenceno.setEditable(editable);
         DepositamountT.setEditable(editable);
+        BankAccNumber.setEditable(editable); // FIXED: Added this for safety too
 
+        // Account Creation
         customername.setEditable(editable);
         currencyacc.setEditable(editable);
     }
@@ -728,8 +848,18 @@ public class Tellerframe extends javax.swing.JFrame {
             ValidationUtils.showError(this, "No active transaction to confirm.");
             return;
         }
+       
+        if (isEditMode) {
+            ValidationUtils.showError(this, "Action Blocked: You must click 'SAVE EDIT' before you can confirm and print.");
+            return;
+        }
         if (!permissions.canHandleTicket(activeTicket.ticketNo, activeTicket.category)) {
             ValidationUtils.showError(this, "You are not allowed to process this transaction type.");
+            return;
+        }
+        
+        if (activeTicket == null) {
+            ValidationUtils.showError(this, "No active transaction to confirm.");
             return;
         }
 
@@ -1041,18 +1171,26 @@ public class Tellerframe extends javax.swing.JFrame {
         String accountName = accname.getText().trim();
         String withdrawAmountStr = withdrawamount.getText().trim().replaceAll("[^0-9.]", "");
 
+        // If either field is empty, reset both Current and Remaining balance fields
         if (accountNo.isEmpty() || accountName.isEmpty()) {
-            jTextField29.setText("PHP 0.00");
+            jTextField9.setText("PHP 0.00");  // Updates Current Balance
+            jTextField29.setText("PHP 0.00"); // Updates Remaining Balance
             return;
         }
 
         double currentBalance = QueueDatabase.getAccountBalance(accountNo, accountName);
 
+        // If the account doesn't exist or is invalid
         if (currentBalance < 0) {
+            jTextField9.setText("Invalid Account");
             jTextField29.setText("Invalid Account");
             return;
         }
 
+        // Successfully fetched! Display the live Current Balance
+        jTextField9.setText("PHP " + String.format("%,.2f", currentBalance));
+
+        // Calculate and display Remaining Balance based on withdrawal amount
         double withdrawAmount = 0.0;
         if (!withdrawAmountStr.isEmpty()) {
             try {
@@ -2811,6 +2949,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel39.setText("Current Balance");
 
         jTextField9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField9.addActionListener(this::jTextField9ActionPerformed);
 
         javax.swing.GroupLayout jPanel31Layout = new javax.swing.GroupLayout(jPanel31);
         jPanel31.setLayout(jPanel31Layout);
@@ -3223,6 +3362,10 @@ public class Tellerframe extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jButton24ActionPerformed
 
+    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField9ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -3254,25 +3397,31 @@ public class Tellerframe extends javax.swing.JFrame {
         jPanel7.repaint();
         jPanel7.revalidate();
 }
-   private void validateAndCalculateDeposit() {
+  private void validateAndCalculateDeposit() {
         String accountNo = jTextField6.getText().trim();
         String accountName = jTextField5.getText().trim();
         String depositAmountStr = jTextField26.getText().trim().replaceAll("[^0-9.]", "");
 
+        // If fields are empty, reset both Current and Estimated balance fields
         if (accountNo.isEmpty() || accountName.isEmpty()) {
-            jTextField24.setText("PHP 0.00");
+            jTextField7.setText("PHP 0.00");  // Current Balance
+            jTextField24.setText("PHP 0.00"); // Estimated Balance
             return;
         }
 
         double currentBalance = QueueDatabase.getAccountBalance(accountNo, accountName);
 
+        // If the account doesn't exist or doesn't match the name
         if (currentBalance < 0) {
-            ValidationUtils.showError(this, "Account Verification Failed!\nNo matching active account found for Number: " 
-                    + accountNo + " and Holder: " + accountName);
+            jTextField7.setText("Invalid Account");
             jTextField24.setText("Invalid Account");
             return;
         }
 
+        // Successfully fetched! Display the live Current Balance
+        jTextField7.setText("PHP " + String.format("%,.2f", currentBalance));
+
+        // Calculate and display Estimated Balance based on deposit amount
         double depositAmount = 0.0;
         if (!depositAmountStr.isEmpty()) {
             try {
@@ -3283,7 +3432,6 @@ public class Tellerframe extends javax.swing.JFrame {
         }
 
         double estimatedBalance = currentBalance + depositAmount;
-
         jTextField24.setText("PHP " + String.format("%,.2f", estimatedBalance));
     }
    
@@ -3292,16 +3440,22 @@ public class Tellerframe extends javax.swing.JFrame {
         String transferAmtStr = transferamountphp.getText().trim().replaceAll("[^0-9.]", "");
 
         if (accountNo.isEmpty()) {
-            totalphpdeducted.setText("PHP 0.00");
+            jTextField3.setText("PHP 0.00");      // Current Balance
+            totalphpdeducted.setText("PHP 0.00"); // Remaining Balance
             return;
         }
 
         // Get the live source balance
         double currentBalance = QueueDatabase.getBalanceByNumber(accountNo);
+        
         if (currentBalance < 0) {
+            jTextField3.setText("Account Not Found");
             totalphpdeducted.setText("Account Not Found");
             return;
         }
+
+        // Successfully fetched! Display the live Current Balance
+        jTextField3.setText("PHP " + String.format("%,.2f", currentBalance));
 
         // Parse the typed transfer amount
         double transferAmount = 0.0;

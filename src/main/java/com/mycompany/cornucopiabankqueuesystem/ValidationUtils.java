@@ -35,6 +35,21 @@ public class ValidationUtils {
     private static final Pattern NUMERIC_REFERENCE_PATTERN =
         Pattern.compile("^\\d{4,10}$");
     
+    
+    
+    
+      /** Bill reference: 4-10 digits, OR a PH mobile number written as +639 followed by 9 digits. */
+      private static final Pattern BILL_REFERENCE_PATTERN =
+        Pattern.compile("^(\\d{4,10}|\\+639\\d{9})$");
+
+       public static boolean isValidBillReference(String text) {
+       return !isBlank(text) && BILL_REFERENCE_PATTERN.matcher(text.trim()).matches();
+        }
+
+        /** Longest the reference box may get: 13 characters if it starts with "+", otherwise 10. */
+       public static int billReferenceMaxLength(String current) {
+         return current.startsWith("+") ? 13 : 10;
+        }
    
  
    

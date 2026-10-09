@@ -17,15 +17,14 @@ public class Admin extends javax.swing.JFrame {
      */
     public Admin() {
         initComponents();
-         QueueDatabase.initializeUsersTable();
-           setLocationRelativeTo(null);
-           
-           
-           
-           
-    styleButtonWhite(jButton6); // Account management button
-    styleButtonWhite(jButton3); // Teller creation button
-    styleButtonWhite(jButton2); // Records and System button
+        QueueDatabase.initializeUsersTable();
+        setLocationRelativeTo(null);
+        
+        setupPasswordValidation();
+        
+        styleButtonWhite(jButton6); // Account management button
+        styleButtonWhite(jButton3); // Teller creation button
+        styleButtonWhite(jButton2); // Records and System button
            
     }
     private void clearForm() {
@@ -382,6 +381,11 @@ public class Admin extends javax.swing.JFrame {
         String contact = jTextField4.getText();    // Contact number
         // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
         // (then use new String(field.getPassword())).
+        boolean hasLength = password.length() >= 8;
+        boolean hasUpper = password.matches(".*[A-Z].*");
+        boolean hasLower = password.matches(".*[a-z].*");
+        boolean hasNumber = password.matches(".*\\d.*");
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
  
         // --- validation ---
         if (!ValidationUtils.isValidName(fullName)) {
@@ -405,8 +409,8 @@ public class Admin extends javax.swing.JFrame {
             return;
         }
         // REPLACED: was "!isBlank(password)", which rejected every real password.
-        if (!ValidationUtils.isValidPassword(password)) {
-            ValidationUtils.showError(this, "Password must be at least 6 characters.");
+        if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
+            ValidationUtils.showError(this, "Password must be at least 8 characters and include an uppercase letter, lowercase letter, a number, and a special character.");
             return;
         }
         if (!(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
@@ -501,6 +505,37 @@ public class Admin extends javax.swing.JFrame {
  
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new Admin().setVisible(true));
+    }
+    
+    private void setupPasswordValidation() {
+        // Adds a listener that triggers every time text is inserted, removed, or changed
+        jTextField6.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+        });
+    }
+
+    private void validatePassword() {
+        String password = jTextField6.getText();
+        
+        // Validation Rubric Checks
+        boolean isNotEmpty = !password.trim().isEmpty();
+        boolean hasLength = password.length() >= 8;
+        boolean hasUpper = password.matches(".*[A-Z].*");
+        boolean hasLower = password.matches(".*[a-z].*");
+        boolean hasNumber = password.matches(".*\\d.*");
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); // Checks for any symbol (e.g., !, @, #, $, %)
+
+        // If all conditions are met, set text to default black, otherwise red
+        if (isNotEmpty && hasLength && hasUpper && hasLower && hasNumber && hasSpecial) {
+            jTextField6.setForeground(java.awt.Color.BLACK); // Normal / OK
+        } else {
+            jTextField6.setForeground(java.awt.Color.RED);   // Rubric not met
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
