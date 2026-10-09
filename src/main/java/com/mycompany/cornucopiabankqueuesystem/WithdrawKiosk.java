@@ -115,7 +115,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         jCheckBox1.setText("Priority lane (senior citizen / PWD / pregnant)");
         jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
 
-        jButton2.setBackground(new java.awt.Color(153, 0, 0));
+        jButton2.setBackground(new java.awt.Color(220, 38, 38));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("CLEAR");

@@ -180,6 +180,8 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        pnlNowServing.setBackground(new java.awt.Color(255, 218, 106));
+
         jPanel7.setBackground(new java.awt.Color(253, 220, 92));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -202,6 +204,8 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        pnlWaiting.setBackground(new java.awt.Color(255, 218, 106));
+
         jPanel5.setBackground(new java.awt.Color(12, 35, 74));
         jPanel5.setForeground(new java.awt.Color(255, 255, 255));
         jPanel5.setToolTipText("");
@@ -217,7 +221,7 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(94, 94, 94)
                 .addComponent(jLabel6)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(122, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -247,9 +251,8 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
             .addGroup(pnlWaitingLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlWaitingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         pnlWaitingLayout.setVerticalGroup(
             pnlWaitingLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -249,7 +249,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         btnBack.setText("BACK");
         btnBack.addActionListener(this::btnBackActionPerformed);
 
-        clearbtn.setBackground(new java.awt.Color(153, 0, 0));
+        clearbtn.setBackground(new java.awt.Color(220, 38, 38));
         clearbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         clearbtn.setForeground(new java.awt.Color(255, 255, 255));
         clearbtn.setText("CLEAR");
