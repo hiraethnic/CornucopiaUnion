@@ -354,6 +354,7 @@ public class Tellerframe extends javax.swing.JFrame {
         activeTicket = QueueDatabase.getActiveTicket(counterName);
         fetchPastDoneTickets();
 
+        // 1. Update Active Ticket Display
         if (activeTicket != null) {
             jLabel10.setText(activeTicket.ticketNo);
             jLabel11.setText(activeTicket.customerName != null && !activeTicket.customerName.isEmpty() ? activeTicket.customerName : "N/A");
@@ -364,17 +365,62 @@ public class Tellerframe extends javax.swing.JFrame {
             jLabel12.setText("---");
         }
 
-        java.util.List<String[]> waiting = QueueDatabase.getWaitingTickets(2);
-        jLabel14.setText(!waiting.isEmpty() ? "1. " + waiting.get(0)[0] + " - " + waiting.get(0)[1] : "1. None");
-        jLabel15.setText(waiting.size() > 1 ? "2. " + waiting.get(1)[0] + " - " + waiting.get(1)[1] : "2. None");
+        // --- 2. NEXT IN QUEUE (Filtered by Teller Permissions) ---
+        java.util.List<String[]> allWaiting = QueueDatabase.getWaitingTickets(50); 
+        java.util.List<String[]> allowedWaiting = new java.util.ArrayList<>();
+        
+        for (String[] w : allWaiting) {
+            // Only add tickets this teller is allowed to handle!
+            if (permissions.canHandleTicket(w[0], w[1])) {
+                allowedWaiting.add(w);
+            }
+            if (allowedWaiting.size() >= 6) break; // We only have 6 labels to fill
+        }
 
+        javax.swing.JLabel[] nextLabels = {jLabel14, jLabel15, jLabel26, jLabel38, jLabel40, jLabel41};
+        for (int i = 0; i < nextLabels.length; i++) {
+            if (i < allowedWaiting.size()) {
+                nextLabels[i].setText((i + 1) + ". " + allowedWaiting.get(i)[0] + " - " + allowedWaiting.get(i)[1]);
+            } else {
+                nextLabels[i].setText((i + 1) + ". None");
+            }
+        }
+
+        // --- 3. SERVING NOW (Format: Ticket - Transaction - Teller) ---
+        javax.swing.JLabel[] servingLabels = {jLabel43, jLabel44, jLabel45, jLabel46, jLabel47, jLabel48};
+        for(javax.swing.JLabel lbl : servingLabels) lbl.setText("---");
+
+        try (java.sql.Connection conn = QueueDatabase.getConnection();
+             java.sql.Statement st = conn.createStatement();
+             java.sql.ResultSet rs = st.executeQuery("SELECT ticket_no, category, counter FROM queue_tickets WHERE status IN ('SERVING', 'HELD') ORDER BY id DESC LIMIT 6")) {
+            
+            int i = 0;
+            while(rs.next() && i < servingLabels.length) {
+                String tNo = rs.getString("ticket_no");
+                String cat = rs.getString("category");
+                String cnt = rs.getString("counter");
+                
+                // Remove the "Counter - " prefix so it just shows "ace landry"
+                if (cnt != null && cnt.startsWith("Counter - ")) {
+                    cnt = cnt.substring(10); 
+                }
+                if (cnt == null) cnt = "Unknown";
+                
+                servingLabels[i].setText(tNo + " - " + cat + " - " + cnt);
+                i++;
+            }
+        } catch(Exception e) {
+            // Ignore background refresh errors
+        }
+
+        // 4. Update Held Tickets (History)
         if (!pastDoneTickets.isEmpty()) {
-            QueueDatabase.Ticket t1 = pastDoneTickets.get(0); // Get only the most recent history ticket
+            QueueDatabase.Ticket t1 = pastDoneTickets.get(0); 
             
             jLabel28.setText(t1.ticketNo); 
             jLabel29.setText(t1.customerName != null && !t1.customerName.isEmpty() ? t1.customerName : "No Name");
             jLabel30.setText(t1.category);
-            jLabel31.setText("HELLO");
+            jLabel31.setText("HELD"); // Ensures we label it clearly
             
         } else {
             jLabel28.setText("None");
@@ -1129,17 +1175,28 @@ public class Tellerframe extends javax.swing.JFrame {
         }
 
         // Mark ticket as DONE in DB
-       String refNo = activeTicket.category.substring(0, Math.min(2, activeTicket.category.length())).toUpperCase() 
-                     + "-REF-" + System.currentTimeMillis();
+       // Mark ticket as DONE in DB
+        String prefix = activeTicket.ticketNo.contains("-") ? activeTicket.ticketNo.split("-")[0] : "TX";
+        String refNo = prefix + "-REF-" + System.currentTimeMillis();
 
-        // FIX: Update transaction_type instead of overwriting reference_no
+        // Include sys_ref_no in the SQL Update
         String sql = "UPDATE queue_tickets SET status = 'DONE', valid_id_submitted = 1, transaction_type = ?, confirmed_by = ?, "
-                   + "updated_at = datetime('now','localtime') WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
+                   + "updated_at = datetime('now','localtime'), sys_ref_no = ? WHERE ticket_no = ? AND status IN ('SERVING', 'HELD')";
  
         try (java.sql.PreparedStatement ps = QueueDatabase.getConnection().prepareStatement(sql)) {
-            ps.setString(1, activeTicket.category); 
+            
+            // Standardize Transaction Type so Admin Record shows perfectly (Fixes Bills Payment category bug)
+            String transType = activeTicket.category;
+            if (activeTicket.ticketNo.startsWith("BP-")) transType = "Bills Payment";
+            else if (activeTicket.ticketNo.startsWith("DP-")) transType = "Deposit";
+            else if (activeTicket.ticketNo.startsWith("WD-")) transType = "Withdrawal";
+            else if (activeTicket.ticketNo.startsWith("TR-")) transType = "Transfer Funds";
+            else if (activeTicket.ticketNo.startsWith("FX-")) transType = "Foreign Exchange";
+
+            ps.setString(1, transType); 
             ps.setString(2, tellerName);
-            ps.setString(3, activeTicket.ticketNo);
+            ps.setString(3, refNo); // Bind the generated Ref No
+            ps.setString(4, activeTicket.ticketNo);
         
 
             if (ps.executeUpdate() > 0) {
@@ -1700,7 +1757,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel41.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel41.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel41.setText("jLabel41");
+        jLabel41.setText("D -  ");
 
         jLabel42.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel42.setForeground(new java.awt.Color(12, 35, 74));
@@ -1708,7 +1765,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel43.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel43.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel43.setText("jLabel43");
+        jLabel43.setText("A - 103 - Teller 1");
 
         jLabel44.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel44.setForeground(new java.awt.Color(12, 35, 74));
@@ -1772,7 +1829,7 @@ public class Tellerframe extends javax.swing.JFrame {
                                 .addComponent(jLabel38, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
                                 .addComponent(jLabel26, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jLabel13))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                         .addComponent(jPanel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(127, 127, 127)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2076,7 +2133,7 @@ public class Tellerframe extends javax.swing.JFrame {
             .addGroup(jPanel35Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel81, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 165, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
                 .addComponent(jButton24)
                 .addGap(18, 18, 18)
                 .addComponent(jButton23, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2539,7 +2596,7 @@ public class Tellerframe extends javax.swing.JFrame {
             .addGroup(jPanel39Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel93)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 192, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 107, Short.MAX_VALUE)
                 .addComponent(jButton18)
                 .addGap(18, 18, 18)
                 .addComponent(jButton17)
@@ -2949,7 +3006,7 @@ public class Tellerframe extends javax.swing.JFrame {
                         .addGroup(jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel95)
                             .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 410, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 315, Short.MAX_VALUE)
                         .addGroup(jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel45Layout.createSequentialGroup()
@@ -3220,7 +3277,7 @@ public class Tellerframe extends javax.swing.JFrame {
             .addGroup(jPanel49Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel78, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 148, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addComponent(jButton22)
                 .addGap(18, 18, 18)
                 .addComponent(jButton21)

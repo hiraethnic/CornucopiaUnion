@@ -561,6 +561,8 @@ public final class QueueDatabase {
         addColumnIfMissing(conn, "released_by", "ALTER TABLE queue_tickets ADD COLUMN released_by TEXT");
         addColumnIfMissing(conn, "id_document_path", "ALTER TABLE queue_tickets ADD COLUMN id_document_path TEXT");
         addColumnIfMissing(conn, "id_blob", "ALTER TABLE queue_tickets ADD COLUMN id_blob BLOB"); 
+        addColumnIfMissing(conn, "sys_ref_no", "ALTER TABLE queue_tickets ADD COLUMN sys_ref_no TEXT"); 
+    
     
     }
 
@@ -995,23 +997,22 @@ public final class QueueDatabase {
   
 
    /** Same as above, but also records which teller account confirmed it. */
-   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
+  public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
         initialize(); 
 
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
+        String sysRefNo = "AC-REF-" + System.currentTimeMillis(); // Generate Ref No for Account Creation
         
-        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by, id_document_path, id_blob) "
-                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?, ?, ?)";
+        // Added sys_ref_no and hardcoded transaction_type to 'Account Creation'
+        String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by, id_document_path, id_blob, sys_ref_no, transaction_type) "
+                   + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?, ?, ?, ?, 'Account Creation')";
 
         Connection conn = getConnection();
         if (conn == null) return false;
 
-        // --- SAFELY CONVERT THE IMAGE FILE INTO A BLOB ---
         byte[] fileBytes = null;
         if (idPath != null && !idPath.trim().isEmpty()) {
             java.io.File imgFile = new java.io.File(idPath);
-            
-            // This safely checks if the file exists before attempting to read it, preventing the Windows Error
             if (imgFile.exists() && imgFile.isFile()) { 
                 try {
                     fileBytes = java.nio.file.Files.readAllBytes(imgFile.toPath());
@@ -1029,12 +1030,14 @@ public final class QueueDatabase {
             ps.setString(5, accountNo);
             ps.setString(6, confirmedBy);
             ps.setString(7, idPath);
-            ps.setBytes(8, fileBytes); // Saves the BLOB bytes into the database
+            ps.setBytes(8, fileBytes); 
+            ps.setString(9, sysRefNo); // Save the Reference No
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             return false;
         }
-    }
+       
+  }
 
     /** Copies the uploaded ID photo into an "id_uploads" folder (named after the account number) so it stays available. */
     private static String copyIdPhoto(String idPath, String accountNo) {
@@ -1182,13 +1185,18 @@ public final class QueueDatabase {
     }
     
     public static String[] getAccountDetails(String searchTerm) {
+        // ADDED: "ORDER BY id DESC" to always pull the newest account, and "LIKE" for partial name matching
         String sql = "SELECT reference_no, customer_name, category, amount, status FROM queue_tickets "
-                   + "WHERE (reference_no = ? OR LOWER(customer_name) = LOWER(?)) AND ticket_no LIKE 'AC-%' LIMIT 1";
+                   + "WHERE (reference_no = ? OR LOWER(customer_name) LIKE LOWER(?)) AND ticket_no LIKE 'AC-%' ORDER BY id DESC LIMIT 1";
+        
         Connection conn = getConnection();
         if (conn == null) return null;
+        
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, searchTerm.trim());
-            ps.setString(2, searchTerm.trim());
+            // Wraps the search term in % so a partial name like "John" will find "John Doe"
+            ps.setString(2, "%" + searchTerm.trim() + "%"); 
+            
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return new String[] {
