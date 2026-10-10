@@ -197,7 +197,7 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="C:\Users\Rara\Documents\CornucopiaUnion\src\main\java\Images\backgroundlogin (1) (1).jpg"/>
+                  <Image iconType="2" name="C:\Users\Lenovo\OneDrive\Documents\NetBeansProjects\CornucopiaUnion\src\main\java\Images\backgroundlogin (1) (1).jpg"/>
                 </Property>
               </Properties>
               <Constraints>
@@ -211,7 +211,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\Rara\Documents\CornucopiaUnion\src\main\java\Images\login (1).jpg"/>
+              <Image iconType="2" name="C:\Users\Lenovo\OneDrive\Documents\NetBeansProjects\CornucopiaUnion\src\main\java\Images\login (1).jpg"/>
             </Property>
             <Property name="text" type="java.lang.String" value="jLabel3"/>
           </Properties>
