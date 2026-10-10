@@ -131,10 +131,10 @@ public class AdminRecord extends javax.swing.JFrame {
         panel1 = new java.awt.Panel();
         jSeparator1 = new javax.swing.JSeparator();
         jPanel3 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         AccountList = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
@@ -253,12 +253,6 @@ public class AdminRecord extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(234, 243, 255));
 
-        jButton2.setBackground(new java.awt.Color(234, 243, 255));
-        jButton2.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(30, 58, 138));
-        jButton2.setText("TRANSACTION LOGS");
-        jButton2.addActionListener(this::jButton2ActionPerformed);
-
         jButton4.setBackground(new java.awt.Color(30, 58, 138));
         jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
@@ -279,13 +273,17 @@ public class AdminRecord extends javax.swing.JFrame {
         jButton6.setText("SEARCH");
         jButton6.addActionListener(this::jButton6ActionPerformed);
 
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel3.setText("TRANSACTION LOGS");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jButton2)
-                .addGap(106, 106, 106)
+                .addComponent(jLabel3)
+                .addGap(152, 152, 152)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton6)
@@ -298,10 +296,10 @@ public class AdminRecord extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
                     .addComponent(jButton4)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6))
+                    .addComponent(jButton6)
+                    .addComponent(jLabel3))
                 .addContainerGap())
         );
 
@@ -348,10 +346,6 @@ public class AdminRecord extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         loadTransactionLogs();
@@ -414,13 +408,13 @@ public class AdminRecord extends javax.swing.JFrame {
     private javax.swing.JTable AccountList;
     private javax.swing.JPanel TRANSACTIONPANEL;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
