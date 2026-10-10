@@ -22,9 +22,7 @@ public class Admin extends javax.swing.JFrame {
         
         setupPasswordValidation();
         
-        styleButtonWhite(jButton6); // Account management button
-        styleButtonWhite(jButton3); // Teller creation button
-        styleButtonWhite(jButton2); // Records and System button
+        
            
     }
     private void clearForm() {
@@ -42,13 +40,7 @@ public class Admin extends javax.swing.JFrame {
         foreignexchan.setSelected(false);
     }
     
-    private void styleButtonWhite(javax.swing.JButton button) {
-    button.setBackground(java.awt.Color.WHITE);
-    button.setForeground(java.awt.Color.BLACK); // Ensures text is readable
-    button.setOpaque(false);
-    button.setContentAreaFilled(false);
-    button.setBorderPainted(false); // Optional clean look
-}
+  
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
