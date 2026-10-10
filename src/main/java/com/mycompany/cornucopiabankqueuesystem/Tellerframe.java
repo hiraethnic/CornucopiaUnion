@@ -1507,7 +1507,7 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton25)
-                .addContainerGap())
+                .addGap(22, 22, 22))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(13, 13, 13)
                 .addComponent(jButton12)
@@ -1854,11 +1854,11 @@ public class Tellerframe extends javax.swing.JFrame {
 
         Depositamountlabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Depositamountlabel.setForeground(new java.awt.Color(0, 51, 102));
-        Depositamountlabel.setText("Deposit Ammount PHP");
+        Depositamountlabel.setText("Deposit Ammount PHP:");
 
         estimatedBALANCElabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         estimatedBALANCElabel.setForeground(new java.awt.Color(0, 0, 102));
-        estimatedBALANCElabel.setText("Estimated Balance ");
+        estimatedBALANCElabel.setText("Estimated Balance:");
 
         estimatedbalanceT.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -1866,7 +1866,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel21.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel21.setText("Current Balance");
+        jLabel21.setText("Current Balance:");
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -1911,7 +1911,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel105.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel105.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel105.setText("Bill Category");
+        jLabel105.setText("Bill Category:");
 
         Billcategory.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         Billcategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electric Utility", "Water Utility", "Telecoms & Internet", "Government Agency", "Credit Cards & Loans" }));
@@ -1919,11 +1919,11 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel103.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel103.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel103.setText("Reference No / Account no");
+        jLabel103.setText("Reference No / Account NO. :");
 
         jLabel104.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel104.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel104.setText("Selecter Bills ");
+        jLabel104.setText("Selecter Bills:");
 
         referenceno.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -1933,7 +1933,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         accountnameh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         accountnameh.setForeground(new java.awt.Color(0, 51, 102));
-        accountnameh.setText("Account Name holder");
+        accountnameh.setText("Account Name holder:");
 
         accholder.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -1945,7 +1945,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         accountnameh1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         accountnameh1.setForeground(new java.awt.Color(0, 51, 102));
-        accountnameh1.setText("Bank Account No.");
+        accountnameh1.setText("Bank Account No. :");
 
         javax.swing.GroupLayout jPanel33Layout = new javax.swing.GroupLayout(jPanel33);
         jPanel33.setLayout(jPanel33Layout);
@@ -1962,7 +1962,7 @@ public class Tellerframe extends javax.swing.JFrame {
                             .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(referenceno, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 333, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 317, Short.MAX_VALUE)
                         .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
                                 .addComponent(SelectorBills, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2166,7 +2166,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jPanel10.setOpaque(false);
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel16.setForeground(new java.awt.Color(0, 0, 6));
+        jLabel16.setForeground(new java.awt.Color(0, 51, 102));
         jLabel16.setText("TRANSACTION");
 
         jLabel79.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -2198,13 +2198,16 @@ public class Tellerframe extends javax.swing.JFrame {
         jPanel11.setOpaque(false);
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel19.setText("Currency");
+        jLabel19.setForeground(new java.awt.Color(0, 51, 102));
+        jLabel19.setText("Currency:");
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel18.setText("Customer name");
+        jLabel18.setForeground(new java.awt.Color(0, 51, 102));
+        jLabel18.setText("Customer name:");
 
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel20.setText("Foreign Ammount");
+        jLabel20.setForeground(new java.awt.Color(0, 51, 102));
+        jLabel20.setText("Foreign Ammount:");
 
         customer.addActionListener(this::customerActionPerformed);
 
@@ -2277,11 +2280,11 @@ public class Tellerframe extends javax.swing.JFrame {
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel24)
-                .addGap(47, 47, 47)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton10)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
+                .addGap(105, 105, 105))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2299,16 +2302,18 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel33.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel33.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel33.setText("Live exchange rate");
+        jLabel33.setText("Live exchange rate:");
 
         jLabel34.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel34.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel34.setText("Total PHP payout");
+        jLabel34.setForeground(new java.awt.Color(0, 51, 102));
+        jLabel34.setText("Total PHP payout:");
 
         jLabel35.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel35.setForeground(new java.awt.Color(0, 51, 102));
         jLabel35.setText("1111111");
 
         jLabel36.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabel36.setForeground(new java.awt.Color(0, 51, 102));
         jLabel36.setText("11111");
 
         javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
@@ -2320,11 +2325,11 @@ public class Tellerframe extends javax.swing.JFrame {
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel33)
                     .addComponent(jLabel35))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 267, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel34)
                     .addComponent(jLabel36))
-                .addGap(115, 115, 115))
+                .addGap(40, 40, 40))
         );
         jPanel13Layout.setVerticalGroup(
             jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2346,14 +2351,13 @@ public class Tellerframe extends javax.swing.JFrame {
             XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(XchangeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
-                    .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel10, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel11, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel8, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(XchangeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, 591, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
                 .addComponent(jLabel17)
                 .addContainerGap())
         );
@@ -2390,6 +2394,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel68.setText("Account Creation ");
 
         jLabel67.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel67.setForeground(new java.awt.Color(0, 51, 102));
         jLabel67.setText("TRANSACTION");
 
         javax.swing.GroupLayout jPanel36Layout = new javax.swing.GroupLayout(jPanel36);
@@ -2418,7 +2423,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel71.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel71.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel71.setText("Currency / Account Type");
+        jLabel71.setText("Currency / Account Type:");
 
         currencyacc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -2426,14 +2431,14 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel72.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel72.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel72.setText("Primary ID Presented ");
+        jLabel72.setText("Primary ID Presented:");
 
         primaryid.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         primaryid.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Passport", "Driver's License", "Phillipine ID (PHILID)" }));
 
         Customer1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Customer1.setForeground(new java.awt.Color(0, 51, 102));
-        Customer1.setText("Customer Name ");
+        Customer1.setText("Customer Name:");
 
         javax.swing.GroupLayout jPanel37Layout = new javax.swing.GroupLayout(jPanel37);
         jPanel37.setLayout(jPanel37Layout);
@@ -2588,7 +2593,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel86.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel86.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel86.setText("Transfer Amount PHP");
+        jLabel86.setText("Transfer Amount PHP:");
 
         jLabel87.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel87.setForeground(new java.awt.Color(0, 0, 102));
@@ -2603,7 +2608,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel25.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel25.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel25.setText("Current Balance ");
+        jLabel25.setText("Current Balance:");
 
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -2648,6 +2653,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel69.setBackground(new java.awt.Color(0, 0, 0));
         jLabel69.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel69.setForeground(new java.awt.Color(0, 51, 102));
         jLabel69.setText("TRANSACTION");
 
         jLabel70.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -2681,18 +2687,18 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel84.setBackground(new java.awt.Color(255, 255, 255));
         jLabel84.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel84.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel84.setText("Source Account ");
+        jLabel84.setText("Source Account:");
 
         sourceacc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         sourceacc.addActionListener(this::sourceaccActionPerformed);
 
         jLabel85.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel85.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel85.setText("Destination Account / Bank");
+        jLabel85.setText("Destination Account / Bank:");
 
         jLabel83.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel83.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel83.setText("Recipient Name");
+        jLabel83.setText("Recipient Name:");
 
         destinationaccbank.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         destinationaccbank.addActionListener(this::destinationaccbankActionPerformed);
@@ -2717,7 +2723,7 @@ public class Tellerframe extends javax.swing.JFrame {
                         .addGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(sourceacc, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel84))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 313, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 309, Short.MAX_VALUE)
                         .addGroup(jPanel41Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel41Layout.createSequentialGroup()
                                 .addComponent(jLabel85)
@@ -2822,11 +2828,11 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel88.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel88.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel88.setText("Deposit Ammount PHP");
+        jLabel88.setText("Deposit Ammount PHP:");
 
         jLabel89.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel89.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel89.setText("Estimated Balance ");
+        jLabel89.setText("Estimated Balance:");
 
         jTextField24.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField24.setText("PHP:");
@@ -2837,7 +2843,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel37.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel37.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel37.setText("Current Balance");
+        jLabel37.setText("Current Balance:");
 
         jTextField7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -2882,6 +2888,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel74.setBackground(new java.awt.Color(0, 0, 0));
         jLabel74.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel74.setForeground(new java.awt.Color(0, 51, 102));
         jLabel74.setText("TRANSACTION");
 
         jLabel73.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -2913,18 +2920,18 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel94.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel94.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel94.setText("Deposit Type");
+        jLabel94.setText("Deposit Type:");
 
         jLabel95.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel95.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel95.setText("Account Number");
+        jLabel95.setText("Account Number:");
 
         jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField6.addActionListener(this::jTextField6ActionPerformed);
 
         jLabel91.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel91.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel91.setText("Account Name Holder ");
+        jLabel91.setText("Account Name Holder:");
 
         jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -3050,7 +3057,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel97.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel97.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel97.setText("Remaining Balance");
+        jLabel97.setText("Remaining Balance:");
 
         jTextField29.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField29.setText("PHP:");
@@ -3058,7 +3065,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel39.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel39.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel39.setText("Current Balance");
+        jLabel39.setText("Current Balance:");
 
         jTextField9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField9.addActionListener(this::jTextField9ActionPerformed);
@@ -3102,6 +3109,7 @@ public class Tellerframe extends javax.swing.JFrame {
         jLabel76.setText("WITHDRAW");
 
         jLabel77.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel77.setForeground(new java.awt.Color(0, 51, 102));
         jLabel77.setText("TRANSACTION");
 
         javax.swing.GroupLayout jPanel47Layout = new javax.swing.GroupLayout(jPanel47);
@@ -3130,11 +3138,11 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel100.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel100.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel100.setText("Account Number");
+        jLabel100.setText("Account Number:");
 
         jLabel99.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel99.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel99.setText("Account Name");
+        jLabel99.setText("Account Name:");
 
         accname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -3142,7 +3150,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         jLabel102.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel102.setForeground(new java.awt.Color(0, 51, 102));
-        jLabel102.setText("Withdraw Amount");
+        jLabel102.setText("Withdraw Amount:");
 
         withdrawamount.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
@@ -3344,7 +3352,7 @@ public class Tellerframe extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(

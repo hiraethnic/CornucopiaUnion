@@ -91,7 +91,7 @@
                       <Group type="102" attributes="0">
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jPanel7" max="32767" attributes="0"/>
+                          <Component id="jPanel7" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
@@ -130,7 +130,7 @@
                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="jButton25" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
@@ -1033,7 +1033,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Deposit Ammount PHP"/>
+                        <Property name="text" type="java.lang.String" value="Deposit Ammount PHP:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="estimatedBALANCElabel">
@@ -1044,7 +1044,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="0" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Estimated Balance "/>
+                        <Property name="text" type="java.lang.String" value="Estimated Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="estimatedbalanceT">
@@ -1069,7 +1069,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Current Balance"/>
+                        <Property name="text" type="java.lang.String" value="Current Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField1">
@@ -1107,7 +1107,7 @@
                                               <Component id="referenceno" alignment="0" pref="154" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace pref="333" max="32767" attributes="0"/>
+                                      <EmptySpace pref="317" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="1" attributes="0">
                                               <Component id="SelectorBills" min="-2" pref="153" max="-2" attributes="0"/>
@@ -1194,7 +1194,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Bill Category"/>
+                        <Property name="text" type="java.lang.String" value="Bill Category:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="Billcategory">
@@ -1227,7 +1227,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Reference No / Account no"/>
+                        <Property name="text" type="java.lang.String" value="Reference No / Account NO. :"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel104">
@@ -1238,7 +1238,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Selecter Bills "/>
+                        <Property name="text" type="java.lang.String" value="Selecter Bills:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="referenceno">
@@ -1279,7 +1279,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Account Name holder"/>
+                        <Property name="text" type="java.lang.String" value="Account Name holder:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="accholder">
@@ -1322,7 +1322,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Bank Account No."/>
+                        <Property name="text" type="java.lang.String" value="Bank Account No. :"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="BankAccNumber">
@@ -1499,16 +1499,14 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="jPanel12" pref="640" max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="jPanel13" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jPanel10" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jPanel11" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="jPanel8" alignment="0" max="32767" attributes="0"/>
-                              </Group>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Component id="jPanel11" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jPanel10" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jPanel12" min="-2" pref="591" max="-2" attributes="0"/>
+                              <Component id="jPanel13" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jPanel8" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="jLabel17" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1658,7 +1656,7 @@
                           <Font name="Segoe UI" size="18" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="6" green="0" red="0" type="rgb"/>
+                          <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="TRANSACTION"/>
                       </Properties>
@@ -1743,7 +1741,10 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Currency"/>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Currency:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel18">
@@ -1751,7 +1752,10 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Customer name"/>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Customer name:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel20">
@@ -1759,7 +1763,10 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Foreign Ammount"/>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
+                        </Property>
+                        <Property name="text" type="java.lang.String" value="Foreign Ammount:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="customer">
@@ -1797,11 +1804,11 @@
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="jLabel24" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton10" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton8" min="-2" pref="104" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="105" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1885,12 +1892,12 @@
                                   <Component id="jLabel33" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel35" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="267" max="32767" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="jLabel34" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel36" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel34" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel36" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -1921,7 +1928,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Live exchange rate"/>
+                        <Property name="text" type="java.lang.String" value="Live exchange rate:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel34">
@@ -1930,15 +1937,18 @@
                           <Font name="Segoe UI" size="14" style="1"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                          <Color blue="66" green="0" red="0" type="rgb"/>
+                          <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Total PHP payout"/>
+                        <Property name="text" type="java.lang.String" value="Total PHP payout:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel35">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="12" style="1"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="1111111"/>
                       </Properties>
@@ -1947,6 +1957,9 @@
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="12" style="1"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="11111"/>
                       </Properties>
@@ -2059,6 +2072,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="18" style="1"/>
                         </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="TRANSACTION"/>
                       </Properties>
                     </Component>
@@ -2137,7 +2153,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Currency / Account Type"/>
+                        <Property name="text" type="java.lang.String" value="Currency / Account Type:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="currencyacc">
@@ -2162,7 +2178,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Primary ID Presented "/>
+                        <Property name="text" type="java.lang.String" value="Primary ID Presented:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JComboBox" name="primaryid">
@@ -2190,7 +2206,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Customer Name "/>
+                        <Property name="text" type="java.lang.String" value="Customer Name:"/>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -2454,7 +2470,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Transfer Amount PHP"/>
+                        <Property name="text" type="java.lang.String" value="Transfer Amount PHP:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel87">
@@ -2495,7 +2511,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Current Balance "/>
+                        <Property name="text" type="java.lang.String" value="Current Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField3">
@@ -2551,6 +2567,9 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="18" style="1"/>
                         </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
+                        </Property>
                         <Property name="text" type="java.lang.String" value="TRANSACTION"/>
                       </Properties>
                     </Component>
@@ -2596,7 +2615,7 @@
                                           <Component id="sourceacc" min="-2" pref="163" max="-2" attributes="0"/>
                                           <Component id="jLabel84" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <EmptySpace pref="313" max="32767" attributes="0"/>
+                                      <EmptySpace pref="309" max="32767" attributes="0"/>
                                       <Group type="103" groupAlignment="0" attributes="0">
                                           <Group type="102" alignment="1" attributes="0">
                                               <Component id="jLabel85" min="-2" max="-2" attributes="0"/>
@@ -2646,7 +2665,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Source Account "/>
+                        <Property name="text" type="java.lang.String" value="Source Account:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="sourceacc">
@@ -2667,7 +2686,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Destination Account / Bank"/>
+                        <Property name="text" type="java.lang.String" value="Destination Account / Bank:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel83">
@@ -2678,7 +2697,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Recipient Name"/>
+                        <Property name="text" type="java.lang.String" value="Recipient Name:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="destinationaccbank">
@@ -2901,7 +2920,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Deposit Ammount PHP"/>
+                        <Property name="text" type="java.lang.String" value="Deposit Ammount PHP:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel89">
@@ -2912,7 +2931,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="0" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Estimated Balance "/>
+                        <Property name="text" type="java.lang.String" value="Estimated Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField24">
@@ -2942,7 +2961,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Current Balance"/>
+                        <Property name="text" type="java.lang.String" value="Current Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField7">
@@ -2997,6 +3016,9 @@
                         </Property>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="18" style="1"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="TRANSACTION"/>
                       </Properties>
@@ -3089,7 +3111,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Deposit Type"/>
+                        <Property name="text" type="java.lang.String" value="Deposit Type:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel95">
@@ -3100,7 +3122,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Account Number"/>
+                        <Property name="text" type="java.lang.String" value="Account Number:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField6">
@@ -3121,7 +3143,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Account Name Holder "/>
+                        <Property name="text" type="java.lang.String" value="Account Name Holder:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField5">
@@ -3339,7 +3361,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="0" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Remaining Balance"/>
+                        <Property name="text" type="java.lang.String" value="Remaining Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField29">
@@ -3361,7 +3383,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Current Balance"/>
+                        <Property name="text" type="java.lang.String" value="Current Balance:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="jTextField9">
@@ -3427,6 +3449,9 @@
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Segoe UI" size="18" style="1"/>
+                        </Property>
+                        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                          <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value="TRANSACTION"/>
                       </Properties>
@@ -3508,7 +3533,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Account Number"/>
+                        <Property name="text" type="java.lang.String" value="Account Number:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel99">
@@ -3519,7 +3544,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Account Name"/>
+                        <Property name="text" type="java.lang.String" value="Account Name:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="accname">
@@ -3544,7 +3569,7 @@
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="66" green="33" red="0" type="rgb"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Withdraw Amount"/>
+                        <Property name="text" type="java.lang.String" value="Withdraw Amount:"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="withdrawamount">
