@@ -23,8 +23,28 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 11) {
-                    evt.consume(); // Ignores the keystroke
+                char c = evt.getKeyChar();
+                String text = jTextField1.getText();
+                
+                // If the field is empty, allow either a letter or a digit to start
+                if (text.isEmpty()) {
+                    if (!Character.isLetterOrDigit(c)) {
+                        evt.consume(); 
+                    }
+                } 
+                // If the FIRST character is a DIGIT (Number Search Mode)
+                else if (Character.isDigit(text.charAt(0))) {
+                    // Only allow digits, max 11 characters
+                    if (!Character.isDigit(c) || text.length() >= 11) {
+                        evt.consume(); 
+                    }
+                } 
+                // If the FIRST character is a LETTER (Name Search Mode)
+                else {
+                    // Only allow letters and spaces (block digits)
+                    if (Character.isDigit(c)) {
+                        evt.consume(); 
+                    }
                 }
             }
         });
@@ -34,7 +54,9 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         BALance.setEditable(false);
         AccName.setEditable(false);
         
+        // Wire BOTH buttons to the existing search method
         jButton2.addActionListener(this::searchAccount);
+        NAME.addActionListener(this::searchAccount); // <-- Added this to activate the NAME button
         LOCK.addActionListener(this::editName);
         
            // ID photo panel: starts empty, click the photo to open it bigger
@@ -222,6 +244,8 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
+        NAME = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -294,7 +318,18 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jButton2.setBackground(new java.awt.Color(30, 58, 138));
         jButton2.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("SEARCH");
+        jButton2.setText("NUMBER");
+        jButton2.addActionListener(this::jButton2ActionPerformed);
+
+        NAME.setBackground(new java.awt.Color(30, 58, 138));
+        NAME.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
+        NAME.setForeground(new java.awt.Color(255, 255, 255));
+        NAME.setText("NAME");
+        NAME.addActionListener(this::NAMEActionPerformed);
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel9.setText("Find Account:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -305,9 +340,13 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 299, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
-                .addGap(50, 50, 50))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(NAME)
+                .addGap(51, 51, 51))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -316,7 +355,9 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(NAME)
+                    .addComponent(jLabel9))
                 .addGap(21, 21, 21))
         );
 
@@ -497,6 +538,14 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_jButton4ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void NAMEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NAMEActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_NAMEActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -528,6 +577,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
     private javax.swing.JTextField AccType;
     private javax.swing.JTextField BALance;
     private javax.swing.JButton LOCK;
+    private javax.swing.JButton NAME;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -540,6 +590,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

@@ -42,71 +42,106 @@ public class AdminRecord extends javax.swing.JFrame {
     loadTransactionLogs(""); // tawagin ang may filter kung wala pang search
     }
 
-    private void loadTransactionLogs(String searchKeyword) {
-    try {
-        javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) AccountList.getModel();
-        model.setRowCount(0); 
+   private void loadTransactionLogs(String searchKeyword) {
+        try {
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) AccountList.getModel();
+            model.setRowCount(0); 
 
-        java.sql.Connection conn = QueueDatabase.getConnection();
-        String query = "SELECT * FROM queue_tickets";
-        
-        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-             query += " WHERE ticket_no LIKE ? OR customer_name LIKE ? OR reference_no LIKE ? OR transaction_type LIKE ? OR counter LIKE ? OR confirmed_by LIKE ? OR released_by LIKE ?";
-        }
-         query += " ORDER BY id DESC";
-
-        java.sql.PreparedStatement pst = conn.prepareStatement(query);
-        
-        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
-            String keyword = "%" + searchKeyword.trim() + "%";
-            pst.setString(1, keyword);
-            pst.setString(2, keyword);
-            pst.setString(3, keyword);
-            pst.setString(4, keyword);
-            pst.setString(5, keyword);
-            pst.setString(6, keyword);
-            pst.setString(7, keyword);
-        }
-
-        java.sql.ResultSet rs = pst.executeQuery();
-
-        while (rs.next()) {
-            String createdAt = rs.getString("created_at"); // Halimbawa: "2026-06-06 14:30:00"
-            String datePart = "";
-            String timePart = "";
+            java.sql.Connection conn = QueueDatabase.getConnection();
+            String query = "SELECT * FROM queue_tickets";
             
-            if (createdAt != null && createdAt.contains(" ")) {
-                String[] parts = createdAt.split(" ");
-                datePart = parts[0]; // Petsa (YYYY-MM-DD)
-                timePart = parts[1]; // Oras (HH:MM:SS)
-            } else {
-                datePart = createdAt;
+            if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+                 query += " WHERE ticket_no LIKE ? OR customer_name LIKE ? OR reference_no LIKE ? OR sys_ref_no LIKE ? OR transaction_type LIKE ? OR counter LIKE ? OR confirmed_by LIKE ? OR released_by LIKE ?";
+            }
+             query += " ORDER BY id DESC";
+
+            java.sql.PreparedStatement pst = conn.prepareStatement(query);
+            
+            if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+                String keyword = "%" + searchKeyword.trim() + "%";
+                for (int i = 1; i <= 8; i++) {
+                    pst.setString(i, keyword);
+                }
+            }
+
+            java.sql.ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                String createdAt = rs.getString("created_at"); 
+                String datePart = createdAt != null && createdAt.contains(" ") ? createdAt.split(" ")[0] : createdAt;
+                String timePart = createdAt != null && createdAt.contains(" ") ? createdAt.split(" ")[1] : "";
+                
+                String ticketNo = rs.getString("ticket_no");
+                String transType = rs.getString("transaction_type");
+                String sysRefNo = rs.getString("sys_ref_no");
+                String dbRefNo = rs.getString("reference_no"); 
+                
+                // --- FIX 1: TELLER USER ---
+                // Try confirmed_by first. If empty, grab it from the counter name.
+                String tellerUser = rs.getString("confirmed_by");
+                if (tellerUser == null || tellerUser.trim().isEmpty()) {
+                    String counterVal = rs.getString("counter");
+                    if (counterVal != null && counterVal.startsWith("Counter - ")) {
+                        tellerUser = counterVal.substring(10); // Removes "Counter - " to just show "ace landry"
+                    } else if (counterVal != null) {
+                        tellerUser = counterVal;
+                    } else {
+                        tellerUser = rs.getString("released_by");
+                    }
+                }
+                if (tellerUser == null || tellerUser.trim().isEmpty()) tellerUser = "Not recorded";
+
+                if (transType == null || transType.isEmpty()) transType = rs.getString("category");
+                if (dbRefNo == null) dbRefNo = "N/A";
+
+                String displayAccountNo = dbRefNo; 
+                
+                // --- FIX 2: REFERENCE NUMBER ---
+                // Force it to ONLY show the generated system reference (e.g. BP-REF-123456)
+                String displayRefNo = (sysRefNo != null && !sysRefNo.trim().isEmpty()) ? sysRefNo : "N/A";
+
+                // --- FIX 3: ACCOUNT NO & BILLS PAYMENT CATEGORY ---
+                if (ticketNo != null && ticketNo.startsWith("BP-")) {
+                    transType = "Bills Payment"; 
+                    if (dbRefNo.contains(" / Bank Acc: ")) {
+                        String[] parts = dbRefNo.split(" / Bank Acc: ");
+                        displayAccountNo = parts[1]; // Shows Unified Card Account Number
+                    } else {
+                        displayAccountNo = "N/A (Cash)"; // Shows they paid with Cash
+                    }
+                } 
+                else if (ticketNo != null && ticketNo.startsWith("AC-")) {
+                    transType = "Account Creation";
+                }
+
+                // Format Amount
+                String amountStr = rs.getString("amount");
+                if (amountStr != null && !amountStr.trim().isEmpty()) {
+                    try {
+                        double amt = Double.parseDouble(amountStr);
+                        amountStr = String.format("₱ %,.2f", amt);
+                    } catch (Exception e) {}
+                } else {
+                    amountStr = "₱ 0.00";
+                }
+
+                model.addRow(new Object[]{
+                    ticketNo,
+                    datePart,
+                    timePart,
+                    transType,
+                    rs.getString("customer_name"),
+                    displayAccountNo,
+                    amountStr,
+                    displayRefNo, // Placed exactly in the Reference No Column
+                    tellerUser    // Placed exactly in the Teller User Column
+                });
             }
             
-            String tellerUser = rs.getString("confirmed_by");
-            if (tellerUser == null || tellerUser.trim().isEmpty()) {
-                tellerUser = rs.getString("released_by");
-            }
-            
-            if (tellerUser == null || tellerUser.trim().isEmpty()) tellerUser = "Not recorded";
-
-            model.addRow(new Object[]{
-                rs.getString("ticket_no"),        // Ticket No
-                datePart,                         // Date
-                timePart,                         // Time
-                rs.getString("transaction_type"), // Transaction Type (deposit, withdraw, etc.)
-                rs.getString("customer_name"),    // Name
-                rs.getString("reference_no"),     // Account No
-                rs.getString("amount"),           // Amount
-                rs.getString("reference_no"),     // Reference No
-                tellerUser                        // Teller user
-            });
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
         }
-        
-    } catch (Exception ex) {
-        javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
     }
-}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
