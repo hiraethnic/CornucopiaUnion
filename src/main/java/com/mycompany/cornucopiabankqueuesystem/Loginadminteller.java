@@ -54,14 +54,12 @@ public class Loginadminteller extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(51, 51, 51));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jTextField1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 170, 204, 35));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("PASSWORD:");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, -1, 48));
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, -1, 48));
 
         jPasswordField2.setText("jPasswordField2");
         jPanel3.add(jPasswordField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 240, 204, 42));
@@ -88,12 +86,12 @@ public class Loginadminteller extends javax.swing.JFrame {
         a.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         a.setForeground(new java.awt.Color(255, 255, 255));
         a.setText("USERNAME:");
-        jPanel3.add(a, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 130, -1, 34));
+        jPanel3.add(a, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 130, -1, 34));
 
         jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setText("LOG IN YOUR ACCOUNT ");
-        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 10, -1, 68));
+        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 30, -1, 68));
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\backgroundlogin (1) (1).jpg")); // NOI18N
         jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 340, -1));
