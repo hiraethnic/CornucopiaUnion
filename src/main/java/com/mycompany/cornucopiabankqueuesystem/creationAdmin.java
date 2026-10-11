@@ -152,36 +152,40 @@ public class creationAdmin extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel3.setText("Admin Information ");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 46, 149, -1));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel3.setText("Admin Information:");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 149, -1));
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
-        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 76, 287, 33));
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 220, -1));
 
-        Emailadd.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        Emailadd.setText("Email Address");
-        jPanel3.add(Emailadd, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 127, -1, -1));
+        Emailadd.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Emailadd.setForeground(new java.awt.Color(12, 35, 74));
+        Emailadd.setText("Email Address:");
+        jPanel3.add(Emailadd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, -1, -1));
 
         jTextField2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel3.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 151, 287, 33));
+        jPanel3.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 220, 30));
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel5.setText("Admin ID");
-        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 46, -1, -1));
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel5.setText("Admin ID:");
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 20, -1, -1));
 
         jTextField3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel3.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 76, 236, 33));
+        jPanel3.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 40, 170, -1));
 
-        ContactNum.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        ContactNum.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        ContactNum.setForeground(new java.awt.Color(12, 35, 74));
         ContactNum.setText("Contact Number");
-        jPanel3.add(ContactNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 127, -1, -1));
+        jPanel3.add(ContactNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 80, -1, -1));
 
         jTextField4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel3.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(381, 151, 236, 33));
+        jPanel3.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 100, 170, 30));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, 750, 200));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 150, 740, 160));
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
         jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 23, 42), 2, true));
@@ -193,48 +197,53 @@ public class creationAdmin extends javax.swing.JFrame {
         jLabel8.setText("Security credentials");
         jPanel5.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 8, -1, -1));
 
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel9.setText("System username");
-        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, -1, -1));
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel9.setText("System Username:");
+        jPanel5.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, -1, -1));
 
         jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel5.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 80, 283, -1));
+        jPanel5.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 190, -1));
 
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel10.setText("Initial password");
-        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, -1));
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel10.setText("Initial Password:");
+        jPanel5.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 40, -1, -1));
 
         jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel5.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 90, 270, -1));
+        jPanel5.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 60, 190, -1));
 
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 380, 750, 120));
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 740, 120));
 
         jButton4.setBackground(new java.awt.Color(220, 38, 38));
         jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Clear form");
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 540, -1, -1));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 450, -1, -1));
 
         jButton5.setBackground(new java.awt.Color(0, 0, 255));
         jButton5.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Create account");
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 540, -1, -1));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 450, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(12, 35, 74));
         jLabel2.setText("Select Admin:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, 40));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, 30));
 
         SelectEmployee.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         SelectEmployee.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Create a New Admin" }));
-        jPanel1.add(SelectEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 120, 250, -1));
+        jPanel1.add(SelectEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 110, 250, -1));
 
+        BACK.setBackground(new java.awt.Color(12, 35, 74));
+        BACK.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
+        BACK.setForeground(new java.awt.Color(255, 255, 255));
         BACK.setText("BACK");
         BACK.addActionListener(this::BACKActionPerformed);
-        jPanel1.add(BACK, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 560, -1, -1));
+        jPanel1.add(BACK, new org.netbeans.lib.awtextra.AbsoluteConstraints(662, 510, 80, 30));
 
         logout.setBackground(new java.awt.Color(12, 35, 74));
         logout.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
@@ -243,9 +252,9 @@ public class creationAdmin extends javax.swing.JFrame {
         logout.addActionListener(this::logoutActionPerformed);
         jPanel1.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 40, -1, -1));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\admincreation.png")); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\admincreation.png")); // NOI18N
         jLabel4.setText("jLabel4");
-        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -240, 780, 1160));
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -240, 770, 1160));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 670));
 

@@ -208,16 +208,16 @@ private void loadActivity(String username) {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(12, 35, 74));
         jLabel2.setText("Select Employee:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, -1, 20));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, -1, 20));
 
         SelectEmployee.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel1.add(SelectEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 250, -1));
+        jPanel1.add(SelectEmployee, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 110, 250, -1));
 
         jLabel3.setBackground(new java.awt.Color(255, 255, 255));
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(12, 35, 74));
         jLabel3.setText("TELLER CREDENTIALS AND PROFILE");
-        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, -1, -1));
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 140, -1, -1));
 
         jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel3.setOpaque(false);
@@ -249,10 +249,10 @@ private void loadActivity(String username) {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(12, 35, 74));
         jLabel7.setText("Username:");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, -1, -1));
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 190, -1, 30));
 
         UserName.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel3.add(UserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 200, 208, -1));
+        jPanel3.add(UserName, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 190, 208, 30));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(12, 35, 74));
@@ -260,31 +260,31 @@ private void loadActivity(String username) {
         jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 230, -1, -1));
 
         PassWord.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel3.add(PassWord, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 230, 208, -1));
+        jPanel3.add(PassWord, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 230, 208, -1));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(12, 35, 74));
         jLabel9.setText("Account Status:");
-        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, -1, -1));
+        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 270, -1, 20));
 
         AccountStatus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         AccountStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
         AccountStatus.setToolTipText("");
-        jPanel3.add(AccountStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 260, 208, -1));
+        jPanel3.add(AccountStatus, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 266, 208, 30));
 
         ResetPassword.setBackground(new java.awt.Color(30, 58, 138));
         ResetPassword.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         ResetPassword.setForeground(new java.awt.Color(255, 255, 255));
         ResetPassword.setText("EDIT PASSWORD");
         ResetPassword.addActionListener(this::ResetPasswordActionPerformed);
-        jPanel3.add(ResetPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 220, -1, -1));
+        jPanel3.add(ResetPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 230, -1, 30));
 
         SaveModifications.setBackground(new java.awt.Color(0, 153, 0));
         SaveModifications.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         SaveModifications.setForeground(new java.awt.Color(255, 255, 255));
         SaveModifications.setText("SAVE MODIFICATIONS");
         SaveModifications.addActionListener(this::SaveModificationsActionPerformed);
-        jPanel3.add(SaveModifications, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 210, -1, -1));
+        jPanel3.add(SaveModifications, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, -1, 30));
 
         jCheckBox3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox3.setForeground(new java.awt.Color(12, 35, 74));
@@ -338,9 +338,9 @@ private void loadActivity(String username) {
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("DELETE ACCOUNT");
         jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 189, -1));
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(559, 270, 190, 30));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 770, 310));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 760, 310));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(12, 35, 74));
@@ -365,14 +365,14 @@ private void loadActivity(String username) {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 500, 660, 120));
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, 760, 130));
 
         jButton6.setBackground(new java.awt.Color(30, 58, 138));
         jButton6.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("BACK");
         jButton6.addActionListener(this::jButton6ActionPerformed);
-        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 630, -1, -1));
+        jPanel1.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 640, -1, -1));
 
         jToggleButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jToggleButton2.addActionListener(this::jToggleButton2ActionPerformed);
@@ -383,16 +383,16 @@ private void loadActivity(String username) {
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("REFRESH");
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 120, -1, -1));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 110, -1, 30));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
         jButton1.addActionListener(this::jButton1ActionPerformed);
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 20, -1, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 40, -1, -1));
 
-        jLabel13.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\tellermanagement.png")); // NOI18N
+        jLabel13.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\tellermanagement.png")); // NOI18N
         jLabel13.setText("jLabel13");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 1160, 790));
 

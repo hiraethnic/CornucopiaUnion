@@ -119,21 +119,21 @@ public class Admindashboard extends javax.swing.JFrame {
         jButton2.setForeground(new java.awt.Color(12, 35, 74));
         jButton2.setText("Teller Management");
         jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 181, -1));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 170, -1));
 
         jButton3.setBackground(new java.awt.Color(234, 243, 255));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(12, 35, 74));
         jButton3.setText("Account Management");
         jButton3.addActionListener(this::jButton3ActionPerformed);
-        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, -1, -1));
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, 180, -1));
 
         jButton4.setBackground(new java.awt.Color(234, 243, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(12, 35, 74));
         jButton4.setText("Teller Creation");
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 120, 150, -1));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 120, 150, -1));
 
         jButton5.setBackground(new java.awt.Color(234, 243, 255));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -141,7 +141,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jButton5.setText("Logs");
         jButton5.setPreferredSize(new java.awt.Dimension(130, 27));
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 91, -1));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 80, -1));
 
         jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel3.setOpaque(false);
@@ -171,7 +171,7 @@ public class Admindashboard extends javax.swing.JFrame {
         cashoutshow.setText("₱");
         jPanel4.add(cashoutshow, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 117, -1, -1));
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 180, 176, 140));
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 170, 170, 150));
 
         jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel5.setOpaque(false);
@@ -186,7 +186,7 @@ public class Admindashboard extends javax.swing.JFrame {
         netcashshow.setText("₱");
         jPanel5.add(netcashshow, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 119, -1, -1));
 
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 176, 170, 150));
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 170, 170, 150));
 
         jPanel6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel6.setOpaque(false);
@@ -202,7 +202,7 @@ public class Admindashboard extends javax.swing.JFrame {
         transactionshow.setText("₱");
         jPanel6.add(transactionshow, new org.netbeans.lib.awtextra.AbsoluteConstraints(8, 121, -1, -1));
 
-        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 170, 170, 140));
+        jPanel1.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 170, 150, 150));
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true), "Teller Activity (Live)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(12, 35, 74))); // NOI18N
         jPanel7.setOpaque(false);
@@ -227,9 +227,9 @@ public class Admindashboard extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel7.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 24, 720, 150));
+        jPanel7.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 24, 700, 140));
 
-        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 330, 740, 180));
+        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 330, 730, 180));
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true), "Alerts", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(12, 35, 74))); // NOI18N
         jPanel8.setOpaque(false);
@@ -251,7 +251,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jLabel13.setText("jLabel13");
         jPanel8.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 138, -1, -1));
 
-        jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 340, 170));
+        jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 510, 340, -1));
 
         jPanel9.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true), "Recent Activity", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 1, 12), new java.awt.Color(12, 35, 74))); // NOI18N
         jPanel9.setOpaque(false);
@@ -273,14 +273,14 @@ public class Admindashboard extends javax.swing.JFrame {
         jLabel17.setText("jLabel17");
         jPanel9.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 138, -1, -1));
 
-        jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 510, 370, -1));
+        jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 510, 360, -1));
 
         Admin.setBackground(new java.awt.Color(234, 243, 255));
         Admin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Admin.setForeground(new java.awt.Color(12, 35, 74));
         Admin.setText("Admin Setting");
         Admin.addActionListener(this::AdminActionPerformed);
-        jPanel1.add(Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 120, 130, -1));
+        jPanel1.add(Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 120, 130, -1));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -288,7 +288,7 @@ public class Admindashboard extends javax.swing.JFrame {
         jButton1.setText("Logout");
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 30, -1, -1));
 
-        jLabel6admindashboard.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\admindashborad.png")); // NOI18N
+        jLabel6admindashboard.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\admindashborad.png")); // NOI18N
         jLabel6admindashboard.setText("jLabel6");
         jPanel1.add(jLabel6admindashboard, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 670));
 

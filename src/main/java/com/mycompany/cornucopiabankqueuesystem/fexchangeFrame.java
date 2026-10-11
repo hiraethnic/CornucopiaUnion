@@ -376,7 +376,7 @@ package com.mycompany.cornucopiabankqueuesystem;
         jLabel4.setText("Select Foreign Currency:");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 230, -1, -1));
 
-        jLabel1foreexchange.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\Foreign Exchange.png")); // NOI18N
+        jLabel1foreexchange.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\Foreign Exchange.png")); // NOI18N
         jLabel1foreexchange.setText("jLabel1");
         jPanel3.add(jLabel1foreexchange, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 680));
 

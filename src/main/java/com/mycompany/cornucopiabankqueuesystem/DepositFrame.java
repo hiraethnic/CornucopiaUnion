@@ -150,7 +150,7 @@ public class DepositFrame extends javax.swing.JFrame {
         jButton3.addActionListener(this::jButton3ActionPerformed);
         jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 430, 140, 40));
 
-        jLabel14.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\deposit .jpg")); // NOI18N
+        jLabel14.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\deposit .jpg")); // NOI18N
         jPanel3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 690, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

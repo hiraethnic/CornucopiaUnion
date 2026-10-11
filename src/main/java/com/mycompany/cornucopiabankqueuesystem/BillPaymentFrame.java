@@ -159,7 +159,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setForeground(new java.awt.Color(139, 101, 8));
         jCheckBox1.setText("Senior / PWD / Pregnant Priority");
-        jPanel4.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 480, 310, 20));
+        jPanel4.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 490, 310, 20));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setText("BILL PAYMENT INSTRUCTIONS");
@@ -171,31 +171,31 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel10.setText("Payment Mode:");
-        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 410, -1, -1));
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 420, 120, -1));
 
         txtAmount.addActionListener(this::txtAmountActionPerformed);
-        jPanel4.add(txtAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 380, 160, 20));
+        jPanel4.add(txtAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 390, 160, 30));
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel9.setText("Amount Due (PHP ₱)");
-        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, -1, -1));
-        jPanel4.add(txtAccountName, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, 160, -1));
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 370, -1, -1));
+        jPanel4.add(txtAccountName, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 340, 160, 30));
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setText("Account Holder Name:");
-        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 310, -1, -1));
-        jPanel4.add(txtRefNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 160, -1));
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 310, -1, -1));
+        jPanel4.add(txtRefNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 290, 160, -1));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Account / Reference No.:");
-        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 260, 180, -1));
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 270, 180, -1));
 
         cmbBiller.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Meralco", "Maynilad", "Globe Telecom / Globe At Home", "PLDT / Smart", "SSS (PRN Payment)", "Pag-IBIG Fund" }));
-        jPanel4.add(cmbBiller, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 230, 160, 30));
+        jPanel4.add(cmbBiller, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 240, 160, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Selected Biller:");
-        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 210, 110, 20));
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 220, 110, 20));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("BILL DETAILS");
@@ -206,7 +206,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, -1, 30));
 
         cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electric Utility", "Water Utility", "Telecoms & Internet", "Government Agency", "Credit Cards & Loans" }));
-        jPanel4.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 160, 30));
+        jPanel4.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 190, 160, 30));
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel12.setText(" Select Biller Category & Merchant.");
@@ -214,7 +214,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Unified Card" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-        jPanel4.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 430, 150, 30));
+        jPanel4.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 440, 150, 30));
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText(" Select Payment Mode (Cash/Check).");
@@ -222,9 +222,9 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Biller Category:");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 160, 226, -1));
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 170, 226, -1));
 
-        jLabel17billspayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\billspayment.png")); // NOI18N
+        jLabel17billspayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\billspayment.png")); // NOI18N
         jPanel4.add(jLabel17billspayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, -50, 720, 800));
 
         getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -10, 730, 620));

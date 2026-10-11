@@ -249,7 +249,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         chkPriority.addActionListener(this::chkPriorityActionPerformed);
         jPanel2.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 400, 345, 39));
 
-        jLabel1accountapplication.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\accountapplication.png")); // NOI18N
+        jLabel1accountapplication.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\accountapplication.png")); // NOI18N
         jPanel2.add(jLabel1accountapplication, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 880, 780));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
