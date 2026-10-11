@@ -12,10 +12,9 @@ package com.mycompany.cornucopiabankqueuesystem;
             
             private static final java.util.Map<String, Double> EXCHANGE_RATES = new java.util.LinkedHashMap<>();
             private static long lastFetchTime = 0;
-            private static final long REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000L; // ito ung para sa 24hr cache
+            private static final long REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000L; 
             private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(fexchangeFrame.class.getName());
 
-            // basically ito lng mangyayari if wlng internet
             private static void loadFallbackRates()
             { 
               EXCHANGE_RATES.put("SAR", 15.10);
@@ -97,25 +96,20 @@ package com.mycompany.cornucopiabankqueuesystem;
             initComponents();
             setLocationRelativeTo(null);
             
-            // --- ADD THIS TO MAKE TABLE TRANSPARENT ---
-            
-            // 2. Make the table and all the rows invisible
+           
             jTable1.setOpaque(false);
             jTable1.setBackground(new java.awt.Color(0, 0, 0, 0));
             ((javax.swing.table.DefaultTableCellRenderer) jTable1.getDefaultRenderer(Object.class)).setOpaque(false);
             ((javax.swing.table.DefaultTableCellRenderer) jTable1.getDefaultRenderer(Object.class)).setBackground(new java.awt.Color(0, 0, 0, 0));
 
-            // 3. Make the top header row invisible
             jTable1.getTableHeader().setOpaque(false);
             jTable1.getTableHeader().setBackground(new java.awt.Color(0, 0, 0, 0));
             ((javax.swing.table.DefaultTableCellRenderer) jTable1.getTableHeader().getDefaultRenderer()).setOpaque(false);
             ((javax.swing.table.DefaultTableCellRenderer) jTable1.getTableHeader().getDefaultRenderer()).setBackground(new java.awt.Color(0, 0, 0, 0));
-            // ------------------------------------------
-
+         
             QueueDatabase.initialize();
             applyRealTimeValidation();
-            
-            // loads lng if offline
+           
             if (EXCHANGE_RATES.isEmpty()) {
                 loadFallbackRates();
             }
@@ -142,7 +136,6 @@ package com.mycompany.cornucopiabankqueuesystem;
             for (int i = 0; i < jComboBox1.getItemCount(); i++) {
                 String entry = jComboBox1.getItemAt(i);
                 
-                // Grabs the short code (e.g., "SAR", "JPY")
                 String code = extractCurrencyCode(entry); 
                 if (code == null) continue;
                 
@@ -150,13 +143,11 @@ package com.mycompany.cornucopiabankqueuesystem;
                 if (rate == null) continue;
                 
                 String country = entry;
-                
-                // Grabs just the country name from the combo box text
+             
                 if (entry.contains(" - ") && entry.contains("(")) {
                     country = entry.substring(entry.indexOf(" - ") + 3, entry.indexOf(" (")).trim();
                 }
                 
-                // --- QUICK FIXES FOR TEXT DISPLAY ---
                 if (country.equals("Saudi Arabia")) {
                     country = "Saudi";
                 } else if (country.equals("United Arab Emirates")) {
@@ -166,9 +157,7 @@ package com.mycompany.cornucopiabankqueuesystem;
                 if (code.equals("JPY")) {
                     code = "YEN";
                 }
-                // ------------------------------------
-                
-                // Adds the Cleaned Country, Code, and Rate to the table
+             
                 model.addRow(new Object[]{country, code, String.format("%,.2f", rate)});
             }
         }
@@ -360,7 +349,7 @@ package com.mycompany.cornucopiabankqueuesystem;
     }//GEN-LAST:event_clearbtnActionPerformed
 
     private void btnGetTicketActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetTicketActionPerformed
-        // TODO add your handling code here:
+        
         String customerName = txtCustomerName.getText().trim();
         Object currencySelection = jComboBox1.getSelectedItem();
         String amountText = txtForeignAmount.getText().trim();
@@ -424,7 +413,7 @@ package com.mycompany.cornucopiabankqueuesystem;
     }//GEN-LAST:event_txtForeignAmountActionPerformed
     
     private void applyRealTimeValidation() {
-        // Foreign Amount: Max 6 digits, whole numbers only (no decimals)
+        
         txtForeignAmount.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || txtForeignAmount.getText().length() >= 6) evt.consume();

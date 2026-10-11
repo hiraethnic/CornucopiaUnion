@@ -24,12 +24,11 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }
     
     private void makeTransparent() {
-    // ---- JTextField ----
+ 
     txtFullName.setOpaque(false);
     txtFullName.setBackground(new java.awt.Color(0, 0, 0, 0));
-    txtFullName.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5)); // remove border (optional)
+    txtFullName.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5)); 
 
-    // ---- JComboBox ----
     cmbIDType.setOpaque(false);
     cmbAccountType.setOpaque(false);
     cmbIDType.setBackground(new java.awt.Color(0, 0, 0, 0));
@@ -37,15 +36,13 @@ public class ApplicationFrame extends javax.swing.JFrame {
     cmbIDType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
     cmbAccountType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
-    // Make the combo's rendered (selected/list) item transparent too
     javax.swing.ListCellRenderer<? super String> transparentRenderer = new javax.swing.DefaultListCellRenderer() {
         @Override
         public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value,
                 int index, boolean isSelected, boolean cellHasFocus) {
             javax.swing.JLabel label = (javax.swing.JLabel) super.getListCellRendererComponent(
                     list, value, index, isSelected, cellHasFocus);
-            if (index == -1) {            // the currently displayed item (not the dropdown list)
-                label.setOpaque(false);
+            if (index == -1) {                           label.setOpaque(false);
             }
             return label;
         }
@@ -53,7 +50,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     cmbIDType.setRenderer(transparentRenderer);
     cmbAccountType.setRenderer(transparentRenderer);
 
-    // ---- JTable ----
+   
     
 }
 
@@ -287,7 +284,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_BackbtnActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+      
          String fullName = txtFullName.getText().trim();
     Object accountType = cmbAccountType.getSelectedItem();
     Object idType = cmbIDType.getSelectedItem();

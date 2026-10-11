@@ -28,8 +28,8 @@ public class DepositFrame extends javax.swing.JFrame {
     private void makeTransparent(javax.swing.JTextField... fields) {
     for (javax.swing.JTextField f : fields) {
         f.setOpaque(false);
-        f.setBackground(new java.awt.Color(0, 0, 0, 0)); // fully transparent (needed for Nimbus)
-        f.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, java.awt.Color.DARK_GRAY)); // underline only
+        f.setBackground(new java.awt.Color(0, 0, 0, 0)); 
+        f.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, java.awt.Color.DARK_GRAY)); 
         f.setForeground(java.awt.Color.BLACK);
         f.setCaretColor(java.awt.Color.BLACK);
     }

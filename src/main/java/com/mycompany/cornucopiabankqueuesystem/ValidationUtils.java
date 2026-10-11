@@ -84,10 +84,7 @@ public class ValidationUtils {
         return !isBlank(text) && NUMERIC_REFERENCE_PATTERN.matcher(text.trim()).matches();
     }
  
-    /**
-     * Parses a monetary string already known to match {@link #isValidAmountFormat}.
-     * Returns {@code null} if the text is not a valid, positive amount.
-     */
+   
     public static Double parseAmount(String text) {
         if (!isValidAmountFormat(text)) {
             return null;
@@ -100,18 +97,10 @@ public class ValidationUtils {
         }
     }
  
-    /**
-     * A combo box selection is only considered valid if something is selected
-     * and the text isn't blank/a spacer placeholder (some of these forms use
-     * " " entries purely as visual separators between real choices).
-     */
+   
     public static boolean isValidComboSelection(Object selectedItem) {
         return selectedItem != null && !selectedItem.toString().trim().isEmpty();
     }
- 
-    // ---------------------------------------------------------------
-    // Dialog helpers
-    // ---------------------------------------------------------------
  
     public static void showError(Component parent, String message) {
         JOptionPane.showMessageDialog(parent, message, "Invalid Input", JOptionPane.ERROR_MESSAGE);
@@ -121,17 +110,15 @@ public class ValidationUtils {
         JOptionPane.showMessageDialog(parent, message, "Success", JOptionPane.INFORMATION_MESSAGE);
     }
  
-    /** Generates a short random queue/reference ticket number, e.g. "DP-4821". */
     public static String generateTicketNumber(String prefix) {
         int number = 1000 + (int) (Math.random() * 9000);
         return prefix + "-" + number;
     }
 
-    /** Simple email check: something@something.something */
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
 
-    /** PH mobile number: 09XXXXXXXXX or +639XXXXXXXXX. */
+  
     private static final Pattern CONTACT_PATTERN =
             Pattern.compile("^(09|\\+639)\\d{9}$");
 
@@ -143,17 +130,15 @@ public class ValidationUtils {
         return !isBlank(text) && CONTACT_PATTERN.matcher(text.trim()).matches();
     }
 
-    /** Username: 4-20 characters - letters, numbers, dot, underscore, hyphen. */
     private static final Pattern USERNAME_PATTERN =
             Pattern.compile("^[A-Za-z0-9._-]{4,20}$");
 
-    // REPLACED: this used to throw UnsupportedOperationException (NetBeans stub),
-    // which crashed the Admin "create teller" button.
+  
     public static boolean isValidUsername(String username) {
         return !isBlank(username) && USERNAME_PATTERN.matcher(username.trim()).matches();
     }
 
-    /** Password: at least 6 characters (no spaces-only passwords). */
+  
     public static boolean isValidPassword(String password) {
         return !isBlank(password) && password.length() >= 6;
     }

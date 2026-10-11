@@ -26,7 +26,7 @@ public class TransferFunds extends javax.swing.JFrame {
          jCheckBox1.setIcon(makeBoxIcon(28, false));
          jCheckBox1.setSelectedIcon(makeBoxIcon(28, true));
          jCheckBox1.setOpaque(false);
-         jCheckBox1.setContentAreaFilled(false); // helps under Nimbus
+         jCheckBox1.setContentAreaFilled(false); 
     }
     
     private javax.swing.Icon makeBoxIcon(int size, boolean checked) {
@@ -50,16 +50,15 @@ public class TransferFunds extends javax.swing.JFrame {
     
     
     private void makeTransparent() {
-    // Text fields
+ 
     javax.swing.JTextField[] fields = {jTextField1, jTextField2, jTextField3, jTextField4};
     for (javax.swing.JTextField tf : fields) {
         tf.setOpaque(false);
-        tf.setBackground(new java.awt.Color(0, 0, 0, 0)); // needed for Nimbus
+        tf.setBackground(new java.awt.Color(0, 0, 0, 0)); 
         tf.setBorder(null);
-        tf.setForeground(java.awt.Color.BLACK);           // pick a color that shows on your image
+        tf.setForeground(java.awt.Color.BLACK);           
     }
 
-    // Buttons
     javax.swing.JButton[] buttons = {jButton4, jButton5, jButton6, jButton7};
     for (javax.swing.JButton b : buttons) {
         b.setOpaque(false);
@@ -151,15 +150,12 @@ public class TransferFunds extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
-         
-        // 1. Read all text fields
-        String accountNumber = jTextField2.getText().trim();       // Source Account
-        String destinationAccount = jTextField3.getText().trim();  // Destination Account
-        String accountName = jTextField4.getText().trim();         // Account Name
-        String amountText = jTextField1.getText().trim();          // Transfer Amo);  // Destination Account
+       
+        String accountNumber = jTextField2.getText().trim();       
+        String destinationAccount = jTextField3.getText().trim();  
+        String accountName = jTextField4.getText().trim();         
+        String amountText = jTextField1.getText().trim();          
 
-        // 2. Validate Source Account
         if (!ValidationUtils.isValidAccountNumber(accountNumber)) {
             ValidationUtils.showError(this,
                     "Please enter a valid source account number (6-20 digits only).");
@@ -167,7 +163,7 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        // 3. Validate Destination Account
+      
         if (!ValidationUtils.isValidAccountNumber(destinationAccount)) {
             ValidationUtils.showError(this,
                     "Please enter a valid destination account number (6-20 digits only).");
@@ -175,7 +171,6 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        // 4. Ensure Source and Destination are not the same
         if (accountNumber.equals(destinationAccount)) {
             ValidationUtils.showError(this,
                     "Source and destination accounts cannot be the same.");
@@ -183,7 +178,6 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        // 5. Validate Amount
         if (!ValidationUtils.isValidWholeAmountFormat(amountText)) {
             ValidationUtils.showError(this,
                     "Please enter the transfer amount in whole pesos only (no centavos).");
@@ -198,8 +192,7 @@ public class TransferFunds extends javax.swing.JFrame {
             jTextField3.requestFocusInWindow();
             return;
         }
-        
-        // 1. Validate Source Account
+       
         double sourceBalance = QueueDatabase.getBalanceByNumber(accountNumber);
         if (sourceBalance == -2.0) {
             ValidationUtils.showError(this, "Transfer Failed: Your Source Account is LOCKED and cannot be used.");
@@ -214,7 +207,6 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        // 2. Validate Destination Account
         double destBalance = QueueDatabase.getAccountBalance(destinationAccount, accountName);
         if (destBalance == -2.0) {
             ValidationUtils.showError(this, "Transfer Failed: The Destination Account is LOCKED and cannot receive funds.");
@@ -236,7 +228,6 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
 
-        // 6. Validate Account Name
         if (!ValidationUtils.isValidName(accountName)) {
             ValidationUtils.showError(this,
                     "Please enter a valid account name (letters only).");
@@ -244,15 +235,11 @@ public class TransferFunds extends javax.swing.JFrame {
             return;
         }
         
-        
-
-        // 7. Generate the "TR" ticket for Transfer
+      
         String ticket = QueueDatabase.addTicket("TR", "Transfer Funds", accountName, jCheckBox1.isSelected());
         
-        // 8. Save all data using the new 4-parameter method you added to QueueDatabase
         QueueDatabase.saveKioskData(ticket, accountNumber, destinationAccount, amount);
 
-        // 9. Show Success Prompt
         ValidationUtils.showSuccess(this,
                 "Transfer request submitted!\n"
                 + "Queue ticket: " + ticket + "\n"
@@ -261,7 +248,6 @@ public class TransferFunds extends javax.swing.JFrame {
                 + "Amount: PHP " + String.format("%,d", amount) + "\n"
                 + "Priority: " + (jCheckBox1.isSelected() ? "Yes" : "No"));
 
-        // 10. Call your reset or back button to clear the fields
         jButton5ActionPerformed(evt); 
     
         
@@ -269,21 +255,21 @@ public class TransferFunds extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
      
     private void applyRealTimeValidation() {
-        // Source Account: Max 11 digits, numbers only
+        
         jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || jTextField2.getText().length() >= 11) evt.consume();
             }
         });
 
-        // Destination Account: Max 11 digits, numbers only
+       
         jTextField3.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || jTextField3.getText().length() >= 11) evt.consume();
             }
         });
 
-        // Transfer Amount: Max 6 digits, whole numbers only (no decimals)
+      
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 6) evt.consume();
@@ -292,7 +278,7 @@ public class TransferFunds extends javax.swing.JFrame {
     }
     
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+      
          jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");

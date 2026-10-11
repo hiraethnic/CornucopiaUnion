@@ -39,7 +39,7 @@ public class AdminRecord extends javax.swing.JFrame {
     
     
     private void loadTransactionLogs() {
-    loadTransactionLogs(""); // tawagin ang may filter kung wala pang search
+    loadTransactionLogs(""); 
     }
 
    private void loadTransactionLogs(String searchKeyword) {
@@ -76,13 +76,12 @@ public class AdminRecord extends javax.swing.JFrame {
                 String sysRefNo = rs.getString("sys_ref_no");
                 String dbRefNo = rs.getString("reference_no"); 
                 
-                // --- FIX 1: TELLER USER ---
-                // Try confirmed_by first. If empty, grab it from the counter name.
+               
                 String tellerUser = rs.getString("confirmed_by");
                 if (tellerUser == null || tellerUser.trim().isEmpty()) {
                     String counterVal = rs.getString("counter");
                     if (counterVal != null && counterVal.startsWith("Counter - ")) {
-                        tellerUser = counterVal.substring(10); // Removes "Counter - " to just show "ace landry"
+                        tellerUser = counterVal.substring(10);
                     } else if (counterVal != null) {
                         tellerUser = counterVal;
                     } else {
@@ -95,26 +94,22 @@ public class AdminRecord extends javax.swing.JFrame {
                 if (dbRefNo == null) dbRefNo = "N/A";
 
                 String displayAccountNo = dbRefNo; 
-                
-                // --- FIX 2: REFERENCE NUMBER ---
-                // Force it to ONLY show the generated system reference (e.g. BP-REF-123456)
+           
                 String displayRefNo = (sysRefNo != null && !sysRefNo.trim().isEmpty()) ? sysRefNo : "N/A";
 
-                // --- FIX 3: ACCOUNT NO & BILLS PAYMENT CATEGORY ---
                 if (ticketNo != null && ticketNo.startsWith("BP-")) {
                     transType = "Bills Payment"; 
                     if (dbRefNo.contains(" / Bank Acc: ")) {
                         String[] parts = dbRefNo.split(" / Bank Acc: ");
-                        displayAccountNo = parts[1]; // Shows Unified Card Account Number
+                        displayAccountNo = parts[1];
                     } else {
-                        displayAccountNo = "N/A (Cash)"; // Shows they paid with Cash
+                        displayAccountNo = "N/A (Cash)"; 
                     }
                 } 
                 else if (ticketNo != null && ticketNo.startsWith("AC-")) {
                     transType = "Account Creation";
                 }
 
-                // Format Amount
                 String amountStr = rs.getString("amount");
                 if (amountStr != null && !amountStr.trim().isEmpty()) {
                     try {
@@ -133,8 +128,8 @@ public class AdminRecord extends javax.swing.JFrame {
                     rs.getString("customer_name"),
                     displayAccountNo,
                     amountStr,
-                    displayRefNo, // Placed exactly in the Reference No Column
-                    tellerUser    // Placed exactly in the Teller User Column
+                    displayRefNo, 
+                    tellerUser    
                 });
             }
             

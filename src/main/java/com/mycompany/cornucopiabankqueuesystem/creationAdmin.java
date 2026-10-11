@@ -26,7 +26,7 @@ public class creationAdmin extends javax.swing.JFrame {
     }
     
     private void setupPasswordValidation() {
-        // Adds a listener that triggers every time text is inserted, removed, or changed
+     
         jTextField6.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
@@ -54,19 +54,18 @@ public class creationAdmin extends javax.swing.JFrame {
                 jButton5.setText("Create a new admin");
                 jButton4.setText("Clear form");
                 
-                // Unlock all fields for a new admin
+              
                 jTextField1.setEditable(true);
                 jTextField2.setEditable(true);
                 jTextField3.setEditable(true);
                 jTextField4.setEditable(true);
                 jTextField5.setEditable(true);
                 
-                jButton4ActionPerformed(null); // Clear the boxes
+                jButton4ActionPerformed(null);
             } else {
                 jButton5.setText("EDIT PASSWORD");
                 jButton4.setText("DELETE ACCOUNT");
                 
-                // Lock profile fields so only password can be edited
                 jTextField1.setEditable(false);
                 jTextField2.setEditable(false);
                 jTextField3.setEditable(false);
@@ -74,7 +73,6 @@ public class creationAdmin extends javax.swing.JFrame {
                 jTextField5.setEditable(false);
                 jTextField6.setText(""); 
                 
-                // Pull details from database and populate
                 String username = selected.substring(selected.lastIndexOf('(') + 1, selected.lastIndexOf(')'));
                 String[] profile = QueueDatabase.getAdminProfile(username);
                 if (profile != null) {
@@ -91,20 +89,18 @@ public class creationAdmin extends javax.swing.JFrame {
 
     private void validatePassword() {
         String password = jTextField6.getText();
-        
-        // Validation Rubric Checks
+       
         boolean isNotEmpty = !password.trim().isEmpty();
         boolean hasLength = password.length() >= 8;
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
         boolean hasNumber = password.matches(".*\\d.*");
-        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); // Checks for any symbol (e.g., !, @, #, $, %)
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); 
 
-        // If all conditions are met, set text to default black, otherwise red
         if (isNotEmpty && hasLength && hasUpper && hasLower && hasNumber && hasSpecial) {
-            jTextField6.setForeground(java.awt.Color.BLACK); // Normal / OK
+            jTextField6.setForeground(java.awt.Color.BLACK); 
         } else {
-            jTextField6.setForeground(java.awt.Color.RED);   // Rubric not met
+            jTextField6.setForeground(java.awt.Color.RED);  
         }
     }
 
@@ -355,7 +351,7 @@ public class creationAdmin extends javax.swing.JFrame {
             if (choice == javax.swing.JOptionPane.YES_OPTION) {
                 if (QueueDatabase.deleteAdmin(username)) {
                     ValidationUtils.showSuccess(this, "Admin account deleted.");
-                    loadAdminList(); // Reset back to creation mode
+                    loadAdminList(); 
                 } else {
                     ValidationUtils.showError(this, "Failed to delete admin.");
                 }
@@ -363,7 +359,6 @@ public class creationAdmin extends javax.swing.JFrame {
             return;
         }
 
-        // If in CLEAR mode, just wipe the text boxes
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
@@ -390,7 +385,6 @@ public class creationAdmin extends javax.swing.JFrame {
             return;
         }
 
-        // If in EDIT mode, only update the password
         if (jButton5.getText().equals("EDIT PASSWORD")) {
             String selected = (String) SelectEmployee.getSelectedItem();
             String username = selected.substring(selected.lastIndexOf('(') + 1, selected.lastIndexOf(')'));
@@ -404,7 +398,6 @@ public class creationAdmin extends javax.swing.JFrame {
             return;
         }
 
-        // If in CREATE mode, save the whole new profile
         String fullName = jTextField1.getText();
         String email    = jTextField2.getText();
         String adminId  = jTextField3.getText();
@@ -432,7 +425,7 @@ public class creationAdmin extends javax.swing.JFrame {
 
         if (QueueDatabase.createAdmin(adminId, fullName, email, contact, username, password)) {
             ValidationUtils.showSuccess(this, "Admin account created.");
-            loadAdminList(); // Refresh the combobox
+            loadAdminList(); 
             jButton4ActionPerformed(null); 
         } else {
             ValidationUtils.showError(this, "Could not save the admin. Please try again.");

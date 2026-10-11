@@ -111,13 +111,11 @@ public class Loginadminteller extends javax.swing.JFrame {
    String username = jTextField1.getText();
         String password = new String(jPasswordField2.getPassword());
 
-        // Input validation: ensure inputs are not empty
         if (ValidationUtils.isBlank(username) || ValidationUtils.isBlank(password)) {
             ValidationUtils.showError(this, "Enter your username and password.");
             return;
         }
 
-        // Authenticate Teller account
         TellerPermissions userPermissions = QueueDatabase.authenticate(username, password);
         if (userPermissions != null) {
             new Tellerframe(userPermissions).setVisible(true);
@@ -125,7 +123,6 @@ public class Loginadminteller extends javax.swing.JFrame {
             return;
         }
 
-        // Authenticate Admin account
         if (QueueDatabase.authenticateAdmin(username, password)) {
             new Admin().setVisible(true);
             this.dispose();
@@ -144,9 +141,9 @@ public class Loginadminteller extends javax.swing.JFrame {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
         if (jCheckBox1.isSelected()) {
-            jPasswordField2.setEchoChar((char) 0); // Shows the text
+            jPasswordField2.setEchoChar((char) 0);
         } else {
-            jPasswordField2.setEchoChar('\u2022'); // Hides with bullet points
+            jPasswordField2.setEchoChar('\u2022'); 
         }
     
     }//GEN-LAST:event_jCheckBox1ActionPerformed

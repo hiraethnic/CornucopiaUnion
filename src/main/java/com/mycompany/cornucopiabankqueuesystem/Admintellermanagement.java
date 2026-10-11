@@ -17,7 +17,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
      * 
      */
     
-    private boolean loading = false;   // true while the dropdown is being refilled
+    private boolean loading = false;  
     
       public Admintellermanagement() {
          initComponents();
@@ -26,8 +26,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
  
     jCheckBox3.setText("Bills payment");
     AccountStatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"Active", "Inactive", "Terminated"}));
- 
-    // Online (green) / Offline (red) button. Clicking it changes the selected teller's status.
+
     jToggleButton2.addActionListener(e -> {
         String user = selectedUsername();
         if (user == null) {
@@ -38,12 +37,12 @@ public class Admintellermanagement extends javax.swing.JFrame {
         showOnlineState();
     });
     showOnlineState();
-    UserName.setEditable(false);   // username is the login ID
+    UserName.setEditable(false);  
  
     SelectEmployee.addActionListener(e -> {
         if (!loading) loadSelectedTeller();
     });
-    jButton6.addActionListener(e -> {   // BACK
+    jButton6.addActionListener(e -> {  
         new Admin().setVisible(true);
         this.dispose();
     });
@@ -51,8 +50,7 @@ public class Admintellermanagement extends javax.swing.JFrame {
     loadTellerList(null);
     }
     
-    
-    /** Dropdown text is "Full Name (username)"; this pulls the username back out. */
+
 private String selectedUsername() {
     Object item = SelectEmployee.getSelectedItem();
     if (item == null) return null;
@@ -108,15 +106,13 @@ private void loadSelectedTeller() {
     TellerPermissions perms = QueueDatabase.getTellerPermissions(username);
     if (profile == null || perms == null) { clearFields(); return; }
 
-    // Added bounds checking and null safety to prevent exceptions from hiding the data
     EmployeeName.setText(profile.length > 0 && profile[0] != null ? profile[0] : "");
     jTextField2.setText(profile.length > 1 && profile[1] != null ? profile[1] : "");
     jTextField3.setText(profile.length > 2 && profile[2] != null ? profile[2] : "");
     contactNumber.setText(profile.length > 3 && profile[3] != null ? profile[3] : "");
     
     UserName.setText(username);
-    
-    // Safety checks for Status, Password, and Online status
+ 
     String st = (profile.length > 4 && profile[4] != null) ? profile[4].toUpperCase() : "ACTIVE";
     AccountStatus.setSelectedItem(st.equals("TERMINATED") ? "Terminated" : st.equals("INACTIVE") ? "Inactive" : "Active");
     

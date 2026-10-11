@@ -14,7 +14,6 @@ public class TellerPermissions {
     private final boolean cashWithdrawals;
     private final boolean foreignExchange;
 
-    /** Who is logged in (set by QueueDatabase.authenticate). */
     private String username = "";
     private String fullName = "";
 
@@ -29,12 +28,12 @@ public class TellerPermissions {
         this.foreignExchange = foreignExchange;
     }
 
-    /** Used when testing Tellerframe directly (no login). */
+  
     public static TellerPermissions allGranted() {
         return new TellerPermissions(true, true, true, true, true, true);
     }
 
-    /** Remembers which teller account these permissions belong to. */
+   
     public TellerPermissions withIdentity(String username, String fullName) {
         this.username = username == null ? "" : username;
         this.fullName = fullName == null ? "" : fullName;
@@ -44,7 +43,6 @@ public class TellerPermissions {
     public String getUsername() { return username; }
     public String getFullName() { return fullName; }
 
-    /** Text saved in the records, e.g. "Juan Dela Cruz (juan01)". */
     public String getDisplayName() {
         if (username.isEmpty()) return "Unknown teller";
         return fullName.isEmpty() ? username : fullName + " (" + username + ")";
@@ -57,10 +55,7 @@ public class TellerPermissions {
     public boolean canCashWithdrawals() { return cashWithdrawals; }
     public boolean canForeignExchange() { return foreignExchange; }
 
-    /**
-     * True if this teller may serve a ticket of the given category
-     * (e.g. "Deposit", "Foreign Exchange"). Unknown categories are denied.
-     */
+  
     public boolean canHandleTicket(String ticketNo, String category) {
         if (ticketNo != null) {
             String t = ticketNo.toUpperCase();

@@ -19,17 +19,17 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         initComponents();
         QueueDatabase.initialize();
         applyRealTimeValidation();
-        makeTextAreaTransparent();   // <-- add this
+        makeTextAreaTransparent();  
         setLocationRelativeTo(null);
     }
     
     private void makeTextAreaTransparent() {
     jTextArea1.setOpaque(false);
     jTextArea1.setBackground(new java.awt.Color(0, 0, 0, 0));
-    jTextArea1.setEditable(false);   // optional: it's just instructions
+    jTextArea1.setEditable(false);   
     jScrollPane1.setOpaque(false);
     jScrollPane1.getViewport().setOpaque(false);
-    jScrollPane1.setBorder(null);    // optional
+    jScrollPane1.setBorder(null);    
 }   
 
     /**
@@ -242,8 +242,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         }
 
         String ticket = QueueDatabase.addTicket("WD", "Withdrawal", accountName, jCheckBox1.isSelected());
-        
-        // ADDED: Save the reference (account number) and amount to the database so the Teller frame can autofill it.
+     
         QueueDatabase.saveKioskData(ticket, accountNumber, amount);
 
         ValidationUtils.showSuccess(this,
@@ -259,14 +258,14 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void applyRealTimeValidation() {
-        // Account Number: Max 11 digits, numbers only
+       
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || jTextField1.getText().length() >= 11) evt.consume();
             }
         });
 
-        // Withdrawal Amount: Max 6 digits, whole numbers only (no decimals)
+      
         jTextField2.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 if (!Character.isDigit(evt.getKeyChar()) || jTextField2.getText().length() >= 6) evt.consume();
@@ -275,7 +274,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     }
     
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+       
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
@@ -284,7 +283,7 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void backbtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backbtActionPerformed
-        // TODO add your handling code here:
+      
          KioskFrame kioskF = new  KioskFrame();
          
          kioskF.setVisible(true);

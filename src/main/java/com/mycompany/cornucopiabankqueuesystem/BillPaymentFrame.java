@@ -33,8 +33,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             String selectedCategory = (String) cmbCategory.getSelectedItem();
             
             if (selectedCategory == null) return;
-            
-            // Populate billers based on the selected category
+       
             switch (selectedCategory) {
                 case "Electric Utility":
                     cmbBiller.addItem("Meralco");
@@ -62,11 +61,10 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             }
         });
 
-        // Automatically add "+63" if a Telecom biller is selected
         cmbBiller.addActionListener(evt -> {
             txtRefNumber.setText(""); 
         });
-        // Trigger it once at startup so it loads the first category correctly
+   
         if (cmbCategory.getItemCount() > 0) {
             cmbCategory.setSelectedIndex(0);
         }
@@ -324,21 +322,19 @@ public class BillPaymentFrame extends javax.swing.JFrame {
             return;
         }
         
-        // Temporarily strip the "+" just for the numeric check
+      
         if (!ValidationUtils.isValidNumericReferenceNumber(refNumber.replace("+", ""))) {
             ValidationUtils.showError(this,
                     "Please enter a valid account/reference number (4-20 digits, numbers only).");
             txtRefNumber.requestFocusInWindow();
             return;
         }
-        
-      // --- NEW POP-UP LOGIC STARTS HERE ---
+ 
         String finalRef = refNumber;
         
         if (paymentMode.toString().equals("Unified Card")) {
             javax.swing.JTextField accField = new javax.swing.JTextField();
-            
-            // Forces exactly 11 digits and numbers only
+       
             accField.addKeyListener(new java.awt.event.KeyAdapter() {
                 public void keyTyped(java.awt.event.KeyEvent evt) {
                     if (!Character.isDigit(evt.getKeyChar()) || accField.getText().length() >= 11) {
@@ -353,7 +349,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
                 javax.swing.JOptionPane.OK_CANCEL_OPTION);
                 
             if (option != javax.swing.JOptionPane.OK_OPTION) {
-                return; // Stops if they click cancel
+                return; 
             }
             
             String accNo = accField.getText();
@@ -374,19 +370,15 @@ public class BillPaymentFrame extends javax.swing.JFrame {
              }
             
             
+
             
-            // Combines Biller Ref + Bank Account so it auto-fills on Teller screen
             finalRef = refNumber + " / Bank Acc: " + accNo;
         }
-        // --- NEW POP-UP LOGIC ENDS HERE ---
-
-        // --- NEW POP-UP LOGIC ENDS HERE ---
-        
-        // 1. Generate the ticket and save it to the database! (This defines the 'ticket' variable)
+   
+    
         String ticket = QueueDatabase.addTicket("BP", biller.toString(), accountName, jCheckBox1.isSelected());
         QueueDatabase.saveKioskData(ticket, finalRef, amount.longValue());
 
-        // 2. Show the success message
         ValidationUtils.showSuccess(this,
                 "Payment accepted!\n"
                 + "Queue ticket: " + ticket + "\n"
@@ -407,20 +399,18 @@ public class BillPaymentFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
   private void applyRealTimeValidation() {
-    // Reference number: 4-10 digits, or +639 followed by 9 digits
+   
     txtRefNumber.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyTyped(java.awt.event.KeyEvent evt) {
             char c = evt.getKeyChar();
-            
-            // 1. Block letters and symbols (numbers only)
+       
             if (!Character.isDigit(c)) {
                 evt.consume();
                 return;
             }
-            
-            // 2. Set the maximum length based on the selected biller
+          
             String selectedBiller = cmbBiller.getSelectedItem() != null ? cmbBiller.getSelectedItem().toString() : "";
-            int maxLen = 20; // Default fallback
+            int maxLen = 20; 
             
             if (selectedBiller.equals("Meralco") || selectedBiller.contains("Globe") || selectedBiller.contains("PLDT")) {
                 maxLen = 10;
@@ -430,26 +420,26 @@ public class BillPaymentFrame extends javax.swing.JFrame {
                 maxLen = 13;
             }
             
-            // 3. Stop them from typing if they hit the limit
+    
             if (txtRefNumber.getText().length() >= maxLen) {
                 evt.consume();
             }
         }
     });
 
-    // Amount: up to 6 whole digits and up to 2 decimals (bills have centavos)
+ 
     txtAmount.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyTyped(java.awt.event.KeyEvent evt) {
             char c = evt.getKeyChar();
             String t = txtAmount.getText();
             int dot = t.indexOf('.');
             if (c == '.') {
-                if (dot >= 0 || t.isEmpty()) evt.consume();      // one dot, not first
+                if (dot >= 0 || t.isEmpty()) evt.consume();     
             } else if (Character.isDigit(c)) {
                 if (dot >= 0) {
-                    if (t.length() - dot > 2) evt.consume();     // max 2 decimals
+                    if (t.length() - dot > 2) evt.consume();     
                 } else if (t.length() >= 6) {
-                    evt.consume();                               // max 6 whole digits
+                    evt.consume();                               
                 }
             } else {
                 evt.consume();

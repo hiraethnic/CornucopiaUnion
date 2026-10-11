@@ -215,21 +215,20 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-       String fullName = jTextField1.getText();   // Employee full name
-        String username = jTextField5.getText();   // System username
-        String password = jTextField6.getText();   // Initial password
-        String email = jTextField2.getText();      // Email address (Corrected)
-        String employeeId = jTextField3.getText(); // Employee ID (Corrected)
-        String contact = jTextField4.getText();    // Contact number
-        // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
-        // (then use new String(field.getPassword())).
+       String fullName = jTextField1.getText();   
+        String username = jTextField5.getText();  
+        String password = jTextField6.getText();  
+        String email = jTextField2.getText();      
+        String employeeId = jTextField3.getText(); 
+        String contact = jTextField4.getText();    
+       
         boolean hasLength = password.length() >= 8;
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
         boolean hasNumber = password.matches(".*\\d.*");
         boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
  
-        // --- validation ---
+      
         if (!ValidationUtils.isValidName(fullName)) {
             ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
             return;
@@ -250,7 +249,7 @@ public class Admin extends javax.swing.JFrame {
             ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
             return;
         }
-        // REPLACED: was "!isBlank(password)", which rejected every real password.
+     
         if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
             ValidationUtils.showError(this, "Password must be at least 8 characters and include an uppercase letter, lowercase letter, a number, and a special character.");
             return;
@@ -269,16 +268,14 @@ public class Admin extends javax.swing.JFrame {
             return;
         }
  
-        // --- read checkboxes ---
         TellerPermissions permissions = new TellerPermissions(
-                jCheckBox1.isSelected(),   // Account creation
-                jCheckBox2.isSelected(),   // Cash deposits
-                jCheckBox3.isSelected(),   // Bill payments
-                jCheckBox4.isSelected(),   // Fund transfers
-                jCheckBox5.isSelected(),   // Cash withdrawals
-                foreignexchan.isSelected());  // Foreign exchange
+                jCheckBox1.isSelected(),   
+                jCheckBox2.isSelected(),  
+                jCheckBox3.isSelected(),   
+                jCheckBox4.isSelected(),   
+                jCheckBox5.isSelected(),   
+                foreignexchan.isSelected());  
  
-        // --- save ---
         if (QueueDatabase.createTeller(username, password, fullName, employeeId, email, contact, permissions)) {
             ValidationUtils.showSuccess(this, "Teller account created for " + fullName.trim() + ".");
             clearForm();
@@ -348,7 +345,6 @@ public class Admin extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
                try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -359,7 +355,7 @@ public class Admin extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+ 
           try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -371,12 +367,12 @@ public class Admin extends javax.swing.JFrame {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
  
-        /* Create and display the form */
+      
         java.awt.EventQueue.invokeLater(() -> new Admin().setVisible(true));
     }
     
     private void setupPasswordValidation() {
-        // Adds a listener that triggers every time text is inserted, removed, or changed
+      
         jTextField6.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
             @Override
             public void insertUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
@@ -396,13 +392,13 @@ public class Admin extends javax.swing.JFrame {
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
         boolean hasNumber = password.matches(".*\\d.*");
-        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); // Checks for any symbol (e.g., !, @, #, $, %)
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
 
-        // If all conditions are met, set text to default black, otherwise red
+   
         if (isNotEmpty && hasLength && hasUpper && hasLower && hasNumber && hasSpecial) {
-            jTextField6.setForeground(java.awt.Color.BLACK); // Normal / OK
+            jTextField6.setForeground(java.awt.Color.BLACK); 
         } else {
-            jTextField6.setForeground(java.awt.Color.RED);   // Rubric not met
+            jTextField6.setForeground(java.awt.Color.RED);   
         }
     }
 

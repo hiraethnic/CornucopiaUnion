@@ -54,10 +54,10 @@ public final class QueueDatabase {
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create users table", ex);
         }
-        // Older databases: add the new permission columns.
+     
         addColumnIfMissing(conn, "can_bill_payments", "ALTER TABLE users ADD COLUMN can_bill_payments INTEGER NOT NULL DEFAULT 0");
         addColumnIfMissing(conn, "can_foreign_exchange", "ALTER TABLE users ADD COLUMN can_foreign_exchange INTEGER NOT NULL DEFAULT 0");
-        // Teller profile columns (used by Admin + Teller Management).
+    
         addColumnIfMissing(conn, "employee_id", "ALTER TABLE users ADD COLUMN employee_id TEXT");
         addColumnIfMissing(conn, "email", "ALTER TABLE users ADD COLUMN email TEXT");
         addColumnIfMissing(conn, "contact_number", "ALTER TABLE users ADD COLUMN contact_number TEXT");
@@ -92,8 +92,7 @@ public final class QueueDatabase {
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
-            // NOTE: password is saved as plain text. Should be replaced with a hashed password
-            // (e.g. SHA-256 with a salt) in both createTeller() and authenticate().
+          
             ps.setString(2, password);
             ps.setString(3, fullName.trim());
             ps.setInt(4, p.canAccountCreation() ? 1 : 0);
@@ -123,7 +122,7 @@ public final class QueueDatabase {
     }
 
     public static String[] getAdminProfile(String username) {
-        // We added 'password' to the SELECT statement here
+      
         String sql = "SELECT full_name, email, admin_id, contact_number, username, password FROM admins WHERE username = ?";
         Connection conn = getConnection();
         if (conn == null) return null;
@@ -131,7 +130,7 @@ public final class QueueDatabase {
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    // Added password to the returned array so it can be displayed
+                  
                     return new String[]{
                         rs.getString("full_name"), 
                         rs.getString("email"), 
@@ -189,7 +188,7 @@ public final class QueueDatabase {
                             rs.getInt("can_cash_withdrawals") == 1,
                             rs.getInt("can_foreign_exchange") == 1)
                             .withIdentity(rs.getString("username"), rs.getString("full_name"));
-                    setTellerOnline(perms.getUsername(), true);   // shows green in Teller Management
+                    setTellerOnline(perms.getUsername(), true);   
                     return perms;
                 }
             }
@@ -201,9 +200,7 @@ public final class QueueDatabase {
     
     
     
-    // ---------------------------------------------------------------
-    // TELLER MANAGEMENT (used by the Admintellermanagement form)
-    // ---------------------------------------------------------------
+   
 
     /** Saves a new teller with full profile (employee ID, email, contact) and permissions. */
     public static synchronized boolean createTeller(String username, String password, String fullName,
@@ -216,7 +213,7 @@ public final class QueueDatabase {
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
-            ps.setString(2, password); // plain text, same as createTeller() above
+            ps.setString(2, password); 
             ps.setString(3, fullName.trim());
             ps.setString(4, employeeId.trim());
             ps.setString(5, email.trim());
@@ -234,7 +231,7 @@ public final class QueueDatabase {
         }
     }
 
-    /** True if another teller (not excludeUsername) already uses this employee ID. */
+   
     public static boolean employeeIdExists(String employeeId, String excludeUsername) {
         initializeUsersTable();
         String sql = "SELECT COUNT(*) FROM users WHERE LOWER(employee_id) = LOWER(?) AND LOWER(username) <> LOWER(?)";
@@ -252,7 +249,7 @@ public final class QueueDatabase {
         }
     }
 
-    /** Profile of one teller: {fullName, employeeId, email, contact, status, password, online("1"/"0")}, or null. */
+   
     public static String[] getTellerProfile(String username) {
         initializeUsersTable();
         String sql = "SELECT full_name, employee_id, email, contact_number, status, password, online FROM users WHERE username = ?";
@@ -278,7 +275,7 @@ public final class QueueDatabase {
         return null;
     }
 
-    /** Permissions of one teller, or null if not found. */
+  
     public static TellerPermissions getTellerPermissions(String username) {
         initializeUsersTable();
         String sql = "SELECT * FROM users WHERE username = ?";
@@ -304,7 +301,6 @@ public final class QueueDatabase {
         return null;
     }
 
-    /** Updates a teller's profile, permissions and status ("ACTIVE" / "INACTIVE"). Username never changes. */
     public static synchronized boolean updateTeller(String username, String fullName, String employeeId,
             String email, String contact, TellerPermissions p, String status) {
         String sql = "UPDATE users SET full_name = ?, employee_id = ?, email = ?, contact_number = ?, "
@@ -333,7 +329,6 @@ public final class QueueDatabase {
         }
     }
 
-    /** Marks a teller online (true) or offline (false). */
     public static synchronized boolean setTellerOnline(String username, boolean online) {
         String sql = "UPDATE users SET online = ? WHERE username = ?";
         Connection conn = getConnection();
@@ -348,8 +343,7 @@ public final class QueueDatabase {
         }
     }
 
-    /** Permanently removes a teller account. Past transaction records keep the teller's name. */
-    /** Permanently removes a teller account. Past transaction records keep the teller's name. */
+  
     public static synchronized boolean deleteTeller(String username) {
     String sql = "DELETE FROM users WHERE username = ?";
     Connection conn = getConnection();
@@ -368,7 +362,7 @@ public final class QueueDatabase {
         Connection conn = getConnection();
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, newPassword); // plain text, same as createTeller()
+            ps.setString(1, newPassword);
             ps.setString(2, username);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -377,12 +371,6 @@ public final class QueueDatabase {
         }
     }
 
-    /**
-     * Records handled by one teller (newest first, max 50), including account
-     * creations. Each row: {time, ticketNo, transactionType, status, handledBy}.
-     * Matches on the "(username)" part of confirmed_by so old records still
-     * show up even if the teller's full name is changed later.
-     */
     public static List<String[]> getTellerActivity(String username) {
         List<String[]> list = new ArrayList<>();
         String sql = "SELECT COALESCE(updated_at, created_at) AS t, ticket_no, category, transaction_type, "
@@ -411,11 +399,7 @@ public final class QueueDatabase {
         return list;
     }
 
-    // ---------------------------------------------------------------
-    // ADMINS (used by the creationAdmin form)
-    // ---------------------------------------------------------------
 
-    /** Creates the admins table if it doesn't exist. */
     public static synchronized void initializeAdminsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS admins ("
                 + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -436,7 +420,6 @@ public final class QueueDatabase {
         }
     }
 
-    /** True if an admin already has this Admin ID or username. */
     public static boolean adminExists(String adminId, String username) {
         initializeAdminsTable();
         String sql = "SELECT COUNT(*) FROM admins WHERE LOWER(admin_id) = LOWER(?) OR LOWER(username) = LOWER(?)";
@@ -454,7 +437,6 @@ public final class QueueDatabase {
         }
     }
 
-    /** Saves a new admin. Returns true if saved. */
     public static synchronized boolean createAdmin(String adminId, String fullName, String email,
             String contactNumber, String username, String password) {
         initializeAdminsTable();
@@ -469,7 +451,6 @@ public final class QueueDatabase {
             ps.setString(3, email.trim());
             ps.setString(4, contactNumber.trim());
             ps.setString(5, username.trim());
-            // NOTE: password is saved as plain text. Should be replaced with a hashed password.
             ps.setString(6, password);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
@@ -494,8 +475,7 @@ public final class QueueDatabase {
             return false;
         }
     }
-   
-    /** All saved teller accounts. Each row: {fullName, username, permissions, createdAt}. */
+ 
     public static List<String[]> getAllTellers() {
         initializeUsersTable();
         List<String[]> list = new ArrayList<>();
@@ -666,8 +646,7 @@ public final class QueueDatabase {
             String customerName, boolean priority) {
         initialize();
         String ticketNo = nextTicketNumber(prefix);
-        
-        // Append -PWD to the ticket if it's a priority customer
+      
         if (priority) {
             ticketNo += "-PWD";
         }
@@ -709,7 +688,6 @@ public final class QueueDatabase {
         }
     }
 
-    /** All tickets still waiting, priority customers first, then FIFO. Each row: {ticketNo, category}. */
     public static List<String[]> getWaitingTickets() {
         return getWaitingTickets(Integer.MAX_VALUE);
     }
@@ -736,8 +714,7 @@ public final class QueueDatabase {
         return list;
     }
 
-    /** Tickets currently being served. Each row: {ticketNo, counter}. */
-    /** Tickets currently called or ongoing (SERVING or HELD). Each row: {ticketNo, counter}. */
+  
         public static List<String[]> getNowServing() {
             List<String[]> list = new ArrayList<>();
             String sql = "SELECT ticket_no, counter FROM queue_tickets WHERE status IN ('SERVING','HELD') "
@@ -757,7 +734,7 @@ public final class QueueDatabase {
             return list;
         }
 
-        /** Most recently-called ticket, for the "last announcement" panel. {ticketNo, counter} or null. */
+       
         public static String[] getLastAnnounced() {
             String sql = "SELECT ticket_no, counter FROM queue_tickets WHERE status IN ('SERVING','HELD') "
                     + "ORDER BY id DESC LIMIT 1";
@@ -834,7 +811,6 @@ public final class QueueDatabase {
         }
     }
     
-    /** Updates a ticket's core details when a teller edits them */
     public static synchronized boolean updateTicketDetails(String ticketNo, String customerName, String referenceNo, Double amount) {
         String sql = "UPDATE queue_tickets SET customer_name = ?, reference_no = ?, amount = ?, updated_at = datetime('now','localtime') WHERE ticket_no = ?";
         Connection conn = getConnection();
@@ -880,23 +856,12 @@ public final class QueueDatabase {
         }
     }
 
-    /**
-     * Pulls the next WAITING ticket (priority first, then FIFO) into SERVING
-     * status at the given counter. Not wired to any UI yet - handy once a
-     * teller-side "Call Next" screen is built.
-     *
-     * @return true if a ticket was called, false if the queue was empty
-     */
-    /** Calls the next waiting ticket of ANY type (no permission limit). */
+
     public static synchronized Ticket callNext(String counter) {
         return callNext(counter, TellerPermissions.allGranted());
     }
 
-    /**
-     * Calls the next waiting ticket that this teller is allowed to serve.
-     * Tickets for functions the teller doesn't have are skipped and stay waiting
-     * for another teller.
-     */
+  
     public static synchronized Ticket callNext(String counter, TellerPermissions perms) {
         if (getActiveTicket(counter) != null) {
             return null;
@@ -908,7 +873,6 @@ public final class QueueDatabase {
             int chosenId = -1;
             boolean chosenIsPriority = false;
 
-            // Fetch all waiting tickets ordered by oldest first, calculating wait time in minutes
             String fetchSql = "SELECT id, ticket_no, category, priority, "
                     + "(julianday('now', 'localtime') - julianday(created_at)) * 24 * 60 AS wait_mins "
                     + "FROM queue_tickets WHERE status = 'WAITING' ORDER BY id ASC";
@@ -922,8 +886,7 @@ public final class QueueDatabase {
                 while (rs.next()) {
                     String ticketNo = rs.getString("ticket_no");
                     String category = rs.getString("category");
-                    
-                    // Skip if teller lacks permission for this transaction
+ 
                     if (perms != null && !perms.canHandleTicket(ticketNo, category)) {
                         continue;
                     }
@@ -931,8 +894,7 @@ public final class QueueDatabase {
                     int id = rs.getInt("id");
                     int priority = rs.getInt("priority");
                     double waitMins = rs.getDouble("wait_mins");
-                    
-                    // 1. Time Limit Boost: Normal customer waiting > 20 mins
+      
                     if (priority == 0 && waitMins > 20 && frustratedId == -1) {
                         frustratedId = id;
                     }
@@ -944,20 +906,19 @@ public final class QueueDatabase {
                         oldestRegularId = id;
                     }
                 }
-                
-                // --- QUEUE ROUTING LOGIC ---
+    
                 if (frustratedId != -1) {
-                    // Overrides all rules: Pull the frustrated regular customer immediately
+                  
                     chosenId = frustratedId;
                     chosenIsPriority = false;
                 } else {
-                    // Alternating Counter: 2 Priority then 1 Regular
+                  
                     if (consecutivePriorityCount >= 2) {
                         if (oldestRegularId != -1) {
                             chosenId = oldestRegularId;
                             chosenIsPriority = false;
                         } else if (oldestPriorityId != -1) {
-                            chosenId = oldestPriorityId; // Fallback to priority if no regulars exist
+                            chosenId = oldestPriorityId; 
                             chosenIsPriority = true;
                         }
                     } else {
@@ -965,7 +926,7 @@ public final class QueueDatabase {
                             chosenId = oldestPriorityId;
                             chosenIsPriority = true;
                         } else if (oldestRegularId != -1) {
-                            chosenId = oldestRegularId; // Fallback to regular if no priorities exist
+                            chosenId = oldestRegularId; 
                             chosenIsPriority = false;
                         }
                     }
@@ -976,7 +937,7 @@ public final class QueueDatabase {
                 return null;
             }
             
-            if (chosenId < 0) return null; // Queue is empty for this teller
+            if (chosenId < 0) return null; 
 
             String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
                     + "transaction_type = category, updated_at = datetime('now','localtime') "
@@ -987,11 +948,11 @@ public final class QueueDatabase {
                 ps.setInt(2, chosenId);
                 
                 if (ps.executeUpdate() > 0) {
-                    // Successfully secured the ticket, now manage the alternating counter
+                   
                     if (chosenIsPriority) {
                         consecutivePriorityCount++;
                     } else {
-                        consecutivePriorityCount = 0; // Reset after a regular customer is pulled
+                        consecutivePriorityCount = 0; 
                     }
                     return getActiveTicket(counter);
                 }
@@ -1016,7 +977,6 @@ public final class QueueDatabase {
         }
 }    
 
-/** Creates the accounts table if it doesn't exist */
     public static synchronized void initializeAccountsTable() {
         String sql = "CREATE TABLE IF NOT EXISTS bank_accounts ("
                 + "account_number TEXT PRIMARY KEY,"
@@ -1054,14 +1014,12 @@ public final class QueueDatabase {
 
   
 
-   /** Same as above, but also records which teller account confirmed it. */
   public static synchronized boolean createBankAccount(String accountNo, String name, String accountType, double balance, String idPath, String confirmedBy) {
         initialize(); 
 
         String ticketNo = "AC-" + (1000 + (int)(Math.random() * 9000));
-        String sysRefNo = "AC-REF-" + System.currentTimeMillis(); // Generate Ref No for Account Creation
-        
-        // Added sys_ref_no and hardcoded transaction_type to 'Account Creation'
+        String sysRefNo = "AC-REF-" + System.currentTimeMillis();
+  
         String sql = "INSERT INTO queue_tickets (ticket_no, category, customer_name, amount, reference_no, valid_id_submitted, status, confirmed_by, id_document_path, id_blob, sys_ref_no, transaction_type) "
                    + "VALUES (?, ?, ?, ?, ?, 1, 'DONE', ?, ?, ?, ?, 'Account Creation')";
 
@@ -1089,7 +1047,7 @@ public final class QueueDatabase {
             ps.setString(6, confirmedBy);
             ps.setString(7, idPath);
             ps.setBytes(8, fileBytes); 
-            ps.setString(9, sysRefNo); // Save the Reference No
+            ps.setString(9, sysRefNo);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             return false;
@@ -1097,7 +1055,6 @@ public final class QueueDatabase {
        
   }
 
-    /** Copies the uploaded ID photo into an "id_uploads" folder (named after the account number) so it stays available. */
     private static String copyIdPhoto(String idPath, String accountNo) {
         if (idPath == null || idPath.isEmpty()) return null;
         try {
@@ -1115,7 +1072,6 @@ public final class QueueDatabase {
         }
     }
 
-    /** Path of the ID photo uploaded when this account was created, or null if none. */
     public static String getAccountIdPath(String accountNo) {
         initialize();
         String sql = "SELECT id_document_path FROM queue_tickets WHERE reference_no = ? AND ticket_no LIKE 'AC-%' LIMIT 1";
@@ -1146,7 +1102,7 @@ public final class QueueDatabase {
     }
    
    public static synchronized double getAccountBalance(String accountNo, String name) {
-        // Updated to target the main AC- record and check the lock status
+      
         String sql = "SELECT amount, status FROM queue_tickets WHERE reference_no = ? AND LOWER(customer_name) = LOWER(?) AND ticket_no LIKE 'AC-%' LIMIT 1";
         Connection conn = getConnection();
         if (conn == null) return -1.0;
@@ -1171,8 +1127,7 @@ public final class QueueDatabase {
   * @return true if row updated successfully
   */
  public static synchronized boolean updateAccountBalance(String accountNo, double newBalance) {
-        // FIX: Added "AND ticket_no LIKE 'AC-%'" so it only updates the main account balance, 
-        // leaving your older transaction history amounts completely untouched.
+       
         String sql = "UPDATE queue_tickets SET amount = ?, updated_at = datetime('now','localtime') "
                    + "WHERE reference_no = ? AND ticket_no LIKE 'AC-%'";
                    
@@ -1243,7 +1198,7 @@ public final class QueueDatabase {
     }
     
     public static String[] getAccountDetails(String searchTerm) {
-        // ADDED: "ORDER BY id DESC" to always pull the newest account, and "LIKE" for partial name matching
+        
         String sql = "SELECT reference_no, customer_name, category, amount, status FROM queue_tickets "
                    + "WHERE (reference_no = ? OR LOWER(customer_name) LIKE LOWER(?)) AND ticket_no LIKE 'AC-%' ORDER BY id DESC LIMIT 1";
         
@@ -1252,7 +1207,7 @@ public final class QueueDatabase {
         
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, searchTerm.trim());
-            // Wraps the search term in % so a partial name like "John" will find "John Doe"
+           
             ps.setString(2, "%" + searchTerm.trim() + "%"); 
             
             try (ResultSet rs = ps.executeQuery()) {
@@ -1274,8 +1229,7 @@ public final class QueueDatabase {
 
     public static List<String[]> getAccountHistory(String accountNo) {
         List<String[]> history = new ArrayList<>();
-        
-        // 1. Grab the EXACT balance used by the Account Details panel so they never mismatch
+       
         double runningBalance = 0.0;
         String[] details = getAccountDetails(accountNo);
         if (details != null && details[3] != null) {
@@ -1284,7 +1238,6 @@ public final class QueueDatabase {
             } catch (NumberFormatException e) { }
         }
 
-        // 2. Read newest to oldest (ORDER BY id DESC) to calculate backward from the current balance
         String sql = "SELECT created_at, ticket_no, amount, reference_no FROM queue_tickets "
                    + "WHERE reference_no LIKE ? AND status IN ('DONE', 'LOCKED') ORDER BY id DESC";
         
@@ -1301,7 +1254,7 @@ public final class QueueDatabase {
                     
                     String displayType = "Transaction";
                     String cashFlow = "0.00";
-                    double rowBalance = runningBalance; // The exact balance after this transaction
+                    double rowBalance = runningBalance; 
 
                     if (ticket != null) {
                         if (ticket.startsWith("AC-")) {
@@ -1312,12 +1265,12 @@ public final class QueueDatabase {
                         else if (ticket.startsWith("DP-")) {
                             displayType = "Deposit";
                             cashFlow = "+" + String.format("%.2f", amt);
-                            runningBalance -= amt; // Undo deposit to find previous balance
+                            runningBalance -= amt;
                         }
                         else if (ticket.startsWith("WD-")) {
                             displayType = "Withdrawal";
                             cashFlow = "-" + String.format("%.2f", amt);
-                            runningBalance += amt; // Undo withdrawal to find previous balance
+                            runningBalance += amt; 
                         }
                         else if (ticket.startsWith("TR-")) {
                             displayType = "Transfer Funds";
@@ -1336,7 +1289,7 @@ public final class QueueDatabase {
                         }
                     }
                     
-                    // Since we queried DESC, adding normally puts the newest transaction at the top
+                   
                     history.add(new String[] { 
                         rs.getString("created_at"),
                         displayType,
@@ -1380,9 +1333,7 @@ public final class QueueDatabase {
             return false;
         }
     }
-    
-    // --- ADMIN DASHBOARD FUNCTIONS ---
-
+  
     public static double[] getTodayCashFlow() {
         double cashIn = 0.0, cashOut = 0.0;
         String sql = "SELECT category, amount FROM queue_tickets WHERE status = 'DONE' AND date(updated_at) = date('now', 'localtime')";
@@ -1423,21 +1374,18 @@ public final class QueueDatabase {
         Connection conn = getConnection();
         if (conn == null) return rows;
 
-        // Fetch all users
         String userSql = "SELECT username, online FROM users";
         try (Statement userSt = conn.createStatement(); ResultSet userRs = userSt.executeQuery(userSql)) {
             while (userRs.next()) {
                 String username = userRs.getString("username");
                 boolean isOnline = userRs.getInt("online") == 1;
 
-                // Current serving
                 String currentServing = "None";
                 String activeSql = "SELECT ticket_no FROM queue_tickets WHERE status IN ('SERVING', 'HELD') AND counter LIKE '%" + username + "%' LIMIT 1";
                 try(Statement actSt = conn.createStatement(); ResultSet actRs = actSt.executeQuery(activeSql)){
                     if(actRs.next()) currentServing = actRs.getString("ticket_no");
                 }
 
-                // Stats today (FIXED: Uses 'counter' to correctly track who did the transaction)
                 int served = 0;
                 double cashIn = 0, cashOut = 0;
                 String statSql = "SELECT category, amount FROM queue_tickets WHERE status = 'DONE' AND counter LIKE '%" + username + "%' AND date(updated_at) = date('now', 'localtime')";
@@ -1453,7 +1401,7 @@ public final class QueueDatabase {
                 
                 String status = !isOnline ? "Offline" : (currentServing.equals("None") ? "Idle" : "Serving");
                 
-                // FIXED: Removed complex formatting so it shows as normal numbers without the "..."
+                
                 rows.add(new Object[]{
                     username, currentServing, status, served, 
                     cashIn, cashOut
@@ -1469,15 +1417,13 @@ public final class QueueDatabase {
         if (conn == null) return alerts;
         
         try (Statement st = conn.createStatement()) {
-            // Large withdrawals
+
             ResultSet rs1 = st.executeQuery("SELECT ticket_no, amount FROM queue_tickets WHERE status = 'DONE' AND category LIKE '%withdraw%' AND amount >= 50000 AND date(updated_at) = date('now', 'localtime')");
             while(rs1.next()) alerts.add("⚠️ Large Withdrawal: " + rs1.getString("ticket_no") + " (₱ " + rs1.getDouble("amount") + ")");
             
-            // Long waits
             ResultSet rs2 = st.executeQuery("SELECT ticket_no FROM queue_tickets WHERE status = 'WAITING' AND (julianday('now', 'localtime') - julianday(created_at)) * 24 * 60 > 30");
             while(rs2.next()) alerts.add("⚠️ Long Wait: Ticket " + rs2.getString("ticket_no") + " waiting > 30 mins");
-            
-            // Idle tellers
+         
             ResultSet rs3 = st.executeQuery("SELECT username FROM users WHERE status = 'ACTIVE' AND online = 1 AND username NOT IN (SELECT counter FROM queue_tickets WHERE status IN ('SERVING', 'HELD') AND counter IS NOT NULL)");
             while(rs3.next()) alerts.add("⚠️ Idle Teller: " + rs3.getString("username") + " has no active ticket");
         } catch (SQLException ex) { }

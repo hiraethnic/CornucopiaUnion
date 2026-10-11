@@ -25,24 +25,21 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 char c = evt.getKeyChar();
                 String text = jTextField1.getText();
-                
-                // If the field is empty, allow either a letter or a digit to start
+          
                 if (text.isEmpty()) {
                     if (!Character.isLetterOrDigit(c)) {
                         evt.consume(); 
                     }
                 } 
-                // If the FIRST character is a DIGIT (Number Search Mode)
+    
                 else if (Character.isDigit(text.charAt(0))) {
-                    // Only allow digits, max 11 characters
-                    if (!Character.isDigit(c) || text.length() >= 11) {
+              if (!Character.isDigit(c) || text.length() >= 11) {
                         evt.consume(); 
                     }
                 } 
-                // If the FIRST character is a LETTER (Name Search Mode)
+     
                 else {
-                    // Only allow letters and spaces (block digits)
-                    if (Character.isDigit(c)) {
+               if (Character.isDigit(c)) {
                         evt.consume(); 
                     }
                 }
@@ -53,13 +50,11 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         AccType.setEditable(false);
         BALance.setEditable(false);
         AccName.setEditable(false);
-        
-        // Wire BOTH buttons to the existing search method
+    
         jButton2.addActionListener(this::searchAccount);
-        NAME.addActionListener(this::searchAccount); // <-- Added this to activate the NAME button
+        NAME.addActionListener(this::searchAccount); 
         LOCK.addActionListener(this::editName);
-        
-           // ID photo panel: starts empty, click the photo to open it bigger
+   
         uploadphoto.setIcon(null);
         uploadphoto.setText("No account selected");
         uploadphoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -81,15 +76,12 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         
         
         
-        
-        
-        // --- ADD THIS TO AUTO-REFRESH THE TABLE & BALANCE EVERY 3 SECONDS ---
+   
         new javax.swing.Timer(3000, e -> {
             String currentAcc = AccNo.getText().trim();
             if (!currentAcc.isEmpty()) {
-                loadHistory(currentAcc); // Pulls new transaction rows automatically
+                loadHistory(currentAcc); 
                 
-                // Updates the live balance text automatically
                 double currentBal = QueueDatabase.getBalanceByNumber(currentAcc);
                 if (currentBal >= 0) {
                     BALance.setText("PHP " + String.format("%.2f", currentBal));
@@ -131,8 +123,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
         loadHistory(details[0]);
     }
-    
-   // Stores the BLOB binary data while the account is open
+
     private byte[] currentIdBlob = null;
  
     private void showIdPhoto(String accNo) {
@@ -140,7 +131,6 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         uploadphoto.setIcon(null);
         uploadphoto.setText("Loading ID...");
  
-        // 1. Fetch the Binary Large Object (BLOB) from the database
         byte[] blobData = QueueDatabase.getAccountIdBlob(accNo);
         
         if (blobData == null || blobData.length == 0) {
@@ -150,11 +140,10 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         
         currentIdBlob = blobData;
  
-        // 2. Convert the BLOB back into an image
         try {
             javax.swing.ImageIcon icon = new javax.swing.ImageIcon(currentIdBlob);
             if (icon.getIconWidth() > 0) {
-                // Resize the image to fit the label nicely so it doesn't break your UI
+        
                 java.awt.Image img = icon.getImage().getScaledInstance(200, 150, java.awt.Image.SCALE_SMOOTH);
                 uploadphoto.setIcon(new javax.swing.ImageIcon(img));
                 uploadphoto.setText("");
@@ -171,17 +160,17 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         try {
             javax.swing.ImageIcon icon = new javax.swing.ImageIcon(currentIdBlob);
             if (icon.getIconWidth() > 0) {
-                // Show a larger pop-up of the BLOB image
+            
                 javax.swing.JScrollPane sp = new javax.swing.JScrollPane(new javax.swing.JLabel(icon));
                 sp.setPreferredSize(new java.awt.Dimension(
                         Math.min(icon.getIconWidth() + 20, 800), Math.min(icon.getIconHeight() + 20, 600)));
                 JOptionPane.showMessageDialog(this, sp, "Valid ID - " + AccName.getText(), JOptionPane.PLAIN_MESSAGE);
             } else {
-                // If the BLOB is a PDF document, extract it to a temp file and open it
+      
                 java.io.File tempPdf = java.io.File.createTempFile("ID_Document_", ".pdf");
                 java.nio.file.Files.write(tempPdf.toPath(), currentIdBlob);
                 java.awt.Desktop.getDesktop().open(tempPdf);
-                tempPdf.deleteOnExit(); // Automatically cleans up the temp file
+                tempPdf.deleteOnExit();
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Could not open the ID file.");
