@@ -109,7 +109,7 @@ public class Admindashboard extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(255, 218, 106));
+        jPanel1.setBackground(new java.awt.Color(234, 243, 255));
 
         jPanel2.setBackground(new java.awt.Color(12, 35, 74));
         jPanel2.setPreferredSize(new java.awt.Dimension(869, 93));
@@ -130,7 +130,7 @@ public class Admindashboard extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 633, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 627, Short.MAX_VALUE)
                 .addComponent(jButton1)
                 .addGap(21, 21, 21))
         );
@@ -144,23 +144,23 @@ public class Admindashboard extends javax.swing.JFrame {
                 .addContainerGap(33, Short.MAX_VALUE))
         );
 
-        jButton2.setBackground(new java.awt.Color(255, 218, 106));
+        jButton2.setBackground(new java.awt.Color(234, 243, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(12, 35, 74));
         jButton2.setText("Teller Management");
 
-        jButton3.setBackground(new java.awt.Color(255, 218, 106));
+        jButton3.setBackground(new java.awt.Color(234, 243, 255));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(12, 35, 74));
         jButton3.setText("Account Management");
 
-        jButton4.setBackground(new java.awt.Color(255, 218, 106));
+        jButton4.setBackground(new java.awt.Color(234, 243, 255));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(12, 35, 74));
         jButton4.setText("Teller Creation");
         jButton4.addActionListener(this::jButton4ActionPerformed);
 
-        jButton5.setBackground(new java.awt.Color(255, 218, 106));
+        jButton5.setBackground(new java.awt.Color(234, 243, 255));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(12, 35, 74));
         jButton5.setText("Logs");
