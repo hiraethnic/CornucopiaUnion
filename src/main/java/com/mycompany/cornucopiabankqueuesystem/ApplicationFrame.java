@@ -83,12 +83,15 @@ public class ApplicationFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel2 = new javax.swing.JPanel();
         cmbIDType = new javax.swing.JComboBox<>();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
         cmbAccountType = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         txtFullName = new javax.swing.JTextField();
         Backbtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -104,37 +107,52 @@ public class ApplicationFrame extends javax.swing.JFrame {
         setBackground(new java.awt.Color(244, 246, 249));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        cmbIDType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Philippine ID (PhilID)", "Passport", "Driver's License", "Student ID + Reg Form" }));
+        cmbIDType.addActionListener(this::cmbIDTypeActionPerformed);
+        getContentPane().add(cmbIDType, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 300, 260, 30));
+
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        cmbIDType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Philippine ID (PhilID)", "Passport", "Driver's License", "Student ID + Reg Form" }));
-        cmbIDType.addActionListener(this::cmbIDTypeActionPerformed);
-        jPanel2.add(cmbIDType, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 350, 260, 30));
+        jPanel3.setBackground(new java.awt.Color(255, 255, 102));
+        jPanel3.setForeground(new java.awt.Color(255, 204, 51));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel3.setText("BSP REQUIREMENTS & VALID IDs");
-        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 110, 310, 30));
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 310, 30));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("ACCOUNT APPLICATION DETAILS");
-        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 110, 300, 30));
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 330, 40));
 
         cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unified Card" }));
-        jPanel2.add(cmbAccountType, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 280, 260, 40));
+        jPanel2.add(cmbAccountType, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 230, 260, 40));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Full Name:");
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 150, 94, -1));
 
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("ACCOUNT APPLICATION DETAILS");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 300, 30));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("ACCOUNT APPLICATION DETAILS");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 300, 30));
+
+        jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 360, 30));
+
         txtFullName.addActionListener(this::txtFullNameActionPerformed);
-        jPanel2.add(txtFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 220, 260, 30));
+        jPanel2.add(txtFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 170, 270, 40));
 
         Backbtn.setBackground(new java.awt.Color(0, 0, 153));
         Backbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         Backbtn.setForeground(new java.awt.Color(255, 255, 255));
         Backbtn.setText("BACK");
         Backbtn.addActionListener(this::BackbtnActionPerformed);
-        jPanel2.add(Backbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 570, 80, 35));
+        jPanel2.add(Backbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 510, 80, 35));
 
         jTable2.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
@@ -149,21 +167,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
             new String [] {
                 "Category", "ID Document Name", "Qty Required"
             }
-        ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false
-            };
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(2).setResizable(false);
-        }
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 350, 170));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 380, 160));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 64));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -171,16 +178,16 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jButton1.setText("SUBMIT & PRINT TICKET");
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
         jButton1.addActionListener(this::jButton1ActionPerformed);
-        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 520, 390, 30));
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 460, 360, 30));
 
         chkPriority.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         chkPriority.setForeground(new java.awt.Color(139, 101, 8));
         chkPriority.setText("Senior / PWD / Pregnant Priority");
         chkPriority.addActionListener(this::chkPriorityActionPerformed);
-        jPanel2.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 470, 260, 30));
+        jPanel2.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 400, 345, 39));
 
-        jLabel1accountapplication.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\Accountcreation2.png")); // NOI18N
-        jPanel2.add(jLabel1accountapplication, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 780, 800));
+        jLabel1accountapplication.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\accountapplication.png")); // NOI18N
+        jPanel2.add(jLabel1accountapplication, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 880, 780));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel7.setText("Primary ID Presented:");
@@ -190,7 +197,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jLabel6.setText("Account Type:");
         jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 210, -1, -1));
 
-        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 840, 740));
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 570));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -294,11 +301,14 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel1accountapplication;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField txtFullName;
