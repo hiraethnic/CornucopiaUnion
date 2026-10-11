@@ -108,6 +108,64 @@ public final class QueueDatabase {
             return false;
         }
     }
+    
+    public static java.util.List<String[]> getAllAdmins() {
+        java.util.List<String[]> list = new java.util.ArrayList<>();
+        String sql = "SELECT full_name, username FROM admins ORDER BY id DESC";
+        Connection conn = getConnection();
+        if (conn == null) return list;
+        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(sql)) {
+            while (rs.next()) {
+                list.add(new String[]{rs.getString("full_name"), rs.getString("username")});
+            }
+        } catch (SQLException ex) { }
+        return list;
+    }
+
+    public static String[] getAdminProfile(String username) {
+        // We added 'password' to the SELECT statement here
+        String sql = "SELECT full_name, email, admin_id, contact_number, username, password FROM admins WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return null;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Added password to the returned array so it can be displayed
+                    return new String[]{
+                        rs.getString("full_name"), 
+                        rs.getString("email"), 
+                        rs.getString("admin_id"), 
+                        rs.getString("contact_number"), 
+                        rs.getString("username"),
+                        rs.getString("password")
+                    };
+                }
+            }
+        } catch (SQLException ex) {}
+        return null;
+    }
+
+    public static boolean updateAdminPassword(String username, String password) {
+        String sql = "UPDATE admins SET password = ? WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, password);
+            ps.setString(2, username);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) { return false; }
+    }
+
+    public static boolean deleteAdmin(String username) {
+        String sql = "DELETE FROM admins WHERE username = ?";
+        Connection conn = getConnection();
+        if (conn == null) return false;
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, username);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) { return false; }
+    }
 
     /**
      * Checks username + password. Returns the teller's permissions,

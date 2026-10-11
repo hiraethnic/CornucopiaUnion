@@ -19,7 +19,8 @@ public class creationAdmin extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         QueueDatabase.initializeAdminsTable();
-        
+        loadAdminList();
+        setupComboBoxLogic();
         setupPasswordValidation();
          
     }
@@ -33,6 +34,58 @@ public class creationAdmin extends javax.swing.JFrame {
             public void removeUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
             @Override
             public void changedUpdate(javax.swing.event.DocumentEvent e) { validatePassword(); }
+        });
+    }
+    
+    private void loadAdminList() {
+        SelectEmployee.removeAllItems();
+        SelectEmployee.addItem("Create a New Admin");
+        for (String[] admin : QueueDatabase.getAllAdmins()) {
+            SelectEmployee.addItem(admin[0] + " (" + admin[1] + ")");
+        }
+    }
+
+    private void setupComboBoxLogic() {
+        SelectEmployee.addActionListener(e -> {
+            String selected = (String) SelectEmployee.getSelectedItem();
+            if (selected == null) return;
+
+            if (selected.equals("Create a New Admin")) {
+                jButton5.setText("Create a new admin");
+                jButton4.setText("Clear form");
+                
+                // Unlock all fields for a new admin
+                jTextField1.setEditable(true);
+                jTextField2.setEditable(true);
+                jTextField3.setEditable(true);
+                jTextField4.setEditable(true);
+                jTextField5.setEditable(true);
+                
+                jButton4ActionPerformed(null); // Clear the boxes
+            } else {
+                jButton5.setText("EDIT PASSWORD");
+                jButton4.setText("DELETE ACCOUNT");
+                
+                // Lock profile fields so only password can be edited
+                jTextField1.setEditable(false);
+                jTextField2.setEditable(false);
+                jTextField3.setEditable(false);
+                jTextField4.setEditable(false);
+                jTextField5.setEditable(false);
+                jTextField6.setText(""); 
+                
+                // Pull details from database and populate
+                String username = selected.substring(selected.lastIndexOf('(') + 1, selected.lastIndexOf(')'));
+                String[] profile = QueueDatabase.getAdminProfile(username);
+                if (profile != null) {
+                    jTextField1.setText(profile[0]);
+                    jTextField2.setText(profile[1]);
+                    jTextField3.setText(profile[2]);
+                    jTextField4.setText(profile[3]);
+                    jTextField5.setText(profile[4]);
+                    jTextField6.setText(profile[5]);
+                }
+            }
         });
     }
 
@@ -85,6 +138,9 @@ public class creationAdmin extends javax.swing.JFrame {
         jTextField6 = new javax.swing.JTextField();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        SelectEmployee = new javax.swing.JComboBox<>();
+        BACK = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -192,7 +248,7 @@ public class creationAdmin extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
@@ -258,6 +314,16 @@ public class creationAdmin extends javax.swing.JFrame {
         jButton5.setText("Create account");
         jButton5.addActionListener(this::jButton5ActionPerformed);
 
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(12, 35, 74));
+        jLabel2.setText("Select Admin:");
+
+        SelectEmployee.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        SelectEmployee.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Create a New Admin" }));
+
+        BACK.setText("BACK");
+        BACK.addActionListener(this::BACKActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -268,26 +334,40 @@ public class creationAdmin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(28, 28, 28)
+                        .addComponent(BACK)
+                        .addGap(226, 226, 226)
                         .addComponent(jButton4)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton5)))
+                        .addComponent(jButton5)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(SelectEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton5)
-                    .addComponent(jButton4))
-                .addGap(0, 34, Short.MAX_VALUE))
+                    .addComponent(jButton4)
+                    .addComponent(BACK))
+                .addGap(37, 37, 37))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -298,7 +378,7 @@ public class creationAdmin extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -309,65 +389,96 @@ public class creationAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-      jTextField1.setText("");
-      jTextField2.setText("");
-      jTextField3.setText("");
-      jTextField4.setText("");
-      jTextField5.setText("");
-      jTextField6.setText("");
-      jTextField3.requestFocus();
+      if (jButton4.getText().equals("DELETE ACCOUNT")) {
+            String selected = (String) SelectEmployee.getSelectedItem();
+            String username = selected.substring(selected.lastIndexOf('(') + 1, selected.lastIndexOf(')'));
+            
+            int choice = javax.swing.JOptionPane.showConfirmDialog(this, "Permanently delete admin " + username + "?", "Confirm", javax.swing.JOptionPane.YES_NO_OPTION);
+            if (choice == javax.swing.JOptionPane.YES_OPTION) {
+                if (QueueDatabase.deleteAdmin(username)) {
+                    ValidationUtils.showSuccess(this, "Admin account deleted.");
+                    loadAdminList(); // Reset back to creation mode
+                } else {
+                    ValidationUtils.showError(this, "Failed to delete admin.");
+                }
+            }
+            return;
+        }
+
+        // If in CLEAR mode, just wipe the text boxes
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField3.setText("");
+        jTextField4.setText("");
+        jTextField5.setText("");
+        jTextField6.setText("");
+        
+        if (jTextField3.isEditable()) {
+            jTextField3.requestFocus();
+        }
       
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-    String fullName = jTextField1.getText();
-    String email    = jTextField2.getText();
-    String adminId  = jTextField3.getText();
-    String contact  = jTextField4.getText();
-    String username = jTextField5.getText();
-    // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField.
-    String password = jTextField6.getText();
-    boolean hasLength = password.length() >= 8;
-    boolean hasUpper = password.matches(".*[A-Z].*");
-    boolean hasLower = password.matches(".*[a-z].*");
-    boolean hasNumber = password.matches(".*\\d.*");
-    boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
+        String password = jTextField6.getText();
+        boolean hasLength = password.length() >= 8;
+        boolean hasUpper = password.matches(".*[A-Z].*");
+        boolean hasLower = password.matches(".*[a-z].*");
+        boolean hasNumber = password.matches(".*\\d.*");
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
 
-    if (!ValidationUtils.isValidName(fullName)) {
-        ValidationUtils.showError(this, "Enter a valid full name (letters only).");
-        return;
-    }
-    if (!ValidationUtils.isValidReferenceNumber(adminId)) {
-        ValidationUtils.showError(this, "Admin ID must be 4-30 letters, numbers or hyphens.");
-        return;
-    }
-    if (!ValidationUtils.isValidEmail(email)) {
-        ValidationUtils.showError(this, "Enter a valid email address.");
-        return;
-    }
-    if (!ValidationUtils.isValidContactNumber(contact)) {
-        ValidationUtils.showError(this, "Contact number must look like 09123456789 or +639123456789.");
-        return;
-    }
-    if (!ValidationUtils.isValidUsername(username)) {
-        ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
-        return;
-    }
-    if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
-        ValidationUtils.showError(this, "Password must be at least 8 characters and include an uppercase letter, lowercase letter, a number, and a special character.");
-        return;
-    }
-    if (QueueDatabase.adminExists(adminId, username)) {
-        ValidationUtils.showError(this, "That Admin ID or username is already taken.");
-        return;
-    }
+        if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
+            ValidationUtils.showError(this, "Password must be at least 8 characters and include an uppercase letter, lowercase letter, a number, and a special character.");
+            return;
+        }
 
-    if (QueueDatabase.createAdmin(adminId, fullName, email, contact, username, password)) {
-        ValidationUtils.showSuccess(this, "Admin account created.");
-        jButton4ActionPerformed(null);   // clear the form
-    } else {
-        ValidationUtils.showError(this, "Could not save the admin. Please try again.");
-    }
+        // If in EDIT mode, only update the password
+        if (jButton5.getText().equals("EDIT PASSWORD")) {
+            String selected = (String) SelectEmployee.getSelectedItem();
+            String username = selected.substring(selected.lastIndexOf('(') + 1, selected.lastIndexOf(')'));
+            
+            if (QueueDatabase.updateAdminPassword(username, password)) {
+                ValidationUtils.showSuccess(this, "Password updated successfully for " + username);
+                jTextField6.setText("");
+            } else {
+                ValidationUtils.showError(this, "Failed to update password.");
+            }
+            return;
+        }
+
+        // If in CREATE mode, save the whole new profile
+        String fullName = jTextField1.getText();
+        String email    = jTextField2.getText();
+        String adminId  = jTextField3.getText();
+        String contact  = jTextField4.getText();
+        String username = jTextField5.getText();
+
+        if (!ValidationUtils.isValidName(fullName)) {
+            ValidationUtils.showError(this, "Enter a valid full name (letters only)."); return;
+        }
+        if (!ValidationUtils.isValidReferenceNumber(adminId)) {
+            ValidationUtils.showError(this, "Admin ID must be 4-30 letters, numbers or hyphens."); return;
+        }
+        if (!ValidationUtils.isValidEmail(email)) {
+            ValidationUtils.showError(this, "Enter a valid email address."); return;
+        }
+        if (!ValidationUtils.isValidContactNumber(contact)) {
+            ValidationUtils.showError(this, "Contact number must look like 09123456789 or +639123456789."); return;
+        }
+        if (!ValidationUtils.isValidUsername(username)) {
+            ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -)."); return;
+        }
+        if (QueueDatabase.adminExists(adminId, username)) {
+            ValidationUtils.showError(this, "That Admin ID or username is already taken."); return;
+        }
+
+        if (QueueDatabase.createAdmin(adminId, fullName, email, contact, username, password)) {
+            ValidationUtils.showSuccess(this, "Admin account created.");
+            loadAdminList(); // Refresh the combobox
+            jButton4ActionPerformed(null); 
+        } else {
+            ValidationUtils.showError(this, "Could not save the admin. Please try again.");
+        }
      
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -375,6 +486,11 @@ public class creationAdmin extends javax.swing.JFrame {
     new Loginadminteller().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_logoutActionPerformed
+
+    private void BACKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BACKActionPerformed
+         new Admindashboard().setVisible(true);
+       this.dispose();
+    }//GEN-LAST:event_BACKActionPerformed
 
     /**
      * @param args the command line arguments
@@ -411,12 +527,15 @@ public class creationAdmin extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BACK;
     private javax.swing.JLabel ContactNum;
     private javax.swing.JLabel Emailadd;
+    private javax.swing.JComboBox<String> SelectEmployee;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;

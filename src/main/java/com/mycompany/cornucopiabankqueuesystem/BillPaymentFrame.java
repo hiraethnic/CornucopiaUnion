@@ -64,16 +64,8 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         // Automatically add "+63" if a Telecom biller is selected
         cmbBiller.addActionListener(evt -> {
-            String selectedBiller = (String) cmbBiller.getSelectedItem();
-            if (selectedBiller != null) {
-                if (selectedBiller.contains("Globe") || selectedBiller.contains("Smart")) {
-                    txtRefNumber.setText("+63");
-                } else {
-                    txtRefNumber.setText(""); // Clears it for normal billers
-                }
-            }
+            txtRefNumber.setText(""); 
         });
-        
         // Trigger it once at startup so it loads the first category correctly
         if (cmbCategory.getItemCount() > 0) {
             cmbCategory.setSelectedIndex(0);
@@ -411,13 +403,27 @@ public class BillPaymentFrame extends javax.swing.JFrame {
     txtRefNumber.addKeyListener(new java.awt.event.KeyAdapter() {
         public void keyTyped(java.awt.event.KeyEvent evt) {
             char c = evt.getKeyChar();
-            String current = txtRefNumber.getText();
-            if (c == '+') {
-                if (!current.isEmpty()) evt.consume();   // "+" only as the first character
+            
+            // 1. Block letters and symbols (numbers only)
+            if (!Character.isDigit(c)) {
+                evt.consume();
                 return;
             }
-            if (!Character.isDigit(c)
-                    || current.length() >= ValidationUtils.billReferenceMaxLength(current)) {
+            
+            // 2. Set the maximum length based on the selected biller
+            String selectedBiller = cmbBiller.getSelectedItem() != null ? cmbBiller.getSelectedItem().toString() : "";
+            int maxLen = 20; // Default fallback
+            
+            if (selectedBiller.equals("Meralco") || selectedBiller.contains("Globe") || selectedBiller.contains("PLDT")) {
+                maxLen = 10;
+            } else if (selectedBiller.equals("Maynilad") || selectedBiller.equals("Pag-IBIG Fund")) {
+                maxLen = 12;
+            } else if (selectedBiller.equals("SSS (PRN Payment)")) {
+                maxLen = 13;
+            }
+            
+            // 3. Stop them from typing if they hit the limit
+            if (txtRefNumber.getText().length() >= maxLen) {
                 evt.consume();
             }
         }
