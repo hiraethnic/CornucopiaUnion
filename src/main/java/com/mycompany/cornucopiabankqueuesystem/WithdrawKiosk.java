@@ -48,7 +48,6 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jLabel16 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
@@ -97,10 +96,6 @@ public class WithdrawKiosk extends javax.swing.JFrame {
         jLabel16.setText("WITHDRAW DETAILS");
         jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 110, -1, -1));
         jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(472, 190, 300, 31));
-
-        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel11.setText("Transaction Details");
-        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(379, 77, -1, -1));
 
         jTextField2.addActionListener(this::jTextField2ActionPerformed);
         jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 320, 300, 30));
@@ -330,7 +325,6 @@ public class WithdrawKiosk extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;

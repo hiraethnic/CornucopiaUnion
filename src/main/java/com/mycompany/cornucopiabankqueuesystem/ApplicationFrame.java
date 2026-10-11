@@ -20,8 +20,59 @@ public class ApplicationFrame extends javax.swing.JFrame {
         QueueDatabase.initialize();
         setLocationRelativeTo(null);
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
-       
+        makeTransparent();
     }
+    
+    private void makeTransparent() {
+    // ---- JTextField ----
+    txtFullName.setOpaque(false);
+    txtFullName.setBackground(new java.awt.Color(0, 0, 0, 0));
+    txtFullName.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5)); // remove border (optional)
+
+    // ---- JComboBox ----
+    cmbIDType.setOpaque(false);
+    cmbAccountType.setOpaque(false);
+    cmbIDType.setBackground(new java.awt.Color(0, 0, 0, 0));
+    cmbAccountType.setBackground(new java.awt.Color(0, 0, 0, 0));
+    cmbIDType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+    cmbAccountType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+
+    // Make the combo's rendered (selected/list) item transparent too
+    javax.swing.ListCellRenderer<? super String> transparentRenderer = new javax.swing.DefaultListCellRenderer() {
+        @Override
+        public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value,
+                int index, boolean isSelected, boolean cellHasFocus) {
+            javax.swing.JLabel label = (javax.swing.JLabel) super.getListCellRendererComponent(
+                    list, value, index, isSelected, cellHasFocus);
+            if (index == -1) {            // the currently displayed item (not the dropdown list)
+                label.setOpaque(false);
+            }
+            return label;
+        }
+    };
+    cmbIDType.setRenderer(transparentRenderer);
+    cmbAccountType.setRenderer(transparentRenderer);
+
+    // ---- JTable ----
+    jTable2.setOpaque(false);
+    jTable2.setShowGrid(false);
+    jTable2.setBackground(new java.awt.Color(0, 0, 0, 0));
+    jTable2.setIntercellSpacing(new java.awt.Dimension(0, 0));
+    jTable2.getTableHeader().setOpaque(false);
+    jTable2.getTableHeader().setBackground(new java.awt.Color(0, 0, 0, 0));
+
+    // Transparent cell renderer
+    javax.swing.table.DefaultTableCellRenderer cellRenderer = new javax.swing.table.DefaultTableCellRenderer();
+    cellRenderer.setOpaque(false);
+    jTable2.setDefaultRenderer(Object.class, cellRenderer);
+
+    // The scroll pane and its viewport must be transparent as well
+    jScrollPane2.setOpaque(false);
+    jScrollPane2.getViewport().setOpaque(false);
+    jScrollPane2.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+    jScrollPane2.setViewportBorder(null);
+    jScrollPane2.getColumnHeader().setOpaque(false);
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -32,85 +83,61 @@ public class ApplicationFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cmbIDType = new javax.swing.JComboBox<>();
+        jPanel2 = new javax.swing.JPanel();
+        cmbAccountType = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
+        txtFullName = new javax.swing.JTextField();
+        Backbtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        txtFullName = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        cmbAccountType = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        cmbIDType = new javax.swing.JComboBox<>();
-        chkPriority = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
-        Backbtn = new javax.swing.JButton();
+        chkPriority = new javax.swing.JCheckBox();
+        jLabel1accountapplication = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Cornucopia Union - Account Application");
         setBackground(new java.awt.Color(244, 246, 249));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setBackground(new java.awt.Color(12, 35, 74));
+        cmbIDType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Philippine ID (PhilID)", "Passport", "Driver's License", "Student ID + Reg Form" }));
+        cmbIDType.addActionListener(this::cmbIDTypeActionPerformed);
+        getContentPane().add(cmbIDType, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 300, 260, 30));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
-        jLabel1.setText("Centria Unified");
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("New Account Application Form");
+        cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unified Card" }));
+        jPanel2.add(cmbAccountType, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 230, 260, 40));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(388, 388, 388)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(353, 353, 353)
-                        .addComponent(jLabel2)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel2)
-                .addContainerGap(41, Short.MAX_VALUE))
-        );
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("Full Name:");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 150, 94, -1));
 
-        jPanel2.setBackground(new java.awt.Color(253, 220, 92));
+        jPanel1.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("BSP REQUIREMENTS & VALID IDs");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setText("ACCOUNT APPLICATION DETAILS");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 300, 30));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(77, 77, 77)
-                .addComponent(jLabel3)
-                .addContainerGap(88, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
+        jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 360, 30));
 
+        txtFullName.addActionListener(this::txtFullNameActionPerformed);
+        jPanel2.add(txtFullName, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 170, 270, 40));
+
+        Backbtn.setBackground(new java.awt.Color(0, 0, 153));
+        Backbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Backbtn.setForeground(new java.awt.Color(255, 255, 255));
+        Backbtn.setText("BACK");
+        Backbtn.addActionListener(this::BackbtnActionPerformed);
+        jPanel2.add(Backbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 510, 80, 35));
+
+        jTable2.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Primary", "Philippine ID (PhilID)", "1 Original"},
@@ -126,46 +153,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        jPanel3.setBackground(new java.awt.Color(253, 220, 92));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel4.setText("APPLICANT DETAILS");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(174, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addGap(169, 169, 169))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel4)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setText("Full Name:");
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setText("Account Type:");
-
-        cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unified Card" }));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Primary ID Presented:");
-
-        cmbIDType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Philippine ID (PhilID)", "Passport", "Driver's License", "Student ID + Reg Form" }));
-        cmbIDType.addActionListener(this::cmbIDTypeActionPerformed);
-
-        chkPriority.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        chkPriority.setForeground(new java.awt.Color(139, 101, 8));
-        chkPriority.setText("Senior / PWD / Pregnant Priority");
-        chkPriority.addActionListener(this::chkPriorityActionPerformed);
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 380, 160));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 64));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -173,74 +161,26 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jButton1.setText("SUBMIT & PRINT TICKET");
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
         jButton1.addActionListener(this::jButton1ActionPerformed);
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 460, 360, 30));
 
-        Backbtn.setBackground(new java.awt.Color(0, 0, 153));
-        Backbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Backbtn.setForeground(new java.awt.Color(255, 255, 255));
-        Backbtn.setText("BACK");
-        Backbtn.addActionListener(this::BackbtnActionPerformed);
+        chkPriority.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        chkPriority.setForeground(new java.awt.Color(139, 101, 8));
+        chkPriority.setText("Senior / PWD / Pregnant Priority");
+        chkPriority.addActionListener(this::chkPriorityActionPerformed);
+        jPanel2.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 400, 345, 39));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(chkPriority, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
-                        .addComponent(cmbIDType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cmbAccountType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txtFullName, javax.swing.GroupLayout.Alignment.LEADING)))
-                .addGap(23, 23, 23))
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Backbtn)
-                .addGap(56, 56, 56))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel6)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbAccountType, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cmbIDType, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
-                .addComponent(chkPriority, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Backbtn, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(9, Short.MAX_VALUE))
-        );
+        jLabel1accountapplication.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\accountapplication.png")); // NOI18N
+        jPanel2.add(jLabel1accountapplication, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 880, 780));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("Primary ID Presented:");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 410, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText("Account Type:");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 210, -1, -1));
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 570));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -307,6 +247,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
     txtFullName.requestFocusInWindow();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void txtFullNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFullNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFullNameActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -339,15 +283,12 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cmbIDType;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel1accountapplication;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField txtFullName;
