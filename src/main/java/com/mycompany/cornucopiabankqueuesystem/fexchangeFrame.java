@@ -98,12 +98,7 @@ package com.mycompany.cornucopiabankqueuesystem;
             setLocationRelativeTo(null);
             
             // --- ADD THIS TO MAKE TABLE TRANSPARENT ---
-            jScrollPane1.setOpaque(false);
-            jScrollPane1.getViewport().setOpaque(false);
-            jScrollPane1.setBackground(new java.awt.Color(0, 0, 0, 0));
-            jScrollPane1.getViewport().setBackground(new java.awt.Color(0, 0, 0, 0));
-            jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-
+            
             // 2. Make the table and all the rows invisible
             jTable1.setOpaque(false);
             jTable1.setBackground(new java.awt.Color(0, 0, 0, 0));
@@ -143,10 +138,11 @@ package com.mycompany.cornucopiabankqueuesystem;
             javax.swing.table.DefaultTableModel model =
                     (javax.swing.table.DefaultTableModel) jTable1.getModel();
             model.setRowCount(0);
+            
             for (int i = 0; i < jComboBox1.getItemCount(); i++) {
                 String entry = jComboBox1.getItemAt(i);
                 
-                // This grabs the short code (e.g., "SAR", "USD")
+                // Grabs the short code (e.g., "SAR", "JPY")
                 String code = extractCurrencyCode(entry); 
                 if (code == null) continue;
                 
@@ -155,12 +151,24 @@ package com.mycompany.cornucopiabankqueuesystem;
                 
                 String country = entry;
                 
+                // Grabs just the country name from the combo box text
                 if (entry.contains(" - ") && entry.contains("(")) {
-                    // Grabs just the country name (e.g., "Saudi Arabia")
                     country = entry.substring(entry.indexOf(" - ") + 3, entry.indexOf(" (")).trim();
                 }
                 
-                // Adds the Country, the Short Code, and the Rate to the table
+                // --- QUICK FIXES FOR TEXT DISPLAY ---
+                if (country.equals("Saudi Arabia")) {
+                    country = "Saudi";
+                } else if (country.equals("United Arab Emirates")) {
+                    country = "UAE";
+                }
+                
+                if (code.equals("JPY")) {
+                    code = "YEN";
+                }
+                // ------------------------------------
+                
+                // Adds the Cleaned Country, Code, and Rate to the table
                 model.addRow(new Object[]{country, code, String.format("%,.2f", rate)});
             }
         }
@@ -246,20 +254,20 @@ package com.mycompany.cornucopiabankqueuesystem;
         jLabel2.setText("EXCHANGE RATES (TO PHP)");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
 
-        jTable1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jTable1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Country / Currency", "Code", "Rate (PHP)"
+                "Country ", "Currency", "Rate (PHP)"
             }
         ));
         jTable1.setOpaque(false);
         jTable1.setRowHeight(28);
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 170, 380, 320));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 380, 400));
 
         label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         label.setText("Customer Name:");
