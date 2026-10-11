@@ -51,20 +51,19 @@ public class Admin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
-        Emailadd = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
+        Emailadd = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
         ContactNum = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
-        jPanel4 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
@@ -72,15 +71,12 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox4 = new javax.swing.JCheckBox();
         jCheckBox5 = new javax.swing.JCheckBox();
         foreignexchan = new javax.swing.JCheckBox();
-        jPanel5 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTextField5 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -88,251 +84,121 @@ public class Admin extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(244, 246, 249));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(12, 35, 74));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 153, 0));
-        jLabel1.setText("ADMIN PORTAL - ACCOUNT CREATION AND SCOPE ASSIGNMENT");
-
-        jButton1.setBackground(new java.awt.Color(12, 35, 74));
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Logout");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(-5, 0, 690, -1));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(23, 42, 107), 2, true));
-        jPanel3.setOpaque(false);
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel2.setText("Employee information");
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel3.setText("Employee full name");
-
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
-
-        Emailadd.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        Emailadd.setText("Email Address");
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel5.setText("Employee ID");
-
-        ContactNum.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        ContactNum.setText("Contact Number");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Emailadd)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(86, 86, 86)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField3)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(ContactNum))
-                        .addGap(0, 170, Short.MAX_VALUE))
-                    .addComponent(jTextField4))
-                .addContainerGap())
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Emailadd)
-                    .addComponent(ContactNum))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32))
-        );
-
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 128, 660, -1));
-
-        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 23, 42), 2, true));
-        jPanel4.setOpaque(false);
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel7.setText("System permissions and scope matrix");
-
-        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox1.setText("Account creation");
-
-        jCheckBox2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox2.setText("Cash deposits");
-
-        jCheckBox3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox3.setText("Billy Payment");
-
-        jCheckBox4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox4.setText("Fund transfers");
-
-        jCheckBox5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox5.setText("Cash withdrawals");
-
-        foreignexchan.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        foreignexchan.setText("Foreign Exchange");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jCheckBox2)
-                            .addComponent(jCheckBox3))
-                        .addGap(183, 183, 183)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(foreignexchan)
-                            .addComponent(jCheckBox5)
-                            .addComponent(jCheckBox4))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jCheckBox1)
-                    .addComponent(jCheckBox4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox2)
-                    .addComponent(jCheckBox5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jCheckBox3)
-                    .addComponent(foreignexchan, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 358, 660, -1));
-
-        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 23, 42), 2, true));
-        jPanel5.setOpaque(false);
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 102));
-        jLabel8.setText("Security credentials");
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel9.setText("System username");
-
-        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jLabel10.setText("Initial password");
-
-        jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel8)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(27, 27, 27))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel8)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 526, 660, -1));
-
         jButton4.setBackground(new java.awt.Color(220, 38, 38));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("CLEAR FORM");
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 640, -1, -1));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 530, -1, -1));
 
         jButton5.setBackground(new java.awt.Color(30, 58, 138));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("CREATE ACCOUNT");
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 640, -1, -1));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 530, -1, -1));
 
         jButton2.setBackground(new java.awt.Color(12, 35, 74));
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("BACK");
         jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 70, 130, 40));
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 120, 100, 30));
+
+        jButton1.setBackground(new java.awt.Color(12, 35, 74));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Logout");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 40, 100, 40));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel2.setText("Employee information");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 120, -1, -1));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel3.setText("Employee full name");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 160, 149, -1));
+
+        jTextField1.addActionListener(this::jTextField1ActionPerformed);
+        jPanel1.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, 220, 20));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel5.setText("Employee ID");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 160, -1, -1));
+
+        jTextField3.addActionListener(this::jTextField3ActionPerformed);
+        jPanel1.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 180, 180, 20));
+
+        Emailadd.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        Emailadd.setText("Email Address");
+        jPanel1.add(Emailadd, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, -1, -1));
+
+        jTextField2.addActionListener(this::jTextField2ActionPerformed);
+        jPanel1.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 210, 20));
+
+        ContactNum.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        ContactNum.setText("Contact Number");
+        jPanel1.add(ContactNum, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 220, -1, -1));
+
+        jTextField4.addActionListener(this::jTextField4ActionPerformed);
+        jPanel1.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 240, 210, 20));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel7.setText("System permissions and scope matrix");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, -1, -1));
+
+        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox1.setText("Account creation");
+        jPanel1.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, -1, -1));
+
+        jCheckBox2.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox2.setText("Cash deposits");
+        jCheckBox2.addActionListener(this::jCheckBox2ActionPerformed);
+        jPanel1.add(jCheckBox2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 350, -1, -1));
+
+        jCheckBox3.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox3.setText("Billy Payment");
+        jCheckBox3.addActionListener(this::jCheckBox3ActionPerformed);
+        jPanel1.add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, -1, -1));
+
+        jCheckBox4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox4.setText("Fund transfers");
+        jCheckBox4.addActionListener(this::jCheckBox4ActionPerformed);
+        jPanel1.add(jCheckBox4, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 320, -1, -1));
+
+        jCheckBox5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox5.setText("Cash withdrawals");
+        jPanel1.add(jCheckBox5, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 340, -1, -1));
+
+        foreignexchan.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        foreignexchan.setText("Foreign Exchange");
+        jPanel1.add(foreignexchan, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 360, -1, -1));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 102));
+        jLabel8.setText("Security credentials");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, -1, -1));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel9.setText("System username");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, -1, -1));
+
+        jTextField5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField5.addActionListener(this::jTextField5ActionPerformed);
+        jPanel1.add(jTextField5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 490, 283, -1));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jLabel10.setText("Initial password");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 470, -1, -1));
+
+        jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jTextField6.addActionListener(this::jTextField6ActionPerformed);
+        jPanel1.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 490, 270, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\IMAGEADMIN&TELLER\\Tellercreation (1).png")); // NOI18N
+        jLabel1.setText("jLabel1");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 680, -1));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 680, -1));
 
@@ -421,15 +287,47 @@ public class Admin extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         new Loginadminteller().setVisible(true);
-       this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
        new Admindashboard().setVisible(true);
        this.dispose();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new Loginadminteller().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox2ActionPerformed
+
+    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox3ActionPerformed
+
+    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox4ActionPerformed
+
+    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField5ActionPerformed
+
+    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField6ActionPerformed
+
+    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -530,10 +428,6 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;

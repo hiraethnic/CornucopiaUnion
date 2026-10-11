@@ -153,146 +153,21 @@ public class AdminRecord extends javax.swing.JFrame {
 
         jScrollBar1 = new javax.swing.JScrollBar();
         ACCOUNTPANEL = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        TRANSACTIONPANEL = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton3 = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        panel1 = new java.awt.Panel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jPanel3 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
         jTextField1 = new javax.swing.JTextField();
         jButton6 = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         AccountList = new javax.swing.JTable();
         jButton5 = new javax.swing.JButton();
+        adminRecords = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         ACCOUNTPANEL.setBackground(new java.awt.Color(234, 243, 255));
+        ACCOUNTPANEL.setRequestFocusEnabled(false);
         ACCOUNTPANEL.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel2.setBackground(new java.awt.Color(12, 35, 74));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(251, 191, 36));
-        jLabel1.setText("ADMIN RECORD SYSTEM LOGS");
-
-        jButton1.setBackground(new java.awt.Color(12, 35, 74));
-        jButton1.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Logout");
-        jButton1.addActionListener(this::jButton1ActionPerformed);
-
-        jPanel1.setLayout(null);
-
-        TRANSACTIONPANEL.setBackground(new java.awt.Color(204, 204, 204));
-        TRANSACTIONPANEL.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jPanel5.setBackground(new java.awt.Color(15, 23, 42));
-
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("ADMIN TRANSATION LOGS");
-
-        jButton3.setBackground(new java.awt.Color(0, 23, 42));
-        jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("Logout");
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 392, Short.MAX_VALUE)
-                .addComponent(jButton3)
-                .addGap(32, 32, 32))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jButton3))
-                .addContainerGap(23, Short.MAX_VALUE))
-        );
-
-        TRANSACTIONPANEL.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, -1));
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null}
-            },
-            new String [] {
-                "Ticket No.", "Date", "Transaction Type", "Name", "Amount", "Reference No. ", "Counter", "Status"
-            }
-        ));
-        jScrollPane2.setViewportView(jTable1);
-
-        TRANSACTIONPANEL.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 750, 510));
-
-        javax.swing.GroupLayout panel1Layout = new javax.swing.GroupLayout(panel1);
-        panel1.setLayout(panel1Layout);
-        panel1Layout.setHorizontalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 750, Short.MAX_VALUE)
-        );
-        panel1Layout.setVerticalGroup(
-            panel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        TRANSACTIONPANEL.add(panel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 750, 50));
-
-        jPanel1.add(TRANSACTIONPANEL);
-        TRANSACTIONPANEL.setBounds(0, 0, 670, 630);
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 751, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(32, 32, 32))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jLabel1))
-                .addContainerGap(17, Short.MAX_VALUE))
-        );
-
-        ACCOUNTPANEL.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 60));
-        ACCOUNTPANEL.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 260, 50, 10));
-
-        jPanel3.setBackground(new java.awt.Color(234, 243, 255));
-
-        jButton4.setBackground(new java.awt.Color(30, 58, 138));
-        jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(255, 255, 255));
-        jButton4.setText("REFRESH");
-        jButton4.addActionListener(this::jButton4ActionPerformed);
 
         jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
@@ -301,44 +176,28 @@ public class AdminRecord extends javax.swing.JFrame {
                 jTextField1KeyReleased(evt);
             }
         });
+        ACCOUNTPANEL.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 330, 30));
 
         jButton6.setBackground(new java.awt.Color(30, 58, 138));
         jButton6.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("SEARCH");
         jButton6.addActionListener(this::jButton6ActionPerformed);
+        ACCOUNTPANEL.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, 30));
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel3.setText("TRANSACTION LOGS");
+        jButton4.setBackground(new java.awt.Color(30, 58, 138));
+        jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("REFRESH");
+        jButton4.addActionListener(this::jButton4ActionPerformed);
+        ACCOUNTPANEL.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 270, 120, 40));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addGap(121, 121, 121)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 284, Short.MAX_VALUE)
-                .addComponent(jButton4)
-                .addGap(27, 27, 27))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6)
-                    .addComponent(jLabel3))
-                .addContainerGap())
-        );
-
-        ACCOUNTPANEL.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 1090, 50));
+        jButton1.setBackground(new java.awt.Color(12, 35, 74));
+        jButton1.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Logout");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+        ACCOUNTPANEL.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 30, 90, 40));
 
         AccountList.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         AccountList.setModel(new javax.swing.table.DefaultTableModel(
@@ -359,25 +218,20 @@ public class AdminRecord extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(AccountList);
 
-        ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1090, 390));
+        ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 920, 480));
 
         jButton5.setBackground(new java.awt.Color(30, 58, 138));
         jButton5.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("BACK");
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        ACCOUNTPANEL.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(1010, 510, -1, -1));
+        ACCOUNTPANEL.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 220, 120, 40));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ACCOUNTPANEL, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(ACCOUNTPANEL, javax.swing.GroupLayout.DEFAULT_SIZE, 545, Short.MAX_VALUE)
-        );
+        adminRecords.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\IMAGEADMIN&TELLER\\adminrecord (1).png")); // NOI18N
+        adminRecords.setText("jLabel1");
+        ACCOUNTPANEL.add(adminRecords, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 1100, 960));
+
+        getContentPane().add(ACCOUNTPANEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 700));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -385,20 +239,6 @@ public class AdminRecord extends javax.swing.JFrame {
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         loadTransactionLogs();
     }//GEN-LAST:event_jButton4ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-     new Loginadminteller().setVisible(true);
-       this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-      
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
-       loadTransactionLogs(jTextField1.getText());
-      
-    }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
@@ -412,6 +252,20 @@ public class AdminRecord extends javax.swing.JFrame {
         
         this.dispose();
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        new Loginadminteller().setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
+        loadTransactionLogs(jTextField1.getText());
+
+    }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -441,25 +295,13 @@ public class AdminRecord extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ACCOUNTPANEL;
     private javax.swing.JTable AccountList;
-    private javax.swing.JPanel TRANSACTIONPANEL;
+    private javax.swing.JLabel adminRecords;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollBar jScrollBar1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
-    private java.awt.Panel panel1;
     // End of variables declaration//GEN-END:variables
 }
