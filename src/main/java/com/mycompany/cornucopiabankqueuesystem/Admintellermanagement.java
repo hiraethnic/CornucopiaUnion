@@ -697,7 +697,7 @@ private void loadActivity(String username) {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // TODO add your handling code here:
-         Admin adminnaframe = new Admin();
+         Admindashboard adminnaframe = new Admindashboard();
         
         adminnaframe.setVisible(true);
         

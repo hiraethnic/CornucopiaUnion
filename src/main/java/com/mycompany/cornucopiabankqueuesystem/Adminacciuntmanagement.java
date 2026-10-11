@@ -531,7 +531,7 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-        Admin adminnaframe = new Admin();
+      Admindashboard adminnaframe = new Admindashboard();
         
         adminnaframe.setVisible(true);
         
