@@ -85,10 +85,13 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         cmbIDType = new javax.swing.JComboBox<>();
         jPanel2 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
         cmbAccountType = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         txtFullName = new javax.swing.JTextField();
         Backbtn = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -111,6 +114,16 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel3.setBackground(new java.awt.Color(255, 255, 102));
+        jPanel3.setForeground(new java.awt.Color(255, 204, 51));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setText("BSP REQUIREMENTS & VALID IDs");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 0, 310, 30));
+
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 330, 40));
+
         cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unified Card" }));
         jPanel2.add(cmbAccountType, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 230, 260, 40));
 
@@ -124,6 +137,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("ACCOUNT APPLICATION DETAILS");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 300, 30));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("ACCOUNT APPLICATION DETAILS");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, 300, 30));
 
         jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 100, 360, 30));
 
@@ -284,11 +301,14 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel1accountapplication;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextField txtFullName;
