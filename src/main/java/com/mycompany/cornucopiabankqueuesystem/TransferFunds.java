@@ -90,7 +90,7 @@ public class TransferFunds extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
+        jLabel2transferfunds = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -142,8 +142,8 @@ public class TransferFunds extends javax.swing.JFrame {
         jButton7.addActionListener(this::jButton7ActionPerformed);
         jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 500, -1, 30));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\transfund1 (1).png")); // NOI18N
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 600));
+        jLabel2transferfunds.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\transfund1 (1).png")); // NOI18N
+        jPanel3.add(jLabel2transferfunds, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 600));
 
         getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(3, 0, 700, 600));
 
@@ -383,7 +383,7 @@ public class TransferFunds extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel2transferfunds;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;

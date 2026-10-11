@@ -96,21 +96,10 @@ package com.mycompany.cornucopiabankqueuesystem;
         public fexchangeFrame() {
             initComponents();
             setLocationRelativeTo(null);
+               makeTableTransparent();
+         
             
-            // --- ADD THIS TO MAKE TABLE TRANSPARENT ---
-            
-            // 2. Make the table and all the rows invisible
-            jTable1.setOpaque(false);
-            jTable1.setBackground(new java.awt.Color(0, 0, 0, 0));
-            ((javax.swing.table.DefaultTableCellRenderer) jTable1.getDefaultRenderer(Object.class)).setOpaque(false);
-            ((javax.swing.table.DefaultTableCellRenderer) jTable1.getDefaultRenderer(Object.class)).setBackground(new java.awt.Color(0, 0, 0, 0));
-
-            // 3. Make the top header row invisible
-            jTable1.getTableHeader().setOpaque(false);
-            jTable1.getTableHeader().setBackground(new java.awt.Color(0, 0, 0, 0));
-            ((javax.swing.table.DefaultTableCellRenderer) jTable1.getTableHeader().getDefaultRenderer()).setOpaque(false);
-            ((javax.swing.table.DefaultTableCellRenderer) jTable1.getTableHeader().getDefaultRenderer()).setBackground(new java.awt.Color(0, 0, 0, 0));
-            // ------------------------------------------
+            // --- ADD THIS TO MAKE TABLE TRANSP
 
             QueueDatabase.initialize();
             applyRealTimeValidation();
@@ -132,6 +121,64 @@ package com.mycompany.cornucopiabankqueuesystem;
             jComboBox1.addActionListener(evt -> updateEstimatedTotal());
             
         }
+        
+           /** Makes jTable1, its header, and the scroll pane layers fully transparent. */
+        private void makeTableTransparent() {
+            final java.awt.Color clear = new java.awt.Color(0, 0, 0, 0);
+ 
+            // Scroll pane layers
+            jScrollPane1.setOpaque(false);
+            jScrollPane1.getViewport().setOpaque(false);
+            jScrollPane1.getViewport().setBackground(clear);
+            jScrollPane1.setBorder(null);
+            if (jScrollPane1.getColumnHeader() != null) {
+                jScrollPane1.getColumnHeader().setOpaque(false);
+                jScrollPane1.getColumnHeader().setBackground(clear);
+            }
+ 
+            // Table
+            jTable1.setOpaque(false);
+            jTable1.setBackground(clear);
+            jTable1.setShowGrid(false);
+            jTable1.setIntercellSpacing(new java.awt.Dimension(0, 0));
+            jTable1.setRowSelectionAllowed(false);
+ 
+            // Cell renderer (default renderer resets opaque to true)
+            javax.swing.table.DefaultTableCellRenderer cellRenderer =
+                    new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public java.awt.Component getTableCellRendererComponent(
+                        javax.swing.JTable table, Object value, boolean isSelected,
+                        boolean hasFocus, int row, int column) {
+                    super.getTableCellRendererComponent(table, value, false, false, row, column);
+                    setOpaque(false);
+                    setBackground(clear);
+                    return this;
+                }
+            };
+            jTable1.setDefaultRenderer(Object.class, cellRenderer);
+ 
+            // Header
+            javax.swing.table.JTableHeader header = jTable1.getTableHeader();
+            header.setOpaque(false);
+            header.setBackground(clear);
+            javax.swing.table.DefaultTableCellRenderer headerRenderer =
+                    new javax.swing.table.DefaultTableCellRenderer() {
+                @Override
+                public java.awt.Component getTableCellRendererComponent(
+                        javax.swing.JTable table, Object value, boolean isSelected,
+                        boolean hasFocus, int row, int column) {
+                    super.getTableCellRendererComponent(table, value, false, false, row, column);
+                    setOpaque(false);
+                    setBackground(clear);
+                    setFont(table.getTableHeader().getFont());
+                    setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                    return this;
+                }
+            };
+            header.setDefaultRenderer(headerRenderer);
+        }
+ 
 
         /** Fills the reference exchange-rate table shown on the left panel. */
         private void populateRateTable() {
@@ -213,6 +260,7 @@ package com.mycompany.cornucopiabankqueuesystem;
         jPanel2 = new javax.swing.JPanel();
         jComboBox2 = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -228,7 +276,8 @@ package com.mycompany.cornucopiabankqueuesystem;
         txtCustomerName = new javax.swing.JTextField();
         txtForeignAmount = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        jLabel1foreexchange = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -250,9 +299,13 @@ package com.mycompany.cornucopiabankqueuesystem;
         jPanel3.setBackground(new java.awt.Color(244, 246, 249));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel7.setText("EXCHANGE RATES (TO PHP)");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
+
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel2.setText("EXCHANGE RATES (TO PHP)");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
+        jLabel2.setText("currency converter & queue ticket");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, -1, -1));
 
         jTable1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -301,7 +354,7 @@ package com.mycompany.cornucopiabankqueuesystem;
 
         chkPriority.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         chkPriority.setText("Priority Line (Senior / PWD / Pregnant)");
-        jPanel3.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 430, 450, 80));
+        jPanel3.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 430, 370, 80));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Amount in Foreign Currency:");
@@ -323,11 +376,15 @@ package com.mycompany.cornucopiabankqueuesystem;
         jLabel4.setText("Select Foreign Currency:");
         jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 230, -1, -1));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Kijetsu\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\Foreign Exchange.png")); // NOI18N
-        jLabel1.setText("jLabel1");
-        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, -1));
+        jLabel1foreexchange.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\Foreign Exchange.png")); // NOI18N
+        jLabel1foreexchange.setText("jLabel1");
+        jPanel3.add(jLabel1foreexchange, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 680));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 1, 1000, 600));
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel3.setText("EXCHANGE RATES (TO PHP)");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
+
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 1, 780, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -463,11 +520,13 @@ package com.mycompany.cornucopiabankqueuesystem;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel1foreexchange;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
