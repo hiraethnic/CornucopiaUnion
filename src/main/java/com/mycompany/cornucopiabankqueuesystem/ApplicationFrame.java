@@ -154,7 +154,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         Backbtn.addActionListener(this::BackbtnActionPerformed);
         jPanel2.add(Backbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(682, 510, 80, 35));
 
-        jTable2.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        jTable2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jTable2.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"Primary", "Philippine ID (PhilID)", "1 Original"},
@@ -170,7 +170,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable2);
 
-        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 380, 160));
+        jPanel2.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 140, 380, 160));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 64));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
