@@ -84,6 +84,25 @@ public class BillPaymentFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel4 = new javax.swing.JPanel();
+        clearbtn = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        btnBack = new javax.swing.JButton();
+        jLabel16 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jCheckBox1 = new javax.swing.JCheckBox();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtAmount = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txtAccountName = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtRefNumber = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        cmbBiller = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         cmbCategory = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
@@ -91,26 +110,7 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel17billspayment = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        cmbBiller = new javax.swing.JComboBox<>();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        txtRefNumber = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        txtAccountName = new javax.swing.JTextField();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        txtAmount = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        btnBack = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        clearbtn = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
@@ -120,101 +120,12 @@ public class BillPaymentFrame extends javax.swing.JFrame {
 
         jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel13.setText("2. Enter exact Account / Reference No.");
-        jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 230, -1, 30));
-
-        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electric Utility", "Water Utility", "Telecoms & Internet", "Government Agency", "Credit Cards & Loans" }));
-        jPanel4.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 210, 280, 30));
-
-        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel12.setText("1. Select Biller Category & Merchant.");
-        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 170, 280, 40));
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Unified Card" }));
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-        jPanel4.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 420, 200, 40));
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("4. Select Payment Mode (Cash/Check).");
-        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 300, 250, 30));
-
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel5.setText("Biller Category:");
-        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 240, 226, -1));
-
-        jLabel17billspayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\billspayment.png")); // NOI18N
-        jPanel4.add(jLabel17billspayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, -60, 710, 800));
-
-        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -10, 850, 690));
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel4.setText("BILL DETAILS");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 130, -1, 20));
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel6.setText("Selected Biller:");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 220, 100, 20));
-
-        cmbBiller.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Meralco", "Maynilad", "Globe Telecom / Globe At Home", "PLDT / Smart", "SSS (PRN Payment)", "Pag-IBIG Fund" }));
-        getContentPane().add(cmbBiller, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 240, 280, -1));
-
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setText("Account / Reference No.:");
-        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 270, 180, -1));
-
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel3.setText("BILL PAYMENT INSTRUCTIONS");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 120, -1, -1));
-        getContentPane().add(txtRefNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 290, 280, 30));
-
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel14.setText("1. Select Biller Category & Merchant.");
-        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel8.setText("Account Holder Name:");
-        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 320, -1, -1));
-
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel16.setText("5. Check Priority box if eligible.");
-        getContentPane().add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, 270, 30));
-
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel15.setText("3. Enter Account Holder Name & Amount.");
-        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 280, -1, -1));
-
-        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel9.setText("Amount Due (PHP ₱)");
-        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 370, -1, -1));
-
-        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel10.setText("Payment Mode:");
-        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 420, -1, -1));
-        getContentPane().add(txtAccountName, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 340, 280, 30));
-
-        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jCheckBox1.setForeground(new java.awt.Color(139, 101, 8));
-        jCheckBox1.setText("Senior / PWD / Pregnant Priority");
-        getContentPane().add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 490, 310, 20));
-
-        txtAmount.addActionListener(this::txtAmountActionPerformed);
-        getContentPane().add(txtAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 390, 280, 30));
-
-        jButton1.setBackground(new java.awt.Color(12, 35, 64));
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("SUBMIT & PRINT TICKET");
-        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
-        jButton1.addActionListener(this::jButton1ActionPerformed);
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 530, 400, 40));
-
-        btnBack.setBackground(new java.awt.Color(0, 0, 153));
-        btnBack.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnBack.setForeground(new java.awt.Color(255, 255, 255));
-        btnBack.setText("BACK");
-        btnBack.addActionListener(this::btnBackActionPerformed);
-        getContentPane().add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 580, -1, -1));
+        clearbtn.setBackground(new java.awt.Color(220, 38, 38));
+        clearbtn.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
+        clearbtn.setForeground(new java.awt.Color(255, 255, 255));
+        clearbtn.setText("CLEAR");
+        clearbtn.addActionListener(this::clearbtnActionPerformed);
+        jPanel4.add(clearbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 570, 100, -1));
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -226,14 +137,103 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jTextArea1.setOpaque(false);
         jScrollPane1.setViewportView(jTextArea1);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 420, 300, 190));
+        jPanel4.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, 300, 190));
 
-        clearbtn.setBackground(new java.awt.Color(220, 38, 38));
-        clearbtn.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        clearbtn.setForeground(new java.awt.Color(255, 255, 255));
-        clearbtn.setText("CLEAR");
-        clearbtn.addActionListener(this::clearbtnActionPerformed);
-        getContentPane().add(clearbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 580, -1, -1));
+        btnBack.setBackground(new java.awt.Color(0, 0, 153));
+        btnBack.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
+        btnBack.setForeground(new java.awt.Color(255, 255, 255));
+        btnBack.setText("BACK");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+        jPanel4.add(btnBack, new org.netbeans.lib.awtextra.AbsoluteConstraints(612, 570, 90, -1));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel16.setText(" Check Priority box if eligible.");
+        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 360, 270, 30));
+
+        jButton1.setBackground(new java.awt.Color(12, 35, 64));
+        jButton1.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("SUBMIT & PRINT TICKET");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
+        jButton1.addActionListener(this::jButton1ActionPerformed);
+        jPanel4.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 530, 290, 30));
+
+        jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jCheckBox1.setForeground(new java.awt.Color(139, 101, 8));
+        jCheckBox1.setText("Senior / PWD / Pregnant Priority");
+        jPanel4.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 480, 310, 20));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel3.setText("BILL PAYMENT INSTRUCTIONS");
+        jPanel4.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 110, -1, -1));
+
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel15.setText(" Enter Account Holder Name & Amount.");
+        jPanel4.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 270, -1, -1));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel10.setText("Payment Mode:");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 410, -1, -1));
+
+        txtAmount.addActionListener(this::txtAmountActionPerformed);
+        jPanel4.add(txtAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 380, 160, 20));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel9.setText("Amount Due (PHP ₱)");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 360, -1, -1));
+        jPanel4.add(txtAccountName, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, 160, -1));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel8.setText("Account Holder Name:");
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 310, -1, -1));
+        jPanel4.add(txtRefNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 280, 160, -1));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel7.setText("Account / Reference No.:");
+        jPanel4.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 260, 180, -1));
+
+        cmbBiller.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Meralco", "Maynilad", "Globe Telecom / Globe At Home", "PLDT / Smart", "SSS (PRN Payment)", "Pag-IBIG Fund" }));
+        jPanel4.add(cmbBiller, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 230, 160, 30));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setText("Selected Biller:");
+        jPanel4.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 210, 110, 20));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel4.setText("BILL DETAILS");
+        jPanel4.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 120, -1, 20));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel13.setText(" Enter exact Account / Reference No.");
+        jPanel4.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 220, -1, 30));
+
+        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electric Utility", "Water Utility", "Telecoms & Internet", "Government Agency", "Credit Cards & Loans" }));
+        jPanel4.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 180, 160, 30));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel12.setText(" Select Biller Category & Merchant.");
+        jPanel4.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 160, 280, 40));
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Unified Card" }));
+        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
+        jPanel4.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 430, 150, 30));
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setText(" Select Payment Mode (Cash/Check).");
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 310, 250, 30));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("Biller Category:");
+        jPanel4.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 160, 226, -1));
+
+        jLabel17billspayment.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\billspayment.png")); // NOI18N
+        jPanel4.add(jLabel17billspayment, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, -60, 720, 800));
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel14.setText("1. Select Biller Category & Merchant.");
+        jPanel4.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
+
+        getContentPane().add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, -10, 850, 690));
         getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
