@@ -207,7 +207,7 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
 
         getContentPane().add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 340, 370));
 
-        jLabel7.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\Images\\livedashboard.png")); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\livedashboard.png")); // NOI18N
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 750, 660));
 
         pack();
