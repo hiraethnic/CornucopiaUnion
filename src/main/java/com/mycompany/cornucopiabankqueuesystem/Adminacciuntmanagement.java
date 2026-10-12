@@ -239,11 +239,11 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
         NAME = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -277,9 +277,6 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
         jPanel3.setOpaque(false);
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 180, 270, 20));
-
         jButton2.setBackground(new java.awt.Color(30, 58, 138));
         jButton2.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
@@ -301,8 +298,11 @@ public class Adminacciuntmanagement extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(12, 35, 74));
-        jLabel2.setText("Find Account  Number:");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 210, 60));
+        jLabel2.setText("Find Account:");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 100, 60));
+
+        jTextField1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 20, 230, 20));
 
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 120, 750, 60));
 

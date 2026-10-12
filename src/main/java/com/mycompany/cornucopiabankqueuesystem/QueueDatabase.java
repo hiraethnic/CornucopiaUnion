@@ -918,6 +918,7 @@ public final class QueueDatabase {
                 int frustratedId = -1;
                 int oldestPriorityId = -1;
                 int oldestRegularId = -1;
+                int oldestCancelledId = -1;
 
                 while (rs.next()) {
                     String ticketNo = rs.getString("ticket_no");
@@ -942,6 +943,10 @@ public final class QueueDatabase {
                     }
                     if (priority == 0 && oldestRegularId == -1) {
                         oldestRegularId = id;
+                    }
+                    
+                    if (priority == -1 && oldestCancelledId == -1) {
+                        oldestCancelledId = id;
                     }
                 }
                 
@@ -970,6 +975,13 @@ public final class QueueDatabase {
                         }
                     }
                 }
+                
+                if (chosenId == -1 && oldestCancelledId != -1) {
+                chosenId = oldestCancelledId;
+                chosenIsPriority = false; // Treat as a regular customer for counter purposes
+            }
+
+            if (chosenId < 0) return null; // Queue is empty for this teller
 
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Could not look up next ticket", ex);
@@ -1471,15 +1483,15 @@ public final class QueueDatabase {
         try (Statement st = conn.createStatement()) {
             // Large withdrawals
             ResultSet rs1 = st.executeQuery("SELECT ticket_no, amount FROM queue_tickets WHERE status = 'DONE' AND category LIKE '%withdraw%' AND amount >= 50000 AND date(updated_at) = date('now', 'localtime')");
-            while(rs1.next()) alerts.add("⚠️ Large Withdrawal: " + rs1.getString("ticket_no") + " (₱ " + rs1.getDouble("amount") + ")");
+            while(rs1.next()) alerts.add("Large Withdrawal: " + rs1.getString("ticket_no") + " (₱ " + rs1.getDouble("amount") + ")");
             
             // Long waits
             ResultSet rs2 = st.executeQuery("SELECT ticket_no FROM queue_tickets WHERE status = 'WAITING' AND (julianday('now', 'localtime') - julianday(created_at)) * 24 * 60 > 30");
-            while(rs2.next()) alerts.add("⚠️ Long Wait: Ticket " + rs2.getString("ticket_no") + " waiting > 30 mins");
+            while(rs2.next()) alerts.add(" Long Wait: Ticket " + rs2.getString("ticket_no") + " waiting > 30 mins");
             
             // Idle tellers
             ResultSet rs3 = st.executeQuery("SELECT username FROM users WHERE status = 'ACTIVE' AND online = 1 AND username NOT IN (SELECT counter FROM queue_tickets WHERE status IN ('SERVING', 'HELD') AND counter IS NOT NULL)");
-            while(rs3.next()) alerts.add("⚠️ Idle Teller: " + rs3.getString("username") + " has no active ticket");
+            while(rs3.next()) alerts.add("Idle Teller: " + rs3.getString("username") + " has no active ticket");
         } catch (SQLException ex) { }
         return alerts;
     }

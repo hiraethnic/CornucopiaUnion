@@ -220,7 +220,7 @@ public class creationAdmin extends javax.swing.JFrame {
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Clear form");
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 450, -1, -1));
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 450, -1, -1));
 
         jButton5.setBackground(new java.awt.Color(0, 0, 255));
         jButton5.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N

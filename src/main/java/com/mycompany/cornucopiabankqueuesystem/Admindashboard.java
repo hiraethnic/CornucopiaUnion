@@ -114,34 +114,34 @@ public class Admindashboard extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(234, 243, 255));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jButton2.setBackground(new java.awt.Color(234, 243, 255));
+        jButton2.setBackground(new java.awt.Color(12, 35, 74));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(12, 35, 74));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setText("Teller Management");
         jButton2.addActionListener(this::jButton2ActionPerformed);
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 170, -1));
 
-        jButton3.setBackground(new java.awt.Color(234, 243, 255));
+        jButton3.setBackground(new java.awt.Color(12, 35, 74));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(12, 35, 74));
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setText("Account Management");
         jButton3.addActionListener(this::jButton3ActionPerformed);
         jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 120, 180, -1));
 
-        jButton4.setBackground(new java.awt.Color(234, 243, 255));
+        jButton4.setBackground(new java.awt.Color(12, 35, 74));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton4.setForeground(new java.awt.Color(12, 35, 74));
+        jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("Teller Creation");
         jButton4.addActionListener(this::jButton4ActionPerformed);
         jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 120, 150, -1));
 
-        jButton5.setBackground(new java.awt.Color(234, 243, 255));
+        jButton5.setBackground(new java.awt.Color(12, 35, 74));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(12, 35, 74));
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("Logs");
         jButton5.setPreferredSize(new java.awt.Dimension(130, 27));
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 80, -1));
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(680, 120, 80, -1));
 
         jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 153), 2, true));
         jPanel3.setOpaque(false);
@@ -259,28 +259,28 @@ public class Admindashboard extends javax.swing.JFrame {
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setText("jLabel14");
-        jPanel9.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 24, -1, -1));
+        jPanel9.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 24, 340, -1));
 
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel15.setText("jLabel15");
-        jPanel9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 62, -1, -1));
+        jPanel9.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 340, -1));
 
         jLabel16.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel16.setText("jLabel16");
-        jPanel9.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 100, -1, -1));
+        jPanel9.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 340, 30));
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel17.setText("jLabel17");
-        jPanel9.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 138, -1, -1));
+        jPanel9.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 340, -1));
 
         jPanel1.add(jPanel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 510, 360, -1));
 
-        Admin.setBackground(new java.awt.Color(234, 243, 255));
+        Admin.setBackground(new java.awt.Color(12, 35, 74));
         Admin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Admin.setForeground(new java.awt.Color(12, 35, 74));
+        Admin.setForeground(new java.awt.Color(255, 255, 255));
         Admin.setText("Admin Setting");
         Admin.addActionListener(this::AdminActionPerformed);
-        jPanel1.add(Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 120, 130, -1));
+        jPanel1.add(Admin, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 120, 130, -1));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N

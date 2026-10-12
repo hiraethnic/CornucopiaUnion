@@ -420,7 +420,7 @@ public class Tellerframe extends javax.swing.JFrame {
             jLabel28.setText(t1.ticketNo); 
             jLabel29.setText(t1.customerName != null && !t1.customerName.isEmpty() ? t1.customerName : "No Name");
             jLabel30.setText(t1.category);
-            jLabel31.setText("HELD"); // Ensures we label it clearly
+            jLabel31.setText("DONE"); // Ensures we label it clearly
             
         } else {
             jLabel28.setText("None");
@@ -599,7 +599,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
     private void fetchPastDoneTickets() {
         // Only fetch HELD tickets belonging to this teller, explicitly ignoring AC- rows
-        String sql = "SELECT * FROM queue_tickets WHERE status = 'HELD' AND counter = ? AND ticket_no NOT LIKE 'AC-%' ORDER BY updated_at DESC LIMIT 2";
+       String sql = "SELECT * FROM queue_tickets WHERE status = 'DONE' AND counter = ? AND ticket_no NOT LIKE 'AC-%' ORDER BY updated_at DESC LIMIT 2";
         java.sql.Connection conn = QueueDatabase.getConnection();
         pastDoneTickets.clear();
         if (conn == null) return;
@@ -697,7 +697,7 @@ public class Tellerframe extends javax.swing.JFrame {
 
         // ADD THIS BLOCK: Actually tell the database to change the status to 'HELD'
         if (!QueueDatabase.holdTicket(activeTicket.ticketNo)) {
-            ValidationUtils.showError(this, "Database Error: Could not place ticket on hold.");
+            ValidationUtils.showError(this, "You have a active ticket Could not place ticket on hold.");
             return;
         }
 
