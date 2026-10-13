@@ -19,7 +19,7 @@ public class DepositFrame extends javax.swing.JFrame {
         initComponents();
         QueueDatabase.initialize();
         applyRealTimeValidation();
-        makeTransparent(jTextField1, jTextField2, jTextField3);
+        makeTransparent(jTextField1, jTextField2, jTextField3, jTextField4);
         setLocationRelativeTo(null);
     }
     
@@ -58,12 +58,12 @@ public class DepositFrame extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         jTextField3 = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
         jCheckBox1 = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel14 = new javax.swing.JLabel();
+        jTextField4 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -120,11 +120,6 @@ public class DepositFrame extends javax.swing.JFrame {
         jLabel13.setText("Deposit type");
         jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 290, 100, 30));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Cash", "Check" }));
-        jComboBox1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 153, 255)));
-        jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-        jPanel3.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 320, 190, 30));
-
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setText("Priority transaction (senior/PWD/pregnant)");
         jPanel3.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 380, 341, -1));
@@ -149,9 +144,11 @@ public class DepositFrame extends javax.swing.JFrame {
         jButton3.setText(" ←BACK");
         jButton3.addActionListener(this::jButton3ActionPerformed);
         jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 430, 140, 40));
-
-        jLabel14.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\deposit .jpg")); // NOI18N
         jPanel3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 690, -1));
+
+        jTextField4.setEditable(false);
+        jTextField4.setText("Cash");
+        jPanel3.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 330, 110, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -180,9 +177,7 @@ public class DepositFrame extends javax.swing.JFrame {
         jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
-        if (jComboBox1.getItemCount() > 0) {
-            jComboBox1.setSelectedIndex(0);
-        }
+        
         jCheckBox1.setSelected(false);
         jTextField1.requestFocusInWindow();
 
@@ -192,7 +187,7 @@ public class DepositFrame extends javax.swing.JFrame {
         String accountNumber = jTextField1.getText().trim();
         String accountName = jTextField2.getText().trim();
         String amountText = jTextField3.getText().trim();
-        Object depositType = jComboBox1.getSelectedItem();
+       String depositType = jTextField4.getText();
 
         if (!ValidationUtils.isValidAccountNumber(accountNumber)) {
             ValidationUtils.showError(this, "Please enter a valid account number (6-20 digits only).");
@@ -219,11 +214,7 @@ public class DepositFrame extends javax.swing.JFrame {
             return;
         }
 
-        if (!ValidationUtils.isValidComboSelection(depositType)) {
-            ValidationUtils.showError(this, "Please select a deposit type (Cash or Check).");
-            jComboBox1.requestFocusInWindow();
-            return;
-        }
+        
 
         double currentBalance = QueueDatabase.getAccountBalance(accountNumber, accountName);
         if (currentBalance == -2.0) {
@@ -252,10 +243,6 @@ public class DepositFrame extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
     private void applyRealTimeValidation() {
         // Account Number: Max 11 digits, numbers only
         jTextField1.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -302,7 +289,6 @@ public class DepositFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
@@ -318,5 +304,6 @@ public class DepositFrame extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }
