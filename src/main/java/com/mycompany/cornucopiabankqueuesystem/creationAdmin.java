@@ -89,7 +89,7 @@ public class creationAdmin extends javax.swing.JFrame {
         });
     }
 
-    private void validatePassword() {
+   private void validatePassword() {
         String password = jTextField6.getText();
         
         // Validation Rubric Checks
@@ -98,13 +98,39 @@ public class creationAdmin extends javax.swing.JFrame {
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
         boolean hasNumber = password.matches(".*\\d.*");
-        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); // Checks for any symbol (e.g., !, @, #, $, %)
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); 
 
-        // If all conditions are met, set text to default black, otherwise red
-        if (isNotEmpty && hasLength && hasUpper && hasLower && hasNumber && hasSpecial) {
-            jTextField6.setForeground(java.awt.Color.BLACK); // Normal / OK
+        if (!isNotEmpty) {
+            Valid.setText(""); // Clear label if empty
+            jTextField6.setForeground(java.awt.Color.BLACK);
+            return;
+        }
+
+        // Display short, specific errors in the Valid JLabel
+        if (!hasLength) {
+            Valid.setText("Too short (min 8)");
+            Valid.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasUpper) {
+            Valid.setText("Needs uppercase");
+            Valid.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasLower) {
+            Valid.setText("Needs lowercase");
+            Valid.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasNumber) {
+            Valid.setText("Needs a number");
+            Valid.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasSpecial) {
+            Valid.setText("Needs a symbol (-)");
+            Valid.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
         } else {
-            jTextField6.setForeground(java.awt.Color.RED);   // Rubric not met
+            Valid.setText("Valid Password");
+            Valid.setForeground(new java.awt.Color(0, 153, 0)); // Dark green text for success
+            jTextField6.setForeground(java.awt.Color.BLACK); // Reset input box text to black
         }
     }
 
@@ -133,6 +159,7 @@ public class creationAdmin extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
+        Valid = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
@@ -213,6 +240,9 @@ public class creationAdmin extends javax.swing.JFrame {
         jTextField6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jPanel5.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 60, 190, -1));
 
+        Valid.setText("Aa!0-8+");
+        jPanel5.add(Valid, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, -1, -1));
+
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 320, 740, 120));
 
         jButton4.setBackground(new java.awt.Color(220, 38, 38));
@@ -252,7 +282,6 @@ public class creationAdmin extends javax.swing.JFrame {
         logout.addActionListener(this::logoutActionPerformed);
         jPanel1.add(logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 40, -1, -1));
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\admincreation.png")); // NOI18N
         jLabel4.setText("jLabel4");
         jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -240, 770, 1160));
 
@@ -408,6 +437,7 @@ public class creationAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel ContactNum;
     private javax.swing.JLabel Emailadd;
     private javax.swing.JComboBox<String> SelectEmployee;
+    private javax.swing.JLabel Valid;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel10;

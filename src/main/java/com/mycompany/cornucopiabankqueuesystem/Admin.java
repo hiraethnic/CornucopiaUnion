@@ -52,6 +52,7 @@ public class Admin extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -85,6 +86,9 @@ public class Admin extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(244, 246, 249));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel4.setText("Aa!0-8+");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 450, -1, -1));
 
         jButton4.setBackground(new java.awt.Color(220, 38, 38));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -401,7 +405,7 @@ public class Admin extends javax.swing.JFrame {
         });
     }
 
-    private void validatePassword() {
+   private void validatePassword() {
         String password = jTextField6.getText();
         
         // Validation Rubric Checks
@@ -410,13 +414,39 @@ public class Admin extends javax.swing.JFrame {
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
         boolean hasNumber = password.matches(".*\\d.*");
-        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); // Checks for any symbol (e.g., !, @, #, $, %)
+        boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*"); 
 
-        // If all conditions are met, set text to default black, otherwise red
-        if (isNotEmpty && hasLength && hasUpper && hasLower && hasNumber && hasSpecial) {
-            jTextField6.setForeground(java.awt.Color.BLACK); // Normal / OK
+        if (!isNotEmpty) {
+            jLabel4.setText(""); // Clear label if empty
+            jTextField6.setForeground(java.awt.Color.BLACK);
+            return;
+        }
+
+        // Display short, specific errors in the Valid JLabel
+        if (!hasLength) {
+            jLabel4.setText("Too short (min 8)");
+            jLabel4.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasUpper) {
+            jLabel4.setText("Needs uppercase");
+            jLabel4.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasLower) {
+            jLabel4.setText("Needs lowercase");
+            jLabel4.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasNumber) {
+            jLabel4.setText("Needs a number");
+            jLabel4.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
+        } else if (!hasSpecial) {
+            jLabel4.setText("Needs a symbol (-)");
+            jLabel4.setForeground(java.awt.Color.RED);
+            jTextField6.setForeground(java.awt.Color.RED);
         } else {
-            jTextField6.setForeground(java.awt.Color.RED);   // Rubric not met
+            jLabel4.setText("Valid Password");
+            jLabel4.setForeground(new java.awt.Color(0, 153, 0)); // Dark green text for success
+            jTextField6.setForeground(java.awt.Color.BLACK); // Reset input box text to black
         }
     }
 
@@ -438,6 +468,7 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
