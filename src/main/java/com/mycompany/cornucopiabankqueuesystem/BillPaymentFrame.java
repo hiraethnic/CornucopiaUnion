@@ -351,17 +351,30 @@ public class BillPaymentFrame extends javax.swing.JFrame {
                 ValidationUtils.showError(this, "Account number must be exactly 11 digits.");
                 return;
             }
-            if (QueueDatabase.getBalanceByNumber(accNo) < 0) {
+            
+            // --- NEW BALANCE CHECK LOGIC ---
+            double currentBalance = QueueDatabase.getBalanceByNumber(accNo);
+            
+            if (currentBalance == -1.0) {
                 ValidationUtils.showError(this, "Account number does not exist in the database!");
                 return;
             }
+            if (currentBalance == -2.0) {
+                ValidationUtils.showError(this, "This account is currently locked!");
+                return;
+            }
+            if (currentBalance < amount) {
+                ValidationUtils.showError(this, "Insufficient balance! Available balance is PHP " + String.format("%,.2f", currentBalance));
+                return;
+            }
+            // -------------------------------
             
             if (!ValidationUtils.isValidBillReference(refNumber)) {
-             ValidationUtils.showError(this,
-            "Please enter a valid account/reference number (4-10 digits, or +639 followed by 9 digits for mobile numbers).");
-             txtRefNumber.requestFocusInWindow();
-             return;
-             }
+                ValidationUtils.showError(this,
+                "Please enter a valid account/reference number (4-10 digits, or +639 followed by 9 digits for mobile numbers).");
+                txtRefNumber.requestFocusInWindow();
+                return;
+            }
             
             
             
