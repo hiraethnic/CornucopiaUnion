@@ -84,55 +84,55 @@ private void loadTellerList(String selectUsername) {
  
 private void clearFields() {
     EmployeeName.setText("");
-    jTextField2.setText("");
-    jTextField3.setText("");
-    contactNumber.setText("");
-    UserName.setText("");
-    PassWord.setText("");
-    jCheckBox1.setSelected(false);
-    jCheckBox2.setSelected(false);
-    jCheckBox3.setSelected(false);
-    jCheckBox4.setSelected(false);
-    jCheckBox5.setSelected(false);
-    jCheckBox6.setSelected(false);
-    AccountStatus.setSelectedIndex(0);
-    jToggleButton2.setSelected(false);
-    showOnlineState();
-    ((javax.swing.table.DefaultTableModel) jTable1.getModel()).setRowCount(0);
+        jTextField2.setText("");
+        jTextField3.setText("");
+        contactNumber.setText("");
+        UserName.setText("");
+        PassWord.setText("");
+        jCheckBox1.setSelected(false);
+        jCheckBox2.setSelected(false);
+        jCheckBox3.setSelected(false);
+        jCheckBox4.setSelected(false);
+        jCheckBox5.setSelected(false);
+        jCheckBox6.setSelected(false);
+        PWDline.setSelected(false); // NOTE: Clears PWD
+        AccountStatus.setSelectedIndex(0);
+        jToggleButton2.setSelected(false);
+        showOnlineState();
+        ((javax.swing.table.DefaultTableModel) jTable1.getModel()).setRowCount(0);
 }
  
 private void loadSelectedTeller() {
-    String username = selectedUsername();
-    if (username == null) { clearFields(); return; }
-    String[] profile = QueueDatabase.getTellerProfile(username);
-    TellerPermissions perms = QueueDatabase.getTellerPermissions(username);
-    if (profile == null || perms == null) { clearFields(); return; }
+        String username = selectedUsername();
+        if (username == null) { clearFields(); return; }
+        String[] profile = QueueDatabase.getTellerProfile(username);
+        TellerPermissions perms = QueueDatabase.getTellerPermissions(username);
+        if (profile == null || perms == null) { clearFields(); return; }
 
-    // Added bounds checking and null safety to prevent exceptions from hiding the data
-    EmployeeName.setText(profile.length > 0 && profile[0] != null ? profile[0] : "");
-    jTextField2.setText(profile.length > 1 && profile[1] != null ? profile[1] : "");
-    jTextField3.setText(profile.length > 2 && profile[2] != null ? profile[2] : "");
-    contactNumber.setText(profile.length > 3 && profile[3] != null ? profile[3] : "");
-    
-    UserName.setText(username);
-    
-    // Safety checks for Status, Password, and Online status
-    String st = (profile.length > 4 && profile[4] != null) ? profile[4].toUpperCase() : "ACTIVE";
-    AccountStatus.setSelectedItem(st.equals("TERMINATED") ? "Terminated" : st.equals("INACTIVE") ? "Inactive" : "Active");
-    
-    PassWord.setText(profile.length > 5 && profile[5] != null ? profile[5] : "");
-    jToggleButton2.setSelected(profile.length > 6 && "1".equals(profile[6]));
-    showOnlineState();
-    
-    jCheckBox1.setSelected(perms.canAccountCreation());
-    jCheckBox2.setSelected(perms.canCashDeposits());
-    jCheckBox3.setSelected(perms.canBillPayments());
-    jCheckBox4.setSelected(perms.canFundTransfers());
-    jCheckBox5.setSelected(perms.canCashWithdrawals());
-    jCheckBox6.setSelected(perms.canForeignExchange());
-    
-    loadActivity(username);
-}
+        EmployeeName.setText(profile.length > 0 && profile[0] != null ? profile[0] : "");
+        jTextField2.setText(profile.length > 1 && profile[1] != null ? profile[1] : "");
+        jTextField3.setText(profile.length > 2 && profile[2] != null ? profile[2] : "");
+        contactNumber.setText(profile.length > 3 && profile[3] != null ? profile[3] : "");
+        
+        UserName.setText(username);
+        
+        String st = (profile.length > 4 && profile[4] != null) ? profile[4].toUpperCase() : "ACTIVE";
+        AccountStatus.setSelectedItem(st.equals("TERMINATED") ? "Terminated" : st.equals("INACTIVE") ? "Inactive" : "Active");
+        
+        PassWord.setText(profile.length > 5 && profile[5] != null ? profile[5] : "");
+        jToggleButton2.setSelected(profile.length > 6 && "1".equals(profile[6]));
+        showOnlineState();
+        
+        jCheckBox1.setSelected(perms.canAccountCreation());
+        jCheckBox2.setSelected(perms.canCashDeposits());
+        jCheckBox3.setSelected(perms.canBillPayments());
+        jCheckBox4.setSelected(perms.canFundTransfers());
+        jCheckBox5.setSelected(perms.canCashWithdrawals());
+        jCheckBox6.setSelected(perms.canForeignExchange());
+        PWDline.setSelected(perms.isPwdLine()); // NOTE: Maps DB to checkbox
+        
+        loadActivity(username);
+    }
  
 /** Green + "ONLINE" when selected, red + "OFFLINE" when not. */
 private void showOnlineState() {
@@ -189,6 +189,7 @@ private void loadActivity(String username) {
         contactNumber = new javax.swing.JTextField();
         jCheckBox6 = new javax.swing.JCheckBox();
         jButton2 = new javax.swing.JButton();
+        PWDline = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -340,6 +341,11 @@ private void loadActivity(String username) {
         jButton2.addActionListener(this::jButton2ActionPerformed);
         jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(559, 270, 190, 30));
 
+        PWDline.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        PWDline.setText("PWD LINE");
+        PWDline.addActionListener(this::PWDlineActionPerformed);
+        jPanel3.add(PWDline, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 100, -1, -1));
+
         jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 760, 310));
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -392,7 +398,6 @@ private void loadActivity(String username) {
         jButton1.addActionListener(this::jButton1ActionPerformed);
         jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 40, -1, -1));
 
-        jLabel13.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\tellermanagement.png")); // NOI18N
         jLabel13.setText("jLabel13");
         jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 1160, 790));
 
@@ -407,62 +412,63 @@ private void loadActivity(String username) {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void SaveModificationsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SaveModificationsActionPerformed
-         String username = selectedUsername();
-    if (username == null) {
-        ValidationUtils.showError(this, "Select a teller first.");
-        return;
-    }
-    String name = EmployeeName.getText();
-    String employeeId = jTextField2.getText();
-    String email = jTextField3.getText();
-    String contact = contactNumber.getText();
- 
-    if (!ValidationUtils.isValidName(name)) {
-        ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
-        return;
-    }
-    if (!ValidationUtils.isValidReferenceNumber(employeeId)) {
-        ValidationUtils.showError(this, "Employee ID must be 4-30 characters (letters, numbers, hyphen).");
-        return;
-    }
-    if (QueueDatabase.employeeIdExists(employeeId, username)) {
-        ValidationUtils.showError(this, "That employee ID is already used by another teller.");
-        return;
-    }
-    if (!ValidationUtils.isValidEmail(email)) {
-        ValidationUtils.showError(this, "Enter a valid email address (e.g. name@example.com).");
-        return;
-    }
-    if (!ValidationUtils.isValidContactNumber(contact)) {
-        ValidationUtils.showError(this, "Contact number must be 09XXXXXXXXX or +639XXXXXXXXX.");
-        return;
-    }
-    if (!ValidationUtils.isValidComboSelection(AccountStatus.getSelectedItem())) {
-        ValidationUtils.showError(this, "Select an account status.");
-        return;
-    }
-    boolean active = "Active".equals(AccountStatus.getSelectedItem().toString());
-    if (active && !(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
-            || jCheckBox4.isSelected() || jCheckBox5.isSelected() || jCheckBox6.isSelected())) {
-        ValidationUtils.showError(this, "An active teller needs at least one permission.");
-        return;
-    }
- 
-    TellerPermissions permissions = new TellerPermissions(
-            jCheckBox1.isSelected(),   // Account creation
-            jCheckBox2.isSelected(),   // Cash deposits
-            jCheckBox3.isSelected(),   // Bills payment
-            jCheckBox4.isSelected(),   // Fund transfers
-            jCheckBox5.isSelected(),   // Cash withdrawals
-            jCheckBox6.isSelected());   // Foreign exchange
- 
-    if (QueueDatabase.updateTeller(username, name, employeeId, email, contact,
-            permissions, AccountStatus.getSelectedItem().toString().toUpperCase())) {
-        ValidationUtils.showSuccess(this, "Changes saved for " + name.trim() + ".");
-        loadTellerList(username);   // name may have changed
-    } else {
-        ValidationUtils.showError(this, "Could not save the changes. Please try again.");
-    }   
+        String username = selectedUsername();
+        if (username == null) {
+            ValidationUtils.showError(this, "Select a teller first.");
+            return;
+        }
+        String name = EmployeeName.getText();
+        String employeeId = jTextField2.getText();
+        String email = jTextField3.getText();
+        String contact = contactNumber.getText();
+     
+        if (!ValidationUtils.isValidName(name)) {
+            ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
+            return;
+        }
+        if (!ValidationUtils.isValidReferenceNumber(employeeId)) {
+            ValidationUtils.showError(this, "Employee ID must be 4-30 characters (letters, numbers, hyphen).");
+            return;
+        }
+        if (QueueDatabase.employeeIdExists(employeeId, username)) {
+            ValidationUtils.showError(this, "That employee ID is already used by another teller.");
+            return;
+        }
+        if (!ValidationUtils.isValidEmail(email)) {
+            ValidationUtils.showError(this, "Enter a valid email address (e.g. name@example.com).");
+            return;
+        }
+        if (!ValidationUtils.isValidContactNumber(contact)) {
+            ValidationUtils.showError(this, "Contact number must be 09XXXXXXXXX or +639XXXXXXXXX.");
+            return;
+        }
+        if (!ValidationUtils.isValidComboSelection(AccountStatus.getSelectedItem())) {
+            ValidationUtils.showError(this, "Select an account status.");
+            return;
+        }
+        boolean active = "Active".equals(AccountStatus.getSelectedItem().toString());
+        if (active && !(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
+                || jCheckBox4.isSelected() || jCheckBox5.isSelected() || jCheckBox6.isSelected())) {
+            ValidationUtils.showError(this, "An active teller needs at least one permission.");
+            return;
+        }
+     
+        TellerPermissions permissions = new TellerPermissions(
+                jCheckBox1.isSelected(),   
+                jCheckBox2.isSelected(),   
+                jCheckBox3.isSelected(),   
+                jCheckBox4.isSelected(),   
+                jCheckBox5.isSelected(),   
+                jCheckBox6.isSelected(),   
+                PWDline.isSelected()); // NOTE: Saves new PWD Checkbox status
+     
+        if (QueueDatabase.updateTeller(username, name, employeeId, email, contact,
+                permissions, AccountStatus.getSelectedItem().toString().toUpperCase())) {
+            ValidationUtils.showSuccess(this, "Changes saved for " + name.trim() + ".");
+            loadTellerList(username);   
+        } else {
+            ValidationUtils.showError(this, "Could not save the changes. Please try again.");
+        }
   
  
    
@@ -542,6 +548,10 @@ private void loadActivity(String username) {
         this.dispose();
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void PWDlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWDlineActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PWDlineActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -570,6 +580,7 @@ private void loadActivity(String username) {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> AccountStatus;
     private javax.swing.JTextField EmployeeName;
+    private javax.swing.JCheckBox PWDline;
     private javax.swing.JTextField PassWord;
     private javax.swing.JButton ResetPassword;
     private javax.swing.JButton SaveModifications;

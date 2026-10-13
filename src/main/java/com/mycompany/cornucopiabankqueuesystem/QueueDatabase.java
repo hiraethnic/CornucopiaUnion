@@ -45,6 +45,7 @@ public final class QueueDatabase {
                 + "can_fund_transfers INTEGER NOT NULL DEFAULT 0,"
                 + "can_cash_withdrawals INTEGER NOT NULL DEFAULT 0,"
                 + "can_foreign_exchange INTEGER NOT NULL DEFAULT 0,"
+                + "can_pwd_line INTEGER NOT NULL DEFAULT 0," // NOTE: Added PWD Column
                 + "created_at TEXT NOT NULL DEFAULT (datetime('now','localtime'))"
                 + ")";
         Connection conn = getConnection();
@@ -58,6 +59,7 @@ public final class QueueDatabase {
         addColumnIfMissing(conn, "can_bill_payments", "ALTER TABLE users ADD COLUMN can_bill_payments INTEGER NOT NULL DEFAULT 0");
         addColumnIfMissing(conn, "can_foreign_exchange", "ALTER TABLE users ADD COLUMN can_foreign_exchange INTEGER NOT NULL DEFAULT 0");
         // Teller profile columns (used by Admin + Teller Management).
+        addColumnIfMissing(conn, "can_pwd_line", "ALTER TABLE users ADD COLUMN can_pwd_line INTEGER NOT NULL DEFAULT 0"); // NOTE: Added Alter Table
         addColumnIfMissing(conn, "employee_id", "ALTER TABLE users ADD COLUMN employee_id TEXT");
         addColumnIfMissing(conn, "email", "ALTER TABLE users ADD COLUMN email TEXT");
         addColumnIfMissing(conn, "contact_number", "ALTER TABLE users ADD COLUMN contact_number TEXT");
@@ -86,14 +88,12 @@ public final class QueueDatabase {
             String fullName, TellerPermissions p) {
         initializeUsersTable();
         String sql = "INSERT INTO users (username, password, full_name, can_account_creation, "
-                + "can_cash_deposits, can_bill_payments, can_fund_transfers, can_cash_withdrawals, can_foreign_exchange) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "can_cash_deposits, can_bill_payments, can_fund_transfers, can_cash_withdrawals, can_foreign_exchange, can_pwd_line) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = getConnection();
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
-            // NOTE: password is saved as plain text. Should be replaced with a hashed password
-            // (e.g. SHA-256 with a salt) in both createTeller() and authenticate().
             ps.setString(2, password);
             ps.setString(3, fullName.trim());
             ps.setInt(4, p.canAccountCreation() ? 1 : 0);
@@ -102,6 +102,7 @@ public final class QueueDatabase {
             ps.setInt(7, p.canFundTransfers() ? 1 : 0);
             ps.setInt(8, p.canCashWithdrawals() ? 1 : 0);
             ps.setInt(9, p.canForeignExchange() ? 1 : 0);
+            ps.setInt(10, p.isPwdLine() ? 1 : 0); // NOTE: Added PWD
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create teller " + username, ex);
@@ -187,15 +188,14 @@ public final class QueueDatabase {
                             rs.getInt("can_bill_payments") == 1,
                             rs.getInt("can_fund_transfers") == 1,
                             rs.getInt("can_cash_withdrawals") == 1,
-                            rs.getInt("can_foreign_exchange") == 1)
+                            rs.getInt("can_foreign_exchange") == 1,
+                            rs.getInt("can_pwd_line") == 1) // NOTE: Added PWD
                             .withIdentity(rs.getString("username"), rs.getString("full_name"));
-                    setTellerOnline(perms.getUsername(), true);   // shows green in Teller Management
+                    setTellerOnline(perms.getUsername(), true);   
                     return perms;
                 }
             }
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Login query failed", ex);
-        }
+        } catch (SQLException ex) {}
         return null;
     }
     
@@ -206,17 +206,17 @@ public final class QueueDatabase {
     // ---------------------------------------------------------------
 
     /** Saves a new teller with full profile (employee ID, email, contact) and permissions. */
-    public static synchronized boolean createTeller(String username, String password, String fullName,
+   public static synchronized boolean createTeller(String username, String password, String fullName,
             String employeeId, String email, String contact, TellerPermissions p) {
         initializeUsersTable();
         String sql = "INSERT INTO users (username, password, full_name, employee_id, email, contact_number, "
                 + "can_account_creation, can_cash_deposits, can_bill_payments, can_fund_transfers, "
-                + "can_cash_withdrawals, can_foreign_exchange) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "can_cash_withdrawals, can_foreign_exchange, can_pwd_line) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Connection conn = getConnection();
         if (conn == null) return false;
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username.trim());
-            ps.setString(2, password); // plain text, same as createTeller() above
+            ps.setString(2, password);
             ps.setString(3, fullName.trim());
             ps.setString(4, employeeId.trim());
             ps.setString(5, email.trim());
@@ -227,6 +227,7 @@ public final class QueueDatabase {
             ps.setInt(10, p.canFundTransfers() ? 1 : 0);
             ps.setInt(11, p.canCashWithdrawals() ? 1 : 0);
             ps.setInt(12, p.canForeignExchange() ? 1 : 0);
+            ps.setInt(13, p.isPwdLine() ? 1 : 0); // NOTE: Added PWD
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not create teller " + username, ex);
@@ -279,37 +280,36 @@ public final class QueueDatabase {
     }
 
     /** Permissions of one teller, or null if not found. */
-    public static TellerPermissions getTellerPermissions(String username) {
-        initializeUsersTable();
-        String sql = "SELECT * FROM users WHERE username = ?";
-        Connection conn = getConnection();
-        if (conn == null) return null;
-        try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return new TellerPermissions(
-                            rs.getInt("can_account_creation") == 1,
-                            rs.getInt("can_cash_deposits") == 1,
-                            rs.getInt("can_bill_payments") == 1,
-                            rs.getInt("can_fund_transfers") == 1,
-                            rs.getInt("can_cash_withdrawals") == 1,
-                            rs.getInt("can_foreign_exchange") == 1)
-                            .withIdentity(rs.getString("username"), rs.getString("full_name"));
-                }
+        public static TellerPermissions getTellerPermissions(String username) {
+                initializeUsersTable();
+                String sql = "SELECT * FROM users WHERE username = ?";
+                Connection conn = getConnection();
+                if (conn == null) return null;
+                try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                    ps.setString(1, username);
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return new TellerPermissions(
+                                    rs.getInt("can_account_creation") == 1,
+                                    rs.getInt("can_cash_deposits") == 1,
+                                    rs.getInt("can_bill_payments") == 1,
+                                    rs.getInt("can_fund_transfers") == 1,
+                                    rs.getInt("can_cash_withdrawals") == 1,
+                                    rs.getInt("can_foreign_exchange") == 1,
+                                    rs.getInt("can_pwd_line") == 1) // NOTE: Added PWD
+                                    .withIdentity(rs.getString("username"), rs.getString("full_name"));
+                        }
+                    }
+                } catch (SQLException ex) {}
+                return null;
             }
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Could not load permissions for " + username, ex);
-        }
-        return null;
-    }
 
     /** Updates a teller's profile, permissions and status ("ACTIVE" / "INACTIVE"). Username never changes. */
     public static synchronized boolean updateTeller(String username, String fullName, String employeeId,
             String email, String contact, TellerPermissions p, String status) {
         String sql = "UPDATE users SET full_name = ?, employee_id = ?, email = ?, contact_number = ?, "
                 + "can_account_creation = ?, can_cash_deposits = ?, can_bill_payments = ?, "
-                + "can_fund_transfers = ?, can_cash_withdrawals = ?, can_foreign_exchange = ?, status = ? "
+                + "can_fund_transfers = ?, can_cash_withdrawals = ?, can_foreign_exchange = ?, can_pwd_line = ?, status = ? "
                 + "WHERE username = ?";
         Connection conn = getConnection();
         if (conn == null) return false;
@@ -324,8 +324,9 @@ public final class QueueDatabase {
             ps.setInt(8, p.canFundTransfers() ? 1 : 0);
             ps.setInt(9, p.canCashWithdrawals() ? 1 : 0);
             ps.setInt(10, p.canForeignExchange() ? 1 : 0);
-            ps.setString(11, status);
-            ps.setString(12, username);
+            ps.setInt(11, p.isPwdLine() ? 1 : 0); // NOTE: Added PWD
+            ps.setString(12, status);
+            ps.setString(13, username);
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             logger.log(Level.SEVERE, "Could not update teller " + username, ex);
@@ -717,7 +718,8 @@ public final class QueueDatabase {
     /** Same as getWaitingTickets() but capped to the given number of rows (e.g. the next 5 in line). */
     public static List<String[]> getWaitingTickets(int limit) {
         List<String[]> list = new ArrayList<>();
-        String sql = "SELECT ticket_no, category FROM queue_tickets WHERE status = 'WAITING' "
+        // NOTE: Now we select and return the priority number as the 3rd array element
+        String sql = "SELECT ticket_no, category, priority FROM queue_tickets WHERE status = 'WAITING' "
                 + "ORDER BY priority DESC, id ASC LIMIT ?";
         Connection conn = getConnection();
         if (conn == null) {
@@ -727,12 +729,10 @@ public final class QueueDatabase {
             ps.setInt(1, limit);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(new String[]{rs.getString("ticket_no"), rs.getString("category")});
+                    list.add(new String[]{rs.getString("ticket_no"), rs.getString("category"), String.valueOf(rs.getInt("priority"))});
                 }
             }
-        } catch (SQLException ex) {
-            logger.log(Level.SEVERE, "Could not fetch waiting tickets", ex);
-        }
+        } catch (SQLException ex) {}
         return list;
     }
 
@@ -908,7 +908,6 @@ public final class QueueDatabase {
             int chosenId = -1;
             boolean chosenIsPriority = false;
 
-            // Fetch all waiting tickets ordered by oldest first, calculating wait time in minutes
             String fetchSql = "SELECT id, ticket_no, category, priority, "
                     + "(julianday('now', 'localtime') - julianday(created_at)) * 24 * 60 AS wait_mins "
                     + "FROM queue_tickets WHERE status = 'WAITING' ORDER BY id ASC";
@@ -924,7 +923,6 @@ public final class QueueDatabase {
                     String ticketNo = rs.getString("ticket_no");
                     String category = rs.getString("category");
                     
-                    // Skip if teller lacks permission for this transaction
                     if (perms != null && !perms.canHandleTicket(ticketNo, category)) {
                         continue;
                     }
@@ -932,8 +930,20 @@ public final class QueueDatabase {
                     int id = rs.getInt("id");
                     int priority = rs.getInt("priority");
                     double waitMins = rs.getDouble("wait_mins");
+
+                    // --- NOTE: NEW PWD DEDICATED LINE LOGIC ---
+                    if (perms != null && perms.isPwdLine() && priority == 0) {
+                        continue; // If this teller is PWD line, they IGNORE regular customers completely
+                    }
                     
-                    // 1. Time Limit Boost: Normal customer waiting > 20 mins
+                    if (perms != null && perms.isPwdLine() && priority == 0) {
+                        continue; // PWD teller ignores regular customers
+                    }
+                    
+                    if (perms != null && !perms.isPwdLine() && priority == 1) {
+                        continue; // Regular teller ignores PWD customers
+                    }
+                    
                     if (priority == 0 && waitMins > 20 && frustratedId == -1) {
                         frustratedId = id;
                     }
@@ -950,19 +960,16 @@ public final class QueueDatabase {
                     }
                 }
                 
-                // --- QUEUE ROUTING LOGIC ---
                 if (frustratedId != -1) {
-                    // Overrides all rules: Pull the frustrated regular customer immediately
                     chosenId = frustratedId;
                     chosenIsPriority = false;
                 } else {
-                    // Alternating Counter: 2 Priority then 1 Regular
                     if (consecutivePriorityCount >= 2) {
                         if (oldestRegularId != -1) {
                             chosenId = oldestRegularId;
                             chosenIsPriority = false;
                         } else if (oldestPriorityId != -1) {
-                            chosenId = oldestPriorityId; // Fallback to priority if no regulars exist
+                            chosenId = oldestPriorityId; 
                             chosenIsPriority = true;
                         }
                     } else {
@@ -970,25 +977,20 @@ public final class QueueDatabase {
                             chosenId = oldestPriorityId;
                             chosenIsPriority = true;
                         } else if (oldestRegularId != -1) {
-                            chosenId = oldestRegularId; // Fallback to regular if no priorities exist
+                            chosenId = oldestRegularId; 
                             chosenIsPriority = false;
                         }
                     }
                 }
                 
                 if (chosenId == -1 && oldestCancelledId != -1) {
-                chosenId = oldestCancelledId;
-                chosenIsPriority = false; // Treat as a regular customer for counter purposes
-            }
+                    chosenId = oldestCancelledId;
+                    chosenIsPriority = false; 
+                }
 
-            if (chosenId < 0) return null; // Queue is empty for this teller
+                if (chosenId < 0) return null; 
 
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Could not look up next ticket", ex);
-                return null;
-            }
-            
-            if (chosenId < 0) return null; // Queue is empty for this teller
+            } catch (SQLException ex) { return null; }
 
             String sql = "UPDATE queue_tickets SET status = 'SERVING', counter = ?, "
                     + "transaction_type = category, updated_at = datetime('now','localtime') "
@@ -999,18 +1001,14 @@ public final class QueueDatabase {
                 ps.setInt(2, chosenId);
                 
                 if (ps.executeUpdate() > 0) {
-                    // Successfully secured the ticket, now manage the alternating counter
                     if (chosenIsPriority) {
                         consecutivePriorityCount++;
                     } else {
-                        consecutivePriorityCount = 0; // Reset after a regular customer is pulled
+                        consecutivePriorityCount = 0; 
                     }
                     return getActiveTicket(counter);
                 }
-            } catch (SQLException ex) {
-                logger.log(Level.SEVERE, "Could not call next ticket", ex);
-                return null;
-            }
+            } catch (SQLException ex) { return null; }
         }
     }
 

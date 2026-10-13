@@ -354,7 +354,6 @@ public class Tellerframe extends javax.swing.JFrame {
         activeTicket = QueueDatabase.getActiveTicket(counterName);
         fetchPastDoneTickets();
 
-        // 1. Update Active Ticket Display
         if (activeTicket != null) {
             jLabel10.setText(activeTicket.ticketNo);
             jLabel11.setText(activeTicket.customerName != null && !activeTicket.customerName.isEmpty() ? activeTicket.customerName : "N/A");
@@ -370,13 +369,20 @@ public class Tellerframe extends javax.swing.JFrame {
         java.util.List<String[]> allowedWaiting = new java.util.ArrayList<>();
         
         for (String[] w : allWaiting) {
-            // Only add tickets this teller is allowed to handle!
             if (permissions.canHandleTicket(w[0], w[1])) {
+                boolean isPwdTicket = w.length > 2 && "1".equals(w[2]);
+                
+                if (permissions.isPwdLine() && !isPwdTicket) {
+                    continue; // PWD teller hides regular tickets
+                }
+                if (!permissions.isPwdLine() && isPwdTicket) {
+                    continue; // Regular teller hides PWD tickets
+                }
+                
                 allowedWaiting.add(w);
             }
-            if (allowedWaiting.size() >= 6) break; // We only have 6 labels to fill
+            if (allowedWaiting.size() >= 6) break; 
         }
-
         javax.swing.JLabel[] nextLabels = {jLabel14, jLabel15, jLabel26, jLabel38, jLabel40, jLabel41};
         for (int i = 0; i < nextLabels.length; i++) {
             if (i < allowedWaiting.size()) {
@@ -400,7 +406,6 @@ public class Tellerframe extends javax.swing.JFrame {
                 String cat = rs.getString("category");
                 String cnt = rs.getString("counter");
                 
-                // Remove the "Counter - " prefix so it just shows "ace landry"
                 if (cnt != null && cnt.startsWith("Counter - ")) {
                     cnt = cnt.substring(10); 
                 }
@@ -409,9 +414,7 @@ public class Tellerframe extends javax.swing.JFrame {
                 servingLabels[i].setText(tNo + " - " + cat + " - " + cnt);
                 i++;
             }
-        } catch(Exception e) {
-            // Ignore background refresh errors
-        }
+        } catch(Exception e) {}
 
         // 4. Update Held Tickets (History)
         if (!pastDoneTickets.isEmpty()) {
@@ -420,7 +423,7 @@ public class Tellerframe extends javax.swing.JFrame {
             jLabel28.setText(t1.ticketNo); 
             jLabel29.setText(t1.customerName != null && !t1.customerName.isEmpty() ? t1.customerName : "No Name");
             jLabel30.setText(t1.category);
-            jLabel31.setText("DONE"); // Ensures we label it clearly
+            jLabel31.setText("DONE"); 
             
         } else {
             jLabel28.setText("None");

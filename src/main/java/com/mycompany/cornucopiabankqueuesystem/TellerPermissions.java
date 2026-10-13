@@ -13,6 +13,7 @@ public class TellerPermissions {
     private final boolean fundTransfers;
     private final boolean cashWithdrawals;
     private final boolean foreignExchange;
+    private final boolean pwdLine; // NOTE: Added PWD Line permission
 
     /** Who is logged in (set by QueueDatabase.authenticate). */
     private String username = "";
@@ -20,19 +21,24 @@ public class TellerPermissions {
 
     public TellerPermissions(boolean accountCreation, boolean cashDeposits,
             boolean billPayments, boolean fundTransfers,
-            boolean cashWithdrawals, boolean foreignExchange) {
+            boolean cashWithdrawals, boolean foreignExchange, boolean pwdLine) {
         this.accountCreation = accountCreation;
         this.cashDeposits = cashDeposits;
         this.billPayments = billPayments;
         this.fundTransfers = fundTransfers;
         this.cashWithdrawals = cashWithdrawals;
         this.foreignExchange = foreignExchange;
+        this.pwdLine = pwdLine; // NOTE: Added mapping
     }
 
     /** Used when testing Tellerframe directly (no login). */
-    public static TellerPermissions allGranted() {
-        return new TellerPermissions(true, true, true, true, true, true);
+   public static TellerPermissions allGranted() {
+        return new TellerPermissions(true, true, true, true, true, true, false); // Default to false for PWD
     }
+   
+   public boolean isPwdLine() { 
+        return pwdLine;
+   }
 
     /** Remembers which teller account these permissions belong to. */
     public TellerPermissions withIdentity(String username, String fullName) {
@@ -85,4 +91,6 @@ public class TellerPermissions {
         if (c.contains("bill")) return billPayments;
         return false;
     }
+    
+    
 }

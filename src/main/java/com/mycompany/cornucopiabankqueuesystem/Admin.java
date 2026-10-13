@@ -26,7 +26,7 @@ public class Admin extends javax.swing.JFrame {
            
     }
     private void clearForm() {
-          jTextField1.setText("");
+        jTextField1.setText("");
         jTextField2.setText("");
         jTextField3.setText("");
         jTextField4.setText("");
@@ -35,9 +35,10 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox1.setSelected(false);
         jCheckBox2.setSelected(false);
         jCheckBox3.setSelected(false);
-        jCheckBox4.setSelected(false);
         jCheckBox5.setSelected(false);
+        jCheckBox6.setSelected(false);
         foreignexchan.setSelected(false);
+        PWDline.setSelected(false); // NOTE: clears the PWD box
     }
     
   
@@ -68,7 +69,7 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox1 = new javax.swing.JCheckBox();
         jCheckBox2 = new javax.swing.JCheckBox();
         jCheckBox3 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        PWDline = new javax.swing.JCheckBox();
         jCheckBox5 = new javax.swing.JCheckBox();
         foreignexchan = new javax.swing.JCheckBox();
         jLabel8 = new javax.swing.JLabel();
@@ -76,6 +77,7 @@ public class Admin extends javax.swing.JFrame {
         jTextField5 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jTextField6 = new javax.swing.JTextField();
+        jCheckBox6 = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -168,10 +170,10 @@ public class Admin extends javax.swing.JFrame {
         jCheckBox3.addActionListener(this::jCheckBox3ActionPerformed);
         jPanel1.add(jCheckBox3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 370, -1, -1));
 
-        jCheckBox4.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jCheckBox4.setText("Fund transfers");
-        jCheckBox4.addActionListener(this::jCheckBox4ActionPerformed);
-        jPanel1.add(jCheckBox4, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 330, -1, -1));
+        PWDline.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        PWDline.setText("PWD LINE");
+        PWDline.addActionListener(this::PWDlineActionPerformed);
+        jPanel1.add(PWDline, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 330, -1, -1));
 
         jCheckBox5.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jCheckBox5.setText("Cash withdrawals");
@@ -204,7 +206,11 @@ public class Admin extends javax.swing.JFrame {
         jTextField6.addActionListener(this::jTextField6ActionPerformed);
         jPanel1.add(jTextField6, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 470, 180, 30));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\IMAGEADMIN&TELLER\\Tellercreation (1).png")); // NOI18N
+        jCheckBox6.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jCheckBox6.setText("Fund transfers");
+        jCheckBox6.addActionListener(this::jCheckBox6ActionPerformed);
+        jPanel1.add(jCheckBox6, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 330, -1, -1));
+
         jLabel1.setText("jLabel1");
         jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -30, 700, 640));
 
@@ -223,21 +229,19 @@ public class Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-       String fullName = jTextField1.getText();   // Employee full name
-        String username = jTextField5.getText();   // System username
-        String password = jTextField6.getText();   // Initial password
-        String email = jTextField2.getText();      // Email address (Corrected)
-        String employeeId = jTextField3.getText(); // Employee ID (Corrected)
-        String contact = jTextField4.getText();    // Contact number
-        // NOTE: jTextField6 shows the password in plain text. Should be replaced with a JPasswordField
-        // (then use new String(field.getPassword())).
+       String fullName = jTextField1.getText();   
+        String username = jTextField5.getText();   
+        String password = jTextField6.getText();   
+        String email = jTextField2.getText();      
+        String employeeId = jTextField3.getText(); 
+        String contact = jTextField4.getText();    
+        
         boolean hasLength = password.length() >= 8;
         boolean hasUpper = password.matches(".*[A-Z].*");
         boolean hasLower = password.matches(".*[a-z].*");
         boolean hasNumber = password.matches(".*\\d.*");
         boolean hasSpecial = password.matches(".*[^a-zA-Z0-9].*");
  
-        // --- validation ---
         if (!ValidationUtils.isValidName(fullName)) {
             ValidationUtils.showError(this, "Enter a valid employee full name (letters only).");
             return;
@@ -258,13 +262,12 @@ public class Admin extends javax.swing.JFrame {
             ValidationUtils.showError(this, "Username must be 4-20 characters (letters, numbers, . _ -).");
             return;
         }
-        // REPLACED: was "!isBlank(password)", which rejected every real password.
         if (!(hasLength && hasUpper && hasLower && hasNumber && hasSpecial)) {
             ValidationUtils.showError(this, "Password must be at least 8 characters and include an uppercase letter, lowercase letter, a number, and a special character.");
             return;
         }
         if (!(jCheckBox1.isSelected() || jCheckBox2.isSelected() || jCheckBox3.isSelected()
-                || jCheckBox4.isSelected() || jCheckBox5.isSelected() || foreignexchan.isSelected())) {
+                || jCheckBox6.isSelected() || jCheckBox5.isSelected() || foreignexchan.isSelected())) {
             ValidationUtils.showError(this, "Select at least one permission.");
             return;
         }
@@ -277,16 +280,15 @@ public class Admin extends javax.swing.JFrame {
             return;
         }
  
-        // --- read checkboxes ---
         TellerPermissions permissions = new TellerPermissions(
                 jCheckBox1.isSelected(),   // Account creation
                 jCheckBox2.isSelected(),   // Cash deposits
                 jCheckBox3.isSelected(),   // Bill payments
-                jCheckBox4.isSelected(),   // Fund transfers
+                jCheckBox6.isSelected(),   // Fund transfers
                 jCheckBox5.isSelected(),   // Cash withdrawals
-                foreignexchan.isSelected());  // Foreign exchange
+                foreignexchan.isSelected(),// Foreign exchange
+                PWDline.isSelected());     // NOTE: Added PWD Line mapping
  
-        // --- save ---
         if (QueueDatabase.createTeller(username, password, fullName, employeeId, email, contact, permissions)) {
             ValidationUtils.showSuccess(this, "Teller account created for " + fullName.trim() + ".");
             clearForm();
@@ -317,9 +319,9 @@ public class Admin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox3ActionPerformed
 
-    private void jCheckBox4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox4ActionPerformed
+    private void PWDlineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PWDlineActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox4ActionPerformed
+    }//GEN-LAST:event_PWDlineActionPerformed
 
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
@@ -336,6 +338,10 @@ public class Admin extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
+
+    private void jCheckBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox6ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCheckBox6ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -417,6 +423,7 @@ public class Admin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ContactNum;
     private javax.swing.JLabel Emailadd;
+    private javax.swing.JCheckBox PWDline;
     private javax.swing.JCheckBox foreignexchan;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
@@ -425,8 +432,8 @@ public class Admin extends javax.swing.JFrame {
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JCheckBox jCheckBox5;
+    private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
