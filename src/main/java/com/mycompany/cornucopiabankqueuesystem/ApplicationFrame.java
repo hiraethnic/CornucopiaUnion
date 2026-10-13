@@ -23,39 +23,37 @@ public class ApplicationFrame extends javax.swing.JFrame {
         makeTransparent();
     }
     
-    private void makeTransparent() {
-    // ---- JTextField ----
-    txtFullName.setOpaque(false);
-    txtFullName.setBackground(new java.awt.Color(0, 0, 0, 0));
-    txtFullName.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5)); // remove border (optional)
+   private void makeTransparent() {
+        // ---- JTextFields ----
+        txtFullName.setOpaque(false);
+        txtFullName.setBackground(new java.awt.Color(0, 0, 0, 0));
+        txtFullName.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 5, 0, 5));
+        
+        txtAccountType.setOpaque(false);
+        txtAccountType.setBackground(new java.awt.Color(0, 0, 0, 0));
+        txtAccountType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
-    // ---- JComboBox ----
-    cmbIDType.setOpaque(false);
-    cmbAccountType.setOpaque(false);
-    cmbIDType.setBackground(new java.awt.Color(0, 0, 0, 0));
-    cmbAccountType.setBackground(new java.awt.Color(0, 0, 0, 0));
-    cmbIDType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-    cmbAccountType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        // ---- JComboBox ----
+        cmbIDType.setOpaque(false);
+        cmbIDType.setBackground(new java.awt.Color(0, 0, 0, 0));
+        cmbIDType.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 
-    // Make the combo's rendered (selected/list) item transparent too
-    javax.swing.ListCellRenderer<? super String> transparentRenderer = new javax.swing.DefaultListCellRenderer() {
-        @Override
-        public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value,
-                int index, boolean isSelected, boolean cellHasFocus) {
-            javax.swing.JLabel label = (javax.swing.JLabel) super.getListCellRendererComponent(
-                    list, value, index, isSelected, cellHasFocus);
-            if (index == -1) {            // the currently displayed item (not the dropdown list)
-                label.setOpaque(false);
+        // Make the combo's rendered (selected/list) item transparent too
+        javax.swing.ListCellRenderer<? super String> transparentRenderer = new javax.swing.DefaultListCellRenderer() {
+            @Override
+            public java.awt.Component getListCellRendererComponent(javax.swing.JList<?> list, Object value,
+                    int index, boolean isSelected, boolean cellHasFocus) {
+                javax.swing.JLabel label = (javax.swing.JLabel) super.getListCellRendererComponent(
+                        list, value, index, isSelected, cellHasFocus);
+                if (index == -1) {            
+                    label.setOpaque(false);
+                }
+                return label;
             }
-            return label;
-        }
-    };
-    cmbIDType.setRenderer(transparentRenderer);
-    cmbAccountType.setRenderer(transparentRenderer);
-
-    // ---- JTable ----
-    
-}
+        };
+        cmbIDType.setRenderer(transparentRenderer);
+        // REMOVED: cmbAccountType.setRenderer(transparentRenderer); because text fields don't use renderers
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -80,6 +78,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
+        txtAccountType = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
@@ -90,7 +89,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        cmbAccountType = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -163,6 +161,9 @@ public class ApplicationFrame extends javax.swing.JFrame {
         jLabel15.setText("Philippine ID (PhilID)");
         jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 180, -1, -1));
 
+        txtAccountType.setText("Unified Card");
+        jPanel2.add(txtAccountType, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 240, 130, 30));
+
         jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel14.setText("ID Document Name:");
         jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 150, -1, -1));
@@ -205,9 +206,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 100, 330, 40));
 
-        cmbAccountType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Unified Card" }));
-        jPanel2.add(cmbAccountType, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 230, 260, 40));
-
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Full Name:");
         jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 150, 94, -1));
@@ -248,8 +246,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
         chkPriority.setText("Senior / PWD / Pregnant Priority");
         chkPriority.addActionListener(this::chkPriorityActionPerformed);
         jPanel2.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 400, 345, 39));
-
-        jLabel1accountapplication.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\accountapplication.png")); // NOI18N
         jPanel2.add(jLabel1accountapplication, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -60, 880, 780));
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -289,42 +285,38 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
          String fullName = txtFullName.getText().trim();
-    Object accountType = cmbAccountType.getSelectedItem();
-    Object idType = cmbIDType.getSelectedItem();
+        String accountType = txtAccountType.getText().trim(); // Get fixed text directly
+        Object idType = cmbIDType.getSelectedItem();
 
-    if (!ValidationUtils.isValidName(fullName)) {
-        ValidationUtils.showError(this,
-                "Please enter a valid full name (letters only).");
+        if (!ValidationUtils.isValidName(fullName)) {
+            ValidationUtils.showError(this,
+                    "Please enter a valid full name (letters only).");
+            txtFullName.requestFocusInWindow();
+            return;
+        }
+
+        // REMOVED: Combo box validation for accountType since it is now fixed text
+
+        if (!ValidationUtils.isValidComboSelection(idType)) {
+            ValidationUtils.showError(this, "Please select the primary ID presented.");
+            cmbIDType.requestFocusInWindow();
+            return;
+        }
+
+        String ticket = QueueDatabase.addTicket("AC", "Account Opening", fullName, chkPriority.isSelected());
+        ValidationUtils.showSuccess(this,
+                "Application accepted!\n"
+                + "Queue ticket: " + ticket + "\n"
+                + "Applicant: " + fullName + "\n"
+                + "Account type: " + accountType + "\n"
+                + "ID presented: " + idType + "\n"
+                + "Priority: " + (chkPriority.isSelected() ? "Yes" : "No"));
+
+        txtFullName.setText("");
+        // REMOVED: cmbAccountType.setSelectedIndex(0); because text fields don't have indexes
+        cmbIDType.setSelectedIndex(0);
+        chkPriority.setSelected(false);
         txtFullName.requestFocusInWindow();
-        return;
-    }
-
-    if (!ValidationUtils.isValidComboSelection(accountType)) {
-        ValidationUtils.showError(this, "Please select an account type.");
-        cmbAccountType.requestFocusInWindow();
-        return;
-    }
-
-    if (!ValidationUtils.isValidComboSelection(idType)) {
-        ValidationUtils.showError(this, "Please select the primary ID presented.");
-        cmbIDType.requestFocusInWindow();
-        return;
-    }
-
-    String ticket = QueueDatabase.addTicket("AC", "Account Opening", fullName, chkPriority.isSelected());
-    ValidationUtils.showSuccess(this,
-            "Application accepted!\n"
-            + "Queue ticket: " + ticket + "\n"
-            + "Applicant: " + fullName + "\n"
-            + "Account type: " + accountType + "\n"
-            + "ID presented: " + idType + "\n"
-            + "Priority: " + (chkPriority.isSelected() ? "Yes" : "No"));
-
-    txtFullName.setText("");
-    cmbAccountType.setSelectedIndex(0);
-    cmbIDType.setSelectedIndex(0);
-    chkPriority.setSelected(false);
-    txtFullName.requestFocusInWindow();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void txtFullNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFullNameActionPerformed
@@ -359,7 +351,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Backbtn;
     private javax.swing.JCheckBox chkPriority;
-    private javax.swing.JComboBox<String> cmbAccountType;
     private javax.swing.JComboBox<String> cmbIDType;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -392,6 +383,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField txtAccountType;
     private javax.swing.JTextField txtFullName;
     // End of variables declaration//GEN-END:variables
 }
