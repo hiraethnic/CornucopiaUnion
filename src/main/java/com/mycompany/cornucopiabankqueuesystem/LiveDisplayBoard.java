@@ -112,7 +112,7 @@ public class LiveDisplayBoard extends javax.swing.JFrame {
         lblLastCounter.setText("Please proceed to Counter 1");
         jPanel3.add(lblLastCounter, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 57, -1, 40));
 
-        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 50, 570, 100));
+        jPanel2.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 50, 600, 100));
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 110, 640, 150));
 
