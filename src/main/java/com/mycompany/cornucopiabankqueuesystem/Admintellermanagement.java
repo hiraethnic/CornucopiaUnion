@@ -213,17 +213,19 @@ private void loadActivity(String username) {
         jPanel1.setPreferredSize(new java.awt.Dimension(786, 633));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        SaveModifications.setBackground(new java.awt.Color(0, 153, 0));
+        SaveModifications.setBackground(new java.awt.Color(197, 160, 89));
         SaveModifications.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
-        SaveModifications.setForeground(new java.awt.Color(255, 255, 255));
+        SaveModifications.setForeground(new java.awt.Color(12, 35, 74));
         SaveModifications.setText("SAVE MODIFICATIONS");
+        SaveModifications.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         SaveModifications.addActionListener(this::SaveModificationsActionPerformed);
         jPanel1.add(SaveModifications, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 110, 190, 30));
 
-        jButton2.setBackground(new java.awt.Color(220, 38, 38));
+        jButton2.setBackground(new java.awt.Color(197, 160, 89));
         jButton2.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setForeground(new java.awt.Color(12, 35, 74));
         jButton2.setText("DELETE ACCOUNT");
+        jButton2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton2.addActionListener(this::jButton2ActionPerformed);
         jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(660, 110, -1, 30));
 
@@ -246,7 +248,7 @@ private void loadActivity(String username) {
         ResetPassword.setText("EDIT PASSWORD");
         ResetPassword.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         ResetPassword.addActionListener(this::ResetPasswordActionPerformed);
-        jPanel1.add(ResetPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 360, 140, 20));
+        jPanel1.add(ResetPassword, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 360, 140, 30));
 
         PassWord.setBackground(new java.awt.Color(12, 35, 74));
         PassWord.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N

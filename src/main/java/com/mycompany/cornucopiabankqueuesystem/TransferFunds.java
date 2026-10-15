@@ -21,12 +21,9 @@ public class TransferFunds extends javax.swing.JFrame {
         
          QueueDatabase.initialize();
          applyRealTimeValidation();
-          makeTransparent();   
+         
          setLocationRelativeTo(null);
-         jCheckBox1.setIcon(makeBoxIcon(28, false));
-         jCheckBox1.setSelectedIcon(makeBoxIcon(28, true));
-         jCheckBox1.setOpaque(false);
-         jCheckBox1.setContentAreaFilled(false); // helps under Nimbus
+         
     }
     
     private javax.swing.Icon makeBoxIcon(int size, boolean checked) {
@@ -49,27 +46,7 @@ public class TransferFunds extends javax.swing.JFrame {
 }
     
     
-    private void makeTransparent() {
-    // Text fields
-    javax.swing.JTextField[] fields = {jTextField1, jTextField2, jTextField3, jTextField4};
-    for (javax.swing.JTextField tf : fields) {
-        tf.setOpaque(false);
-        tf.setBackground(new java.awt.Color(0, 0, 0, 0)); // needed for Nimbus
-        tf.setBorder(null);
-        tf.setForeground(java.awt.Color.BLACK);           // pick a color that shows on your image
-    }
-
-    // Buttons
-    javax.swing.JButton[] buttons = {jButton4, jButton5, jButton6, jButton7};
-    for (javax.swing.JButton b : buttons) {
-        b.setOpaque(false);
-        b.setContentAreaFilled(false);
-        b.setBorderPainted(false);
-        b.setFocusPainted(false);
-        b.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-    }
-}
-
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -101,14 +78,14 @@ public class TransferFunds extends javax.swing.JFrame {
         jPanel3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(243, 30, -1, -1));
 
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
-        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 336, 140, 20));
+        jPanel3.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 360, 370, 20));
 
         jTextField2.addActionListener(this::jTextField2ActionPerformed);
-        jPanel3.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 160, 140, 20));
+        jPanel3.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 210, 370, 20));
 
         jTextField3.addActionListener(this::jTextField3ActionPerformed);
-        jPanel3.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 222, 140, 20));
-        jPanel3.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 278, 140, 20));
+        jPanel3.add(jTextField3, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 260, 370, 20));
+        jPanel3.add(jTextField4, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 310, 370, 20));
 
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jCheckBox1.setBorder(null);
@@ -117,35 +94,38 @@ public class TransferFunds extends javax.swing.JFrame {
         jCheckBox1.setMinimumSize(new java.awt.Dimension(50, 50));
         jCheckBox1.setPreferredSize(new java.awt.Dimension(50, 50));
         jCheckBox1.addActionListener(this::jCheckBox1ActionPerformed);
-        jPanel3.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 380, -1, -1));
+        jPanel3.add(jCheckBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 380, -1, -1));
 
         jButton4.setBackground(new java.awt.Color(12, 35, 74));
         jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 450, 100, 30));
+        jPanel3.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 500, 100, 30));
 
-        jButton5.setBackground(new java.awt.Color(153, 0, 0));
+        jButton5.setBackground(new java.awt.Color(197, 160, 89));
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(255, 255, 255));
+        jButton5.setForeground(new java.awt.Color(12, 35, 74));
+        jButton5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 450, 130, 36));
+        jPanel3.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 440, 130, 36));
 
-        jButton6.setBackground(new java.awt.Color(0, 0, 153));
+        jButton6.setBackground(new java.awt.Color(12, 35, 74));
         jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton6.addActionListener(this::jButton6ActionPerformed);
-        jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 500, 110, 30));
+        jPanel3.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 500, 110, 30));
 
         jButton7.setBackground(new java.awt.Color(51, 51, 255));
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
         jButton7.addActionListener(this::jButton7ActionPerformed);
         jPanel3.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 500, -1, 30));
 
-        jLabel2transferfunds.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\transfund1 (1).png")); // NOI18N
-        jPanel3.add(jLabel2transferfunds, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 700, 600));
+        jLabel2transferfunds.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\addminimages\\transferfunds_with_bgc.png")); // NOI18N
+        jPanel3.add(jLabel2transferfunds, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1050, 620));
 
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(3, 0, 700, 600));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(3, 0, 1050, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -317,32 +297,6 @@ public class TransferFunds extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
-    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-    String accNo = jTextField2.getText().trim();
-
-    if (!accNo.matches("\\d{11}")) {
-        jLabel14.setText("");
-        ValidationUtils.showError(this, "Enter your 11-digit source account number first.");
-        jTextField2.requestFocusInWindow();
-        return;
-    }
-
-    String[] details = QueueDatabase.getAccountDetails(accNo);
-
-    if (details == null) {
-        jLabel14.setText("");
-        ValidationUtils.showError(this, "Source account number does not exist in our records.");
-    } else if ("LOCKED".equals(details[4])) {
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        jLabel14.setForeground(java.awt.Color.RED);
-        jLabel14.setText("Account is LOCKED");
-    } else {
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14));
-        jLabel14.setForeground(new java.awt.Color(0, 100, 0));
-        jLabel14.setText("Balance: PHP " + String.format("%,.2f", Double.parseDouble(details[3])));
-    }
-    }//GEN-LAST:event_jButton7ActionPerformed
-
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
@@ -350,6 +304,32 @@ public class TransferFunds extends javax.swing.JFrame {
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jCheckBox1ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        String accNo = jTextField2.getText().trim();
+
+        if (!accNo.matches("\\d{11}")) {
+            jLabel14.setText("");
+            ValidationUtils.showError(this, "Enter your 11-digit source account number first.");
+            jTextField2.requestFocusInWindow();
+            return;
+        }
+
+        String[] details = QueueDatabase.getAccountDetails(accNo);
+
+        if (details == null) {
+            jLabel14.setText("");
+            ValidationUtils.showError(this, "Source account number does not exist in our records.");
+        } else if ("LOCKED".equals(details[4])) {
+            jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14));
+            jLabel14.setForeground(java.awt.Color.RED);
+            jLabel14.setText("Account is LOCKED");
+        } else {
+            jLabel14.setFont(new java.awt.Font("Segoe UI", 1, 14));
+            jLabel14.setForeground(new java.awt.Color(0, 100, 0));
+            jLabel14.setText("Balance: PHP " + String.format("%,.2f", Double.parseDouble(details[3])));
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     /**
      * @param args the command line arguments
