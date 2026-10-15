@@ -142,7 +142,7 @@ public class DepositFrame extends javax.swing.JFrame {
         jButton1.setText("SUBMIT");
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton1.addActionListener(this::jButton1ActionPerformed);
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 440, 460, 40));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 430, 460, 40));
 
         jButton2.setBackground(new java.awt.Color(197, 160, 89));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -150,7 +150,7 @@ public class DepositFrame extends javax.swing.JFrame {
         jButton2.setText("CLEAR");
         jButton2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jButton2.addActionListener(this::jButton2ActionPerformed);
-        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 510, 90, 40));
+        jPanel3.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 510, 90, 40));
 
         jButton3.setBackground(new java.awt.Color(12, 35, 74));
         jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -158,7 +158,7 @@ public class DepositFrame extends javax.swing.JFrame {
         jButton3.setText(" BACK");
         jButton3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton3.addActionListener(this::jButton3ActionPerformed);
-        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 510, 90, 40));
+        jPanel3.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 510, 90, 40));
         jPanel3.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 690, -1));
 
         jTextField4.setEditable(false);
@@ -167,21 +167,17 @@ public class DepositFrame extends javax.swing.JFrame {
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\addminimages\\deposit_with_bgc.png")); // NOI18N
         jLabel1.setText("jLabel1");
-        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 1090, 600));
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1080, 600));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 786, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 328, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 599, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 112, Short.MAX_VALUE))
+            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

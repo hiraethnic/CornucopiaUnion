@@ -276,8 +276,7 @@ package com.mycompany.cornucopiabankqueuesystem;
         txtCustomerName = new javax.swing.JTextField();
         txtForeignAmount = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        jLabel1foreexchange = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -300,14 +299,17 @@ package com.mycompany.cornucopiabankqueuesystem;
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setText("EXCHANGE RATES (TO PHP)");
-        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 130, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel2.setText("currency converter & queue ticket");
-        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 120, -1, -1));
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("CURRENCY CONVERTER & QUEUE TICKET ");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 130, -1, -1));
 
         jTable1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jTable1.setForeground(new java.awt.Color(255, 255, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -320,71 +322,75 @@ package com.mycompany.cornucopiabankqueuesystem;
         jTable1.setRowHeight(28);
         jScrollPane1.setViewportView(jTable1);
 
-        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 380, 400));
+        jPanel3.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 390, 340));
 
         label.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        label.setForeground(new java.awt.Color(255, 255, 255));
         label.setText("Customer Name:");
-        jPanel3.add(label, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 170, -1, -1));
+        jPanel3.add(label, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 170, -1, -1));
 
-        clearbtn.setBackground(new java.awt.Color(220, 38, 38));
+        clearbtn.setBackground(new java.awt.Color(197, 160, 89));
         clearbtn.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
-        clearbtn.setForeground(new java.awt.Color(255, 255, 255));
+        clearbtn.setForeground(new java.awt.Color(12, 35, 74));
         clearbtn.setText("CLEAR");
+        clearbtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         clearbtn.addActionListener(this::clearbtnActionPerformed);
-        jPanel3.add(clearbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 510, 120, 40));
+        jPanel3.add(clearbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 520, 100, 30));
 
         btnGetTicket.setBackground(new java.awt.Color(12, 35, 74));
         btnGetTicket.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         btnGetTicket.setForeground(new java.awt.Color(255, 255, 255));
         btnGetTicket.setText("CONFIRM");
-        btnGetTicket.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(253, 220, 92), 3));
+        btnGetTicket.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89), 3));
         btnGetTicket.addActionListener(this::btnGetTicketActionPerformed);
-        jPanel3.add(btnGetTicket, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 510, 120, 40));
+        jPanel3.add(btnGetTicket, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 450, 460, 40));
 
         lblPhpTotal.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
+        lblPhpTotal.setForeground(new java.awt.Color(255, 255, 255));
         lblPhpTotal.setText(" 0.00 PHP");
-        jPanel3.add(lblPhpTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 400, -1, -1));
+        jPanel3.add(lblPhpTotal, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 390, 220, -1));
 
-        jButton1.setBackground(new java.awt.Color(0, 0, 204));
+        jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("BACK");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton1.addActionListener(this::jButton1ActionPerformed);
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 560, 120, 40));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 520, 80, 30));
 
         chkPriority.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        chkPriority.setForeground(new java.awt.Color(197, 160, 89));
         chkPriority.setText("Priority Line (Senior / PWD / Pregnant)");
-        jPanel3.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 430, 370, 80));
+        jPanel3.add(chkPriority, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 420, 370, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setText("Amount in Foreign Currency:");
-        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 300, -1, -1));
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 300, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Estimated Amount in Philippine Peso (PHP):");
-        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 370, -1, 20));
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 370, -1, 20));
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "SAR - Saudi Arabia (Saudi Riyal)", "AED - United Arab Emirates (UAE Dirham)", "KWD - Kuwait (Kuwaiti Dinar)", "QAR - Qatar (Qatari Riyal)", "SGD - Singapore (Singapore Dollar)", "HKD - Hong Kong (Hong Kong Dollar)", "JPY - Japan (Japanese Yen)", "TWD - Taiwan (New Taiwan Dollar)", "USD - United States (US Dollar)", "CAD - Canada (Canadian Dollar)" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
-        jPanel3.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 260, 220, 30));
-        jPanel3.add(txtCustomerName, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 195, 220, 30));
+        jPanel3.add(jComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 260, 390, 30));
+        jPanel3.add(txtCustomerName, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 190, 390, 30));
 
         txtForeignAmount.addActionListener(this::txtForeignAmountActionPerformed);
-        jPanel3.add(txtForeignAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 330, 220, 30));
+        jPanel3.add(txtForeignAmount, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 330, 390, 30));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Select Foreign Currency:");
-        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 230, -1, -1));
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 230, -1, -1));
 
-        jLabel1foreexchange.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\src\\main\\java\\Images\\Foreign Exchange.png")); // NOI18N
-        jLabel1foreexchange.setText("jLabel1");
-        jPanel3.add(jLabel1foreexchange, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 780, 680));
+        jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\addminimages\\FOREIIGN_with_bgc.png")); // NOI18N
+        jLabel1.setText("jLabel1");
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1070, 600));
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel3.setText("EXCHANGE RATES (TO PHP)");
-        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 110, -1, -1));
-
-        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 1, 780, 600));
+        getContentPane().add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 1, -1, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -520,9 +526,8 @@ package com.mycompany.cornucopiabankqueuesystem;
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JLabel jLabel1foreexchange;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
