@@ -23,8 +23,6 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(212, 175, 55), 3));
         setLocationRelativeTo(null);
         
-        
-        
     }
     
     private void setupComboBoxLogic() {
@@ -121,12 +119,12 @@ public class BillPaymentFrame extends javax.swing.JFrame {
         clearbtn.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         clearbtn.setForeground(new java.awt.Color(12, 35, 74));
         clearbtn.setText("CLEAR");
-        clearbtn.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        clearbtn.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         clearbtn.addActionListener(this::clearbtnActionPerformed);
         jPanel4.add(clearbtn, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 580, 100, 30));
 
         jTextArea1.setEditable(false);
-        jTextArea1.setBackground(new java.awt.Color(0, 0, 0));
+        jTextArea1.setBackground(new java.awt.Color(12, 35, 74));
         jTextArea1.setColumns(20);
         jTextArea1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jTextArea1.setForeground(new java.awt.Color(255, 255, 255));
