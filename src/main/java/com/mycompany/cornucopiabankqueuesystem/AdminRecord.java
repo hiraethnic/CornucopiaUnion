@@ -176,30 +176,35 @@ public class AdminRecord extends javax.swing.JFrame {
                 jTextField1KeyReleased(evt);
             }
         });
-        ACCOUNTPANEL.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 330, 30));
+        ACCOUNTPANEL.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, 330, 30));
 
-        jButton6.setBackground(new java.awt.Color(30, 58, 138));
+        jButton6.setBackground(new java.awt.Color(12, 35, 74));
         jButton6.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setText("SEARCH");
+        jButton6.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton6.addActionListener(this::jButton6ActionPerformed);
-        ACCOUNTPANEL.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, 30));
+        ACCOUNTPANEL.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 90, 30));
 
-        jButton4.setBackground(new java.awt.Color(30, 58, 138));
+        jButton4.setBackground(new java.awt.Color(12, 35, 74));
         jButton4.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setText("REFRESH");
+        jButton4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton4.addActionListener(this::jButton4ActionPerformed);
-        ACCOUNTPANEL.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(930, 140, 120, 40));
+        ACCOUNTPANEL.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(950, 90, 120, 30));
 
         jButton1.setBackground(new java.awt.Color(12, 35, 74));
         jButton1.setFont(new java.awt.Font("Lucida Bright", 0, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Logout");
+        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton1.addActionListener(this::jButton1ActionPerformed);
-        ACCOUNTPANEL.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 30, 90, 40));
+        ACCOUNTPANEL.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(990, 10, 100, 40));
 
+        AccountList.setBackground(new java.awt.Color(12, 35, 74));
         AccountList.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        AccountList.setForeground(new java.awt.Color(255, 255, 255));
         AccountList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -218,20 +223,21 @@ public class AdminRecord extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(AccountList);
 
-        ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 190, 1040, 390));
+        ACCOUNTPANEL.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 130, 1060, 420));
 
-        jButton5.setBackground(new java.awt.Color(30, 58, 138));
+        jButton5.setBackground(new java.awt.Color(12, 35, 74));
         jButton5.setFont(new java.awt.Font("Lucida Bright", 1, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("BACK");
+        jButton5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(197, 160, 89)));
         jButton5.addActionListener(this::jButton5ActionPerformed);
-        ACCOUNTPANEL.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(920, 620, 120, 40));
+        ACCOUNTPANEL.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(960, 570, 120, 30));
 
-        adminRecords.setIcon(new javax.swing.ImageIcon("C:\\Users\\Lenovo\\OneDrive\\Documents\\NetBeansProjects\\CornucopiaUnion\\IMAGEADMIN&TELLER\\adminrecord (1).png")); // NOI18N
+        adminRecords.setIcon(new javax.swing.ImageIcon("C:\\Users\\Rara\\Documents\\CornucopiaUnion\\src\\main\\java\\addminimages\\ADMINRECORDpng (1).png")); // NOI18N
         adminRecords.setText("jLabel1");
-        ACCOUNTPANEL.add(adminRecords, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -20, 1100, 960));
+        ACCOUNTPANEL.add(adminRecords, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -230, 1160, 1060));
 
-        getContentPane().add(ACCOUNTPANEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 700));
+        getContentPane().add(ACCOUNTPANEL, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1090, 610));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
